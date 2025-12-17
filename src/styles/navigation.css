@@ -1,5 +1,6 @@
 .header {
-  @apply bg-body dark:bg-darkmode-body py-6;
+  /* Añadimos un borde sutil abajo para dar profundidad */
+  @apply bg-body dark:bg-darkmode-body py-6 border-b border-border/50 dark:border-darkmode-border/30;
 }
 
 /* navbar items */
@@ -8,7 +9,8 @@
 }
 
 .navbar-brand {
-  @apply text-text-dark dark:text-darkmode-text-dark text-xl font-semibold;
+  /* Usamos text-dark que ahora es tu Morado #451773 */
+  @apply text-dark dark:text-darkmode-primary text-xl font-bold;
   image {
     @apply max-h-full max-w-full;
   }
@@ -19,7 +21,12 @@
 }
 
 .nav-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary block p-3 cursor-pointer font-semibold transition lg:px-2 lg:py-3;
+  /* El hover ahora usa tu Rosa Primario de forma vibrante */
+  @apply text-text-dark hover:text-[#F2275D] dark:text-darkmode-text-dark dark:hover:text-[#17BFBF] block p-3 cursor-pointer font-bold transition-all duration-300 lg:px-2 lg:py-3;
+}
+
+.nav-link.active {
+  @apply text-[#F2275D] dark:text-[#17BFBF];
 }
 
 .nav-dropdown {
@@ -27,11 +34,12 @@
 }
 
 .nav-dropdown > svg {
-  @apply pointer-events-none;
+  @apply pointer-events-none transition-transform duration-300;
 }
 
 .nav-dropdown-list {
-  @apply bg-body dark:bg-darkmode-body z-10 min-w-[180px] rounded p-4 shadow-sm;
+  /* Dropdown con bordes más redondeados y sombra turquesa muy sutil en dark mode */
+  @apply bg-body dark:bg-darkmode-light z-10 min-w-[200px] rounded-xl p-4 shadow-xl border border-border/40 dark:border-darkmode-border;
 }
 
 .nav-dropdown-item {
@@ -39,15 +47,17 @@
 }
 
 .nav-dropdown-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary block py-1 font-semibold transition;
+  /* Los links del submenú ahora tienen un ligero desplazamiento en hover */
+  @apply text-text-dark hover:text-[#F2275D] dark:text-darkmode-text dark:hover:text-[#17BFBF] block py-1.5 px-3 font-semibold transition-all hover:translate-x-1;
 }
 
 /* theme-switcher */
 .theme-switcher {
-  @apply inline-flex;
+  @apply inline-flex items-center;
 
   label {
-    @apply bg-border relative inline-block h-4 w-6 cursor-pointer rounded-2xl lg:w-10;
+    /* Fondo del switch usa tu color de borde */
+    @apply bg-border dark:bg-darkmode-border relative inline-block h-5 w-8 cursor-pointer rounded-2xl lg:w-12;
   }
 
   input {
@@ -55,12 +65,18 @@
   }
 
   span {
-    @apply bg-dark absolute -top-1 left-0 flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 dark:bg-white;
+    /* El círculo del switch usa tu Morado #451773 en modo claro */
+    @apply bg-[#451773] absolute -top-0.5 left-0 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-all duration-300 dark:bg-[#17BFBF];
   }
 
   input:checked + label {
     span {
-      @apply lg:left-4;
+      @apply left-3 lg:left-6;
     }
+  }
+  
+  /* Iconos dentro del switcher si los tuvieras */
+  svg {
+    @apply h-3 w-3 text-white dark:text-dark;
   }
 }

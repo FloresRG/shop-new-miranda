@@ -1,15 +1,32 @@
+/* Botón Base */
 .btn {
-  @apply inline-block rounded border border-transparent px-5 py-2 font-semibold capitalize transition;
+  @apply inline-block rounded-lg border-2 px-6 py-2.5 font-bold capitalize transition-all duration-300 active:scale-95;
 }
 
 .btn-sm {
-  @apply rounded-sm px-4 py-1.5 text-sm;
+  @apply rounded-md px-4 py-1.5 text-sm;
 }
 
+/* Botón Primario: Rosa Vibrante (#F2275D) */
 .btn-primary {
-  @apply border-primary bg-primary dark:border-darkmode-primary dark:text-text-dark text-white dark:bg-darkmode-primary;
+  background-color: #F2275D;
+  border-color: #F2275D;
+  color: #FFFFFF;
+  @apply hover:bg-[#451773] hover:border-[#451773] shadow-lg shadow-[#F2275D]/20;
 }
 
+/* Botón Outline: Turquesa (#17BFBF) */
 .btn-outline-primary {
-  @apply border-dark text-text-dark hover:bg-dark dark:hover:text-text-dark bg-transparent hover:text-white dark:border-darkmode-primary dark:text-white dark:hover:bg-darkmode-primary;
+  background-color: transparent;
+  border-color: #17BFBF;
+  color: #17BFBF;
+  @apply hover:bg-[#17BFBF] hover:text-white dark:text-[#17BFBF] dark:hover:text-white;
+}
+
+/* Extra: Botón Danger (#F20505) */
+.btn-danger {
+  background-color: #F20505;
+  border-color: #F20505;
+  color: #FFFFFF;
+  @apply hover:opacity-90;
 }

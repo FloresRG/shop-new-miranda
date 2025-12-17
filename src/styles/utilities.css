@@ -1,12 +1,21 @@
+/* --- Gradiente de Fondo --- */
 @utility bg-gradient {
-  @apply bg-linear-to-b from-[rgba(249,249,249,1)] from-[0.53%] to-white to-[83.28%] dark:from-darkmode-light dark:to-darkmode-body;
+  /* En modo claro mantenemos la limpieza, en modo oscuro inyectamos tu Morado sutilmente */
+  @apply bg-linear-to-b from-[#F9F9F9] from-[0.53%] to-white to-[83.28%] 
+         dark:from-[#451773]/10 dark:to-darkmode-body;
 }
 
-/* form style */
+/* --- Estilo de Formularios --- */
 @utility form-input {
-  @apply w-full rounded border-transparent bg-light px-6 py-4 text-text-dark placeholder:text-text-light focus:border-primary dark:focus:border-darkmode-primary focus:ring-transparent dark:border-darkmode-border dark:bg-darkmode-light dark:text-darkmode-text-light;
+  /* Focus ahora usa tu Rosa #F2275D y en Dark Mode tu Turquesa #17BFBF */
+  @apply w-full rounded-xl border-2 border-transparent bg-light px-6 py-4 
+         text-text-dark placeholder:text-text-light transition-all duration-300
+         focus:border-[#F2275D] focus:ring-4 focus:ring-[#F2275D]/10 focus:bg-white
+         dark:border-darkmode-border dark:bg-darkmode-light dark:text-darkmode-text-light
+         dark:focus:border-[#17BFBF] dark:focus:ring-[#17BFBF]/10;
 }
 
 @utility form-label {
-  @apply mb-4 block font-secondary text-xl font-normal text-text-dark dark:text-darkmode-text-light;
+  /* Etiquetas más legibles con tu Morado de marca */
+  @apply mb-4 block font-secondary text-lg font-bold text-[#451773] dark:text-[#17BFBF];
 }

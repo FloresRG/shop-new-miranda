@@ -1,21 +1,40 @@
-/* navbar toggler */
+/* --- Navbar Toggler (Menú Móvil) --- */
 input#nav-toggle:checked + label #show-button {
   @apply hidden;
 }
 
 input#nav-toggle:checked + label #hide-button {
-  @apply block;
+  /* Al abrir el menú, el icono de cierre se vuelve de tu color Rosa #F2275D */
+  @apply block text-[#F2275D];
 }
 
 input#nav-toggle:checked ~ #nav-menu {
   @apply max-lg:block;
+  /* Solución al error: Usamos la animación nativa directamente */
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
-/* swiper pagination */
+/* --- Swiper Pagination (Puntos del Carrusel) --- */
 .swiper-pagination-bullet {
-  @apply size-2.5! bg-light! opacity-100! dark:bg-darkmode-light!;
+  /* Puntos inactivos: sutiles con tu color de borde */
+  @apply size-2.5! bg-border! opacity-100! dark:bg-darkmode-border! transition-all duration-300;
 }
 
 .swiper-pagination-bullet-active {
-  @apply size-4! bg-primary! dark:bg-darkmode-primary!;
+  /* Punto activo: Tu Rosa #F2275D en modo claro y Turquesa #17BFBF en modo oscuro */
+  @apply size-4! bg-[#F2275D]! dark:bg-[#17BFBF]! opacity-100!;
+  /* Efecto de resplandor para que se vea más moderno */
+  box-shadow: 0 0 8px rgba(242, 39, 93, 0.4);
+}
+
+/* --- Definición de la Animación (Indispensable al final del archivo) --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
