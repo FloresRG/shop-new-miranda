@@ -20,6 +20,12 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
+
+// Seguridad: Si cae aquí por error (SSR) y no hay página, 404
+if (!page) {
+  return Astro.redirect("/404");
+}
+
 const { title, meta_title, description, image } = page.data;
 const { Content } = await render(page);
 ---

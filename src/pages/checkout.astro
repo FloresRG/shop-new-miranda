@@ -1,7 +1,7 @@
 ---
-import Base from "../../layouts/Base.astro";
-import CartModal from "../../components/shop/CartModal"; // Re-usamos pero mostramos en linea si es posible o creamos uno de pagina completa
-import CheckoutForm from "../../components/shop/CheckoutForm"; // Nuevo componente
+import Base from "@/layouts/Base.astro";
+import CartModal from "@/components/shop/CartModal";
+import CheckoutForm from "@/components/shop/CheckoutForm";
 ---
 
 <Base title="Finalizar Compra - Importadora Miranda">
@@ -12,7 +12,7 @@ import CheckoutForm from "../../components/shop/CheckoutForm"; // Nuevo componen
       <div
         class="max-w-4xl mx-auto bg-white dark:bg-darkmode-theme-light p-8 rounded-lg shadow-lg border border-border dark:border-darkmode-border"
       >
-        <CheckoutForm client:load />
+        <CheckoutForm client:only="react" />
       </div>
     </div>
   </section>

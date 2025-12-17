@@ -1,0 +1,35 @@
+---
+import { getProducts } from "@/lib/products";
+
+// Fetch data to get brands
+const data = await getProducts({ page: 1 });
+// Extract unique brands (si la API devuelve lista de marcas aparte sería mejor, pero uso lo que tengo en data.marcas)
+const brands = data.marcas;
+---
+
+<section class="section pt-0">
+  <div class="container">
+    <div class="text-center mb-8">
+      <span
+        class="text-secondary dark:text-accent font-bold uppercase tracking-wider text-xs"
+        >Nuestras Marcas</span
+      >
+      <h3 class="h3 mt-2">Trabajamos con lo Mejor</h3>
+    </div>
+
+    <div
+      class="flex flex-wrap justify-center gap-4 lg:gap-8 items-center opacity-80 hover:opacity-100 transition-opacity"
+    >
+      {
+        brands.map((brand) => (
+          <a
+            href={`/tienda?marca_id=${brand.id}`}
+            class="px-6 py-3 rounded-full border-2 border-border dark:border-darkmode-border hover:border-primary hover:text-primary transition-all font-bold text-gray-500 dark:text-gray-400 text-sm lg:text-base uppercase tracking-widest"
+          >
+            {brand.marca}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

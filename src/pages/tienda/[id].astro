@@ -1,7 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { getProductById } from "../../lib/products";
+import { getProductById, getProducts } from "../../lib/products";
 import ProductDetail from "../../components/shop/ProductDetail";
+import ProductGrid from "../../components/shop/ProductGrid.astro";
 import CartModal from "../../components/shop/CartModal";
 
 export const prerender = false;
@@ -13,8 +14,22 @@ if (!id) {
 }
 
 let product = null;
+let relatedProducts = [];
+
 try {
   product = await getProductById(parseInt(id));
+
+  if (product) {
+    // Buscar productos relacionados por categoría
+    const relatedData = await getProducts({
+      categoriaId: product.categoria.id,
+      page: 1,
+    });
+    // Filtrar el producto actual y tomar solo 4
+    relatedProducts = relatedData.productos
+      .filter((p) => p.id !== product!.id)
+      .slice(0, 4);
+  }
 } catch (e) {
   console.error(e);
 }
@@ -30,11 +45,19 @@ if (!product) {
 >
   <section class="section pt-32 pb-16">
     <div class="container">
-      {/* Breadcrumb simple */}
-      <nav class="flex text-sm text-gray-500 mb-8">
+      {/* Breadcrumb */}
+      <nav
+        class="flex text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap"
+      >
         <a href="/" class="hover:text-primary transition-colors">Inicio</a>
         <span class="mx-2">/</span>
         <a href="/tienda" class="hover:text-primary transition-colors">Tienda</a
+        >
+        <span class="mx-2">/</span>
+        <a
+          href={`/tienda?categoria_id=${product.categoria.id}`}
+          class="hover:text-primary transition-colors"
+          >{product.categoria.categoria}</a
         >
         <span class="mx-2">/</span>
         <span class="text-dark dark:text-white font-medium truncat"
@@ -45,5 +68,20 @@ if (!product) {
       <ProductDetail client:load product={product} />
     </div>
   </section>
+
+  {/* Productos Relacionados */}
+  {
+    relatedProducts.length > 0 && (
+      <section class="section pt-0 pb-20">
+        <div class="container">
+          <h2 class="h4 mb-8 border-b border-border dark:border-darkmode-border pb-4">
+            Productos Relacionados
+          </h2>
+          <ProductGrid products={relatedProducts} />
+        </div>
+      </section>
+    )
+  }
+
   <CartModal client:idle />
 </Base>
