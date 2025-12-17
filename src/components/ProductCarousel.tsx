@@ -35,8 +35,8 @@ const ProductCarousel: React.FC = () => {
   }
 
   return (
-    <section className=" bg-gradient">
-      <div className="max-w-7xl mx-auto relative group">
+    <section className="bg-gradient min-h-screen flex items-center justify-center py-16">
+      <div className="max-w-7xl mx-auto relative group w-full px-4 lg:px-8">
         {/* Botones de navegación personalizados */}
         <button className="swiper-button-prev !hidden lg:!flex !-left-16 !top-1/2 !w-12 !h-12 !bg-white dark:!bg-darkmode-light !text-[#451773] dark:!text-[#17BFBF] !rounded-full !shadow-xl hover:!bg-[#F2275D] hover:!text-white transition-all duration-300 border border-border/50 after:!text-lg"></button>
 
