@@ -26,10 +26,11 @@ export default function CheckoutForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Aquí iría la lógica real de envío a API
-        alert(`¡Pedido Recibido!\nGracias ${formData.nombre}, te contactaremos al ${formData.telefono}.`);
-        clearCart();
-        window.location.href = "/";
+        // Simulando delay de API
+        setTimeout(() => {
+            clearCart();
+            window.location.href = "/success";
+        }, 1000);
     };
 
     if (items.length === 0) {

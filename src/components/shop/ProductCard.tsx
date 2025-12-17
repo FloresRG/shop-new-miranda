@@ -1,6 +1,8 @@
 import type { Product } from "../../interfaces/product";
 import { addCartItem } from "../../store/cartStore";
-import { FaCartPlus } from "react-icons/fa";
+import { toggleWishlist, wishlistItems } from "../../store/wishlistStore";
+import { useStore } from '@nanostores/react';
+import { FaCartPlus, FaHeart, FaRegHeart } from "react-icons/fa";
 import React from "react";
 
 interface ProductCardProps {
@@ -13,14 +15,34 @@ export default function ProductCard({ product }: ProductCardProps) {
     const stock = product.inventario?.cantidad ?? 0;
     const hasStock = stock > 0;
 
+    // Wishlist Logic
+    const $wishlist = useStore(wishlistItems);
+    const isWishlisted = !!$wishlist[product.id];
+
     const handleAddToCart = (e: React.MouseEvent) => {
-        e.preventDefault(); // Evitar navegación si está dentro de un enlace
+        e.preventDefault();
         e.stopPropagation();
         addCartItem(product);
     };
 
+    const handleWishlist = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleWishlist(product);
+    };
+
     return (
-        <div className="bg-white dark:bg-darkmode-theme-light rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group flex flex-col h-full border border-border dark:border-darkmode-border">
+        <div className="bg-white dark:bg-darkmode-theme-light rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group flex flex-col h-full border border-border dark:border-darkmode-border relative">
+
+            {/* Wishlist Button Absolute */}
+            <button
+                onClick={handleWishlist}
+                className="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center text-red-500 hover:scale-110 transition-transform shadow-sm"
+                title="Añadir a lista de deseos"
+            >
+                {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+            </button>
+
             <a href={`/tienda/${product.id}`} className="block relative aspect-[4/3] overflow-hidden bg-gray-100">
                 <img
                     src={product.fotos[0]?.foto || 'https://placehold.co/400x300?text=No+Image'}
@@ -58,7 +80,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <div className="flex items-center justify-between mt-auto">
                     <span className="text-xl font-bold text-primary">
-                        ${price.toFixed(2)}
+                        {price > 0 ? `$${price.toFixed(2)}` : 'Consultar'}
                     </span>
 
                     <button

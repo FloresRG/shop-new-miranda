@@ -50,25 +50,33 @@ export const getProducts = async (params: {
 };
 
 // Obtener un solo producto por ID
-// NOTA: Si la API no tiene endpoint individual, filtramos de la lista (ineficiente pero funcional para demos)
-// O ajustamos si la API soporta /api/productos/1
 export const getProductById = async (id: number): Promise<Product | null> => {
-    // Intenta endpoint específico
+    // 1. Intenta Endpoint Especifico (Standard REST)
     try {
-        const res = await fetch(`${API_URL}/${id}`); // Asumiendo que existe
+        const res = await fetch(`${API_URL}/${id}`);
         if (res.ok) {
-            // Algunas APIs devuelven { producto: ... } o directo el objeto
             const data = await res.json();
             return data.producto || data;
         }
     } catch (e) {
-        // Fallback a buscar en la lista general si falla endpoint específico
+        // Ignorar falla de endpoint especifico
     }
 
-    // Fallback: Fetch a lista (limitada) y buscar
-    // Esto es muy ineficiente en prod, pero útil si la API es simple
+    // 2. Fallback: Search param trick (Si la API soporta ?search=ID o similar)
+    // Intentamos buscar exactamente por el string del ID o nombre si tuvieramos
     try {
-        const all = await getProducts({ page: 1 }); // Solo busca en página 1 como ejemplo
+        // Muchas APIs Laravel permiten buscar por ID si el search busca en todos los campos
+        const searchData = await getProducts({ search: id.toString(), page: 1 });
+        const exactMatch = searchData.productos.find(p => p.id === id);
+        if (exactMatch) return exactMatch;
+    } catch (e) {
+        // Fallo search
+    }
+
+    // 3. Fallback final: Buscar en lista general (página 1)
+    // Esto es lo último que podemos hacer sin iterar todas las páginas
+    try {
+        const all = await getProducts({ page: 1 });
         return all.productos.find(p => p.id === id) || null;
     } catch (e) {
         return null;

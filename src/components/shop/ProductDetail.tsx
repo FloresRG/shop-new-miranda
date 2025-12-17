@@ -57,7 +57,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 </div>
 
                 <div className="text-4xl font-bold text-primary mb-6">
-                    ${price.toFixed(2)}
+                    {price > 0 ? `$${price.toFixed(2)}` : 'Consultar Precio'}
                 </div>
 
                 <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-8 flex-grow">
@@ -88,7 +88,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                         </button>
 
                         <a
-                            href={`https://wa.me/?text=Hola, me interesa este producto: ${product.nombre}`}
+                            href={`https://wa.me/59170621016?text=Hola,%20me%20interesa%20este%20producto:%20${product.nombre}`}
                             target="_blank"
                             className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-lg flex items-center justify-center shadow-lg transition-colors w-16"
                             title="Consultar por WhatsApp"

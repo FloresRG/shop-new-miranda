@@ -1,0 +1,55 @@
+---
+import Base from "@/layouts/Base.astro";
+import { FaCheckCircle, FaWhatsapp } from "react-icons/fa";
+
+export const prerender = false;
+---
+
+<Base>
+  <section class="section min-h-[60vh] flex items-center justify-center">
+    <div class="container text-center">
+      <div
+        class="max-w-xl mx-auto bg-white dark:bg-darkmode-theme-light p-10 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 animate-in zoom-in duration-500"
+      >
+        <div class="mb-6 flex justify-center">
+          <FaCheckCircle className="text-6xl text-green-500 animate-bounce" />
+        </div>
+
+        <h1
+          class="text-3xl lg:text-4xl font-bold mb-4 text-dark dark:text-white"
+        >
+          ¡Pedido Confirmado!
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+          Muchas gracias por tu compra. Hemos enviado los detalles a tu correo
+          electrónico.
+        </p>
+
+        <div class="bg-gray-50 dark:bg-darkmode-body p-6 rounded-xl mb-8">
+          <p class="font-medium text-sm text-gray-500 uppercase">
+            Número de Pedido
+          </p>
+          <p class="text-2xl font-bold tracking-widest text-primary">
+            #ORD-{Math.floor(Math.random() * 10000)}
+          </p>
+          <p class="text-xs text-gray-400 mt-2">
+            Guarda este número para seguimiento
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <a
+            href="https://wa.me/59170621016"
+            target="_blank"
+            class="btn bg-[#25D366] hover:bg-[#20bd5a] text-white w-full border-none flex items-center justify-center gap-2"
+          >
+            <FaWhatsapp /> Contactar soporte ahora
+          </a>
+          <a href="/tienda" class="btn btn-outline-primary w-full">
+            Volver a la Tienda
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

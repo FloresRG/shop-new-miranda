@@ -5,6 +5,7 @@ import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import { IoSearch } from "react-icons/io5";
 import CartIcon from "../../components/shop/CartIcon";
+import ProductSearch from "../../components/shop/ProductSearch";
 
 export interface ChildNavigationLink {
   name: string;
@@ -125,17 +126,9 @@ const { pathname } = Astro.url;
       }
     </ul>
     <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
-      {
-        settings.search && (
-          <button
-            class="border-border text-text-dark hover:text-primary dark:border-darkmode-border mr-5 inline-block border-r pr-5 text-xl dark:text-white dark:hover:text-darkmode-primary"
-            aria-label="search"
-            data-search-trigger
-          >
-            <IoSearch />
-          </button>
-        )
-      }
+      <div className="mr-5 hidden md:block">
+        <ProductSearch client:only="react" />
+      </div>
       <div class="mr-5">
         <CartIcon client:load />
       </div>
