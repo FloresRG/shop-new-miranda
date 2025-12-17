@@ -4,6 +4,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import { IoSearch } from "react-icons/io5";
+import CartIcon from "../../components/shop/CartIcon";
 
 export interface ChildNavigationLink {
   name: string;
@@ -135,6 +136,9 @@ const { pathname } = Astro.url;
           </button>
         )
       }
+      <div class="mr-5">
+        <CartIcon client:load />
+      </div>
       <ThemeSwitcher className="mr-5" />
       {
         navigation_button.enable && (

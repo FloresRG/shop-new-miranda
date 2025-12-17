@@ -8,13 +8,26 @@ import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
   site: config.site.base_url ? config.site.base_url : "http://examplesite.com",
   base: config.site.base_path ? config.site.base_path : "/",
   trailingSlash: config.site.trailing_slash ? "always" : "never",
-  image: { service: sharp() },
+
+  // Habilitar SSR (Server Side Rendering)
+  output: 'server',
+  adapter: node({
+    mode: 'standalone'
+  }),
+
+  // Permitir imágenes remotas (para los placeholders y la API)
+  image: {
+    service: sharp(),
+    remotePatterns: [{ protocol: "https" }, { protocol: "http" }]
+  },
+
   vite: { plugins: [tailwindcss()] },
   integrations: [
     react(),

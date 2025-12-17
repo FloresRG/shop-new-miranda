@@ -1,0 +1,146 @@
+---
+import { FaShapes, FaTags, FaLayerGroup } from "react-icons/fa";
+import type { Category, Brand, Type } from "../../interfaces/product";
+
+interface Props {
+  categories: Category[];
+  brands: Brand[];
+  types: Type[];
+  currentCategory?: number;
+  currentBrand?: number;
+  currentType?: number;
+}
+
+const {
+  categories,
+  brands,
+  types,
+  currentCategory,
+  currentBrand,
+  currentType,
+} = Astro.props;
+
+// Helper to build URL with filters
+const buildUrl = (key: string, value: string | number | null) => {
+  const url = new URL(Astro.request.url);
+  if (value) {
+    url.searchParams.set(key, value.toString());
+    url.searchParams.set("page", "1"); // Reset pagination
+  } else {
+    url.searchParams.delete(key);
+  }
+  return url.toString();
+};
+---
+
+<aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+  <!-- Categories -->
+  <div
+    class="bg-white dark:bg-darkmode-theme-light p-6 rounded-lg shadow-sm border border-border dark:border-darkmode-border"
+  >
+    <h3
+      class="font-bold text-lg mb-4 text-dark dark:text-darkmode-text flex items-center gap-2"
+    >
+      <FaShapes className="text-primary w-5 h-5" />
+      Categorías
+    </h3>
+    <ul class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+      <li>
+        <a
+          href={buildUrl("categoria_id", null)}
+          class={`block px-3 py-2 rounded-md text-sm transition-colors ${!currentCategory ? "bg-primary/10 text-primary font-medium" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-darkmode-theme-dark"}`}
+        >
+          Todas
+        </a>
+      </li>
+      {
+        categories.map((cat) => (
+          <li>
+            <a
+              href={buildUrl("categoria_id", cat.id)}
+              class={`block px-3 py-2 rounded-md text-sm transition-colors ${currentCategory === cat.id ? "bg-primary/10 text-primary font-medium" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-darkmode-theme-dark"}`}
+            >
+              {cat.categoria}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Brands -->
+  <div
+    class="bg-white dark:bg-darkmode-theme-light p-6 rounded-lg shadow-sm border border-border dark:border-darkmode-border"
+  >
+    <h3
+      class="font-bold text-lg mb-4 text-dark dark:text-darkmode-text flex items-center gap-2"
+    >
+      <FaTags className="text-primary w-5 h-5" />
+      Marcas
+    </h3>
+    <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+      <a
+        href={buildUrl("marca_id", null)}
+        class={`px-3 py-1 rounded-full text-xs transition-colors border ${!currentBrand ? "bg-primary text-white border-primary" : "bg-transparent text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-primary"}`}
+      >
+        Todas
+      </a>
+      {
+        brands.map((brand) => (
+          <a
+            href={buildUrl("marca_id", brand.id)}
+            class={`px-3 py-1 rounded-full text-xs transition-colors border ${currentBrand === brand.id ? "bg-primary text-white border-primary" : "bg-transparent text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-primary"}`}
+          >
+            {brand.marca}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Tipos (Opcional según espacio) -->
+  <div
+    class="bg-white dark:bg-darkmode-theme-light p-6 rounded-lg shadow-sm border border-border dark:border-darkmode-border"
+  >
+    <h3
+      class="font-bold text-lg mb-4 text-dark dark:text-darkmode-text flex items-center gap-2"
+    >
+      <FaLayerGroup className="text-primary w-5 h-5" />
+      Tipos
+    </h3>
+    <ul class="space-y-2">
+      <li>
+        <a
+          href={buildUrl("tipo_id", null)}
+          class={`flex items-center gap-2 text-sm ${!currentType ? "text-primary font-medium" : "text-gray-600 dark:text-gray-300"}`}
+        >
+          <div
+            class={`w-4 h-4 rounded-full border flex items-center justify-center ${!currentType ? "border-primary" : "border-gray-400"}`}
+          >
+            {!currentType && <div class="w-2 h-2 rounded-full bg-primary" />}
+          </div>
+          Todos
+        </a>
+      </li>
+      {
+        types.map((t) => (
+          <li>
+            <a
+              href={buildUrl("tipo_id", t.id)}
+              class={`flex items-center gap-2 text-sm ${currentType === t.id ? "text-primary font-medium" : "text-gray-600 dark:text-gray-300"}`}
+            >
+              <div
+                class={`w-4 h-4 rounded-full border flex items-center justify-center ${currentType === t.id ? "border-primary" : "border-gray-400"}`}
+              >
+                {currentType === t.id && (
+                  <div class="w-2 h-2 rounded-full bg-primary" />
+                )}
+              </div>
+              {t.tipo}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>

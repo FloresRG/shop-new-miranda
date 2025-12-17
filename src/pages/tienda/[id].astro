@@ -1,0 +1,49 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getProductById } from "../../lib/products";
+import ProductDetail from "../../components/shop/ProductDetail";
+import CartModal from "../../components/shop/CartModal";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+
+let product = null;
+try {
+  product = await getProductById(parseInt(id));
+} catch (e) {
+  console.error(e);
+}
+
+if (!product) {
+  return Astro.redirect("/404");
+}
+---
+
+<Base
+  title={`${product.nombre} - Importadora Miranda`}
+  description={product.descripcion.substring(0, 150)}
+>
+  <section class="section pt-32 pb-16">
+    <div class="container">
+      {/* Breadcrumb simple */}
+      <nav class="flex text-sm text-gray-500 mb-8">
+        <a href="/" class="hover:text-primary transition-colors">Inicio</a>
+        <span class="mx-2">/</span>
+        <a href="/tienda" class="hover:text-primary transition-colors">Tienda</a
+        >
+        <span class="mx-2">/</span>
+        <span class="text-dark dark:text-white font-medium truncat"
+          >{product.nombre}</span
+        >
+      </nav>
+
+      <ProductDetail client:load product={product} />
+    </div>
+  </section>
+  <CartModal client:idle />
+</Base>
