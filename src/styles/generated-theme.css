@@ -6,23 +6,23 @@
 
 @theme {
   /* === Colors === */
-  --color-primary: #F2275D;          /* Tu Rosa para botones y acentos */
-  --color-body: #ffffff;
+  --color-primary: #121212;
+  --color-body: #fff;
   --color-border: #eaeaea;
   --color-light: #f6f6f6;
-  --color-dark: #451773;             /* Tu Morado para elementos oscuros */
+  --color-dark: #040404;
   --color-text: #444444;
-  --color-text-dark: #451773;        /* Títulos en Morado para mayor elegancia */
+  --color-text-dark: #040404;
   --color-text-light: #717171;
 
   /* === Darkmode Colors === */
-  --color-darkmode-primary: #17BFBF;   /* Turquesa en modo oscuro (mejor contraste) */
+  --color-darkmode-primary: #fff;
   --color-darkmode-body: #1c1c1c;
   --color-darkmode-border: #3E3E3E;
   --color-darkmode-light: #222222;
-  --color-darkmode-dark: #ffffff;
+  --color-darkmode-dark: #fff;
   --color-darkmode-text: #B4AFB6;
-  --color-darkmode-text-dark: #17BFBF; /* Títulos turquesa en modo oscuro */
+  --color-darkmode-text-dark: #fff;
   --color-darkmode-text-light: #B4AFB6;
 
   /* === Font Families === */
@@ -42,6 +42,6 @@
   --text-h3-sm: 1.86624rem;
   --text-h2: 2.48832rem;
   --text-h2-sm: 2.239488rem;
-  --text-h1: 2.985984rem;
-  --text-h1-sm: 2.687386rem;
+  --text-h1: 2.9859839999999997rem;
+  --text-h1-sm: 2.6873856rem;
 }
