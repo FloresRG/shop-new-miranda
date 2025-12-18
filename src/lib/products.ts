@@ -1,6 +1,6 @@
 import type { ApiResponse, Product } from "../interfaces/product";
 
-const API_URL = "http://127.0.0.1:8000/api/productos";
+const API_URL = "https://test.importadoramiranda.com/api/productos";
 
 export const getProducts = async (params: {
     page?: number;
