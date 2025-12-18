@@ -1,13 +1,9 @@
 ---
 import Base from "@/layouts/Base.astro";
-import ProductGrid from "@/components/shop/ProductGrid.astro";
 import BrandList from "@/components/shop/BrandList.astro";
-import { getFeaturedProducts } from "@/lib/products";
 import CartModal from "@/components/shop/CartModal";
 import { FaArrowRight, FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
-
-// Obtener productos destacados (8 items)
-const featuredProducts = await getFeaturedProducts(8);
+import FeaturedProductsHelper from "@/components/shop/FeaturedProductsHelper";
 ---
 
 <Base>
@@ -99,7 +95,7 @@ const featuredProducts = await getFeaturedProducts(8);
         >
       </div>
 
-      <ProductGrid products={featuredProducts} />
+      <FeaturedProductsHelper client:visible />
     </div>
   </section>
 

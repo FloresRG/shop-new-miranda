@@ -94,17 +94,16 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center justify-between mt-auto">
           <span className="text-xl font-bold text-primary">
-            {price > 0 ? `$${price.toFixed(2)}` : "Consultar"}
+            {price > 0 ? `Bs ${price.toLocaleString('es-BO', { minimumFractionDigits: 2 })}` : "Consultar"}
           </span>
 
           <button
             onClick={handleAddToCart}
             disabled={!hasStock}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors text-sm font-medium
-              ${
-                hasStock
-                  ? "bg-primary hover:bg-primary/90"
-                  : "bg-gray-400 cursor-not-allowed"
+              ${hasStock
+                ? "bg-primary hover:bg-primary/90"
+                : "bg-gray-400 cursor-not-allowed"
               }`}
           >
             <FaCartPlus />
