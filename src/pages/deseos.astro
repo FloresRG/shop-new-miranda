@@ -1,0 +1,26 @@
+---
+import Base from "@/layouts/Base.astro";
+import WishlistContainer from "@/components/shop/WishlistContainer";
+import CartModal from "@/components/shop/CartModal";
+---
+
+<Base title="Mis Deseos - Importadora Miranda">
+  <WishlistContainer client:only="react">
+    <div slot="fallback" className="container py-12">
+      <div className="animate-pulse space-y-8">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 w-1/4 rounded"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {
+            [1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-[350px] bg-gray-200 dark:bg-gray-700 rounded-lg"
+              />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </WishlistContainer>
+  <CartModal client:only="react" />
+</Base>

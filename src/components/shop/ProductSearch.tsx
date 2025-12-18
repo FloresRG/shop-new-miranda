@@ -77,7 +77,7 @@ export default function ProductSearch() {
                                     }}
                                 >
                                     <img
-                                        src={product.fotos[0]?.foto || 'https://placehold.co/50'}
+                                        src={product.fotos[0]?.foto ? `https://test.importadoramiranda.com/storage/${product.fotos[0].foto}` : 'https://placehold.co/50'}
                                         alt={product.nombre}
                                         className="w-10 h-10 object-cover rounded bg-gray-200"
                                     />
@@ -86,7 +86,7 @@ export default function ProductSearch() {
                                         <p className="text-xs text-primary">{product.marca.marca}</p>
                                     </div>
                                     <span className="text-sm font-bold text-primary">
-                                        {parseFloat(product.precio) > 0 ? `$${parseFloat(product.precio).toFixed(2)}` : 'Consultar'}
+                                        {parseFloat(product.precio) > 0 ? `Bs ${parseFloat(product.precio).toLocaleString('es-BO', { minimumFractionDigits: 2 })}` : 'Consultar'}
                                     </span>
                                 </a>
                             </li>
