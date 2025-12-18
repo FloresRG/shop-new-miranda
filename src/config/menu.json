@@ -15,6 +15,10 @@
     {
       "name": "Contacto",
       "url": "/contact"
+    },
+    {
+      "name": "Categoria",
+      "url": "/categoria"
     }
   ],
   "footer": [

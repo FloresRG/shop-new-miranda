@@ -1,0 +1,28 @@
+---
+import Base from "@/layouts/Base.astro";
+import ProductGrid from "@/components/shop/ProductGrid.astro";
+import BrandList from "@/components/shop/BrandList.astro";
+import { getProducts, getFeaturedProducts } from "@/lib/products";
+import CartModal from "@/components/shop/CartModal";
+import CategoryCarousel from "@/components/CategoryCarousel";
+import { FaArrowRight, FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
+const featuredProducts = await getFeaturedProducts(8);
+
+// Obtener categorías con un producto por cada una
+const data = await getProducts({ page: 1 });
+const categorias = data.categorias.slice(0, 10);
+const floatingProducts = await getFeaturedProducts(6);
+const categoryProducts = await Promise.all(
+  categorias.map(async (cat) => {
+    const catData = await getProducts({ categoriaId: cat.id, page: 1 });
+    const product = catData.productos[0];
+    return product ? { category: cat, product } : null;
+  }),
+).then((results) => results.filter(Boolean));
+---
+
+<Base
+>
+
+  <CategoryCarousel categoryProducts={categoryProducts} client:load />
+</Base>
