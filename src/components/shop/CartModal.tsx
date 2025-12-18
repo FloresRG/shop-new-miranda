@@ -69,8 +69,13 @@ export default function CartModal() {
                             return (
                                 <div key={item.id} className="flex gap-4 p-3 bg-white dark:bg-darkmode-body rounded-xl border border-border dark:border-darkmode-border hover:border-primary transition-colors group shadow-sm">
                                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                        <img src={item.fotos[0]?.foto || 'https://placehold.co/100'} alt={item.nombre} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                                    </div>
+    <img
+        src={item.fotos[0]?.foto ? `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}` : 'https://placehold.co/100'}
+        alt={item.nombre}
+        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+    />
+</div>
+
                                     <div className="flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start">

@@ -9,7 +9,7 @@ export default function CheckoutForm() {
 
     const total = items.reduce((sum, item) => {
         const price = parseFloat(item.precio) || 0;
-        return sum + (price * item.quantity);
+        return sum + price * item.quantity;
     }, 0);
 
     const [formData, setFormData] = useState({
@@ -50,7 +50,11 @@ export default function CheckoutForm() {
                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar border p-4 rounded-md dark:border-gray-700">
                     {items.map(item => (
                         <div key={item.id} className="flex gap-4 items-center">
-                            <img src={item.fotos[0]?.foto || 'https://placehold.co/100'} className="w-16 h-16 object-cover rounded bg-gray-100" />
+                            <img
+                                src={item.fotos[0]?.foto ? `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}` : 'https://placehold.co/100'}
+                                className="w-16 h-16 object-cover rounded bg-gray-100"
+                                alt={item.nombre}
+                            />
                             <div className="flex-1">
                                 <p className="text-sm font-bold line-clamp-1">{item.nombre}</p>
                                 <p className="text-xs text-gray-500">Cantidad: {item.quantity}</p>
@@ -81,33 +85,68 @@ export default function CheckoutForm() {
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Nombre Completo</label>
-                    <input required type="text" name="nombre" value={formData.nombre} onChange={handleChange} className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700" />
+                    <input
+                        required
+                        type="text"
+                        name="nombre"
+                        value={formData.nombre}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                    />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Email</label>
-                    <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700" />
+                    <input
+                        required
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                    />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Teléfono / WhatsApp</label>
-                    <input required type="tel" name="telefono" value={formData.telefono} onChange={handleChange} className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700" />
+                    <input
+                        required
+                        type="tel"
+                        name="telefono"
+                        value={formData.telefono}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                    />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Dirección de Entrega</label>
-                    <textarea required name="direccion" value={formData.direccion} onChange={handleChange} className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700 h-24"></textarea>
+                    <textarea
+                        required
+                        name="direccion"
+                        value={formData.direccion}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700 h-24"
+                    ></textarea>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Método de Pago</label>
-                    <select name="metodoPago" value={formData.metodoPago} onChange={handleChange} className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700">
+                    <select
+                        name="metodoPago"
+                        value={formData.metodoPago}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                    >
                         <option value="transferencia">Transferencia Bancaria / QR</option>
                         <option value="efectivo">Efectivo contra entrega</option>
                     </select>
                 </div>
 
-                <button type="submit" className="w-full btn btn-primary py-3 rounded-lg font-bold mt-4 shadow-lg hover:shadow-xl transition-all">
+                <button
+                    type="submit"
+                    className="w-full btn btn-primary py-3 rounded-lg font-bold mt-4 shadow-lg hover:shadow-xl transition-all"
+                >
                     Confirmar Pedido
                 </button>
             </form>
