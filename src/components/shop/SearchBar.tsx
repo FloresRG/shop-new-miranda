@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 
-export default function SearchBar() {
+export default function SearchBar({ onSearch }: { onSearch?: (query: string) => void }) {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
@@ -15,14 +15,18 @@ export default function SearchBar() {
 
         // Debounce simple
         const timeoutId = setTimeout(() => {
-            const url = new URL(window.location.href);
-            if (newQuery) {
-                url.searchParams.set("search", newQuery);
-                url.searchParams.set("page", "1"); // Reset page
+            if (onSearch) {
+                onSearch(newQuery);
             } else {
-                url.searchParams.delete("search");
+                const url = new URL(window.location.href);
+                if (newQuery) {
+                    url.searchParams.set("search", newQuery);
+                    url.searchParams.set("page", "1"); // Reset page
+                } else {
+                    url.searchParams.delete("search");
+                }
+                window.location.href = url.toString();
             }
-            window.location.href = url.toString();
         }, 500);
 
         return () => clearTimeout(timeoutId);

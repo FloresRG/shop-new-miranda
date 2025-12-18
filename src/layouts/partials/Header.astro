@@ -84,6 +84,7 @@ const { pathname } = Astro.url;
                       <a
                         href={child.url}
                         aria-label={child.name}
+                        data-astro-prefetch
                         class={`nav-dropdown-link block ${
                           (pathname === `${child.url}/` ||
                             pathname === child.url) &&
@@ -100,6 +101,7 @@ const { pathname } = Astro.url;
               <li class="nav-item">
                 <a
                   href={menu.url}
+                  data-astro-prefetch
                   class={`nav-link block ${
                     (pathname === `${menu.url}/` || pathname === menu.url) &&
                     "active"

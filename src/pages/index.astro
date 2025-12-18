@@ -1,6 +1,5 @@
 ---
 import Base from "@/layouts/Base.astro";
-import ProductGrid from "@/components/shop/ProductGrid.astro";
 import BrandList from "@/components/shop/BrandList.astro";
 import { getProducts, getFeaturedProducts } from "@/lib/products";
 import CartModal from "@/components/shop/CartModal";
@@ -330,7 +329,7 @@ const categoryProducts = await Promise.all(
         >
       </div>
 
-      <ProductGrid products={featuredProducts} />
+      <FeaturedProductsHelper client:visible />
     </div>
   </section>
 
