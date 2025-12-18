@@ -4,10 +4,10 @@ import BrandList from "@/components/shop/BrandList.astro";
 import { getProducts, getFeaturedProducts } from "@/lib/products";
 import CartModal from "@/components/shop/CartModal";
 import CategoryCarousel from "@/components/CategoryCarousel";
+import FeaturedProductsHelper from "@/components/shop/FeaturedProductsHelper";
 import { FaArrowRight, FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
 
-// Obtener productos destacados (8 items)
-const featuredProducts = await getFeaturedProducts(8);
+// Obtener categorías con un producto por cada una
 
 // Obtener categorías con un producto por cada una
 const data = await getProducts({ page: 1 });
