@@ -302,12 +302,7 @@ const categoryProducts = await Promise.all(
 
   <CategoryCarousel categoryProducts={categoryProducts} client:load />
 
-  {/* Marcas */}
-  <div
-    class="bg-light dark:bg-dark p-8 border-b border-border dark:border-darkmode-border"
-  >
-    <BrandList />
-  </div>
+  
 
   {/* Productos Destacados */}
   <section class="section bg-body dark:bg-darkmode-body">
@@ -332,7 +327,12 @@ const categoryProducts = await Promise.all(
       <FeaturedProductsHelper client:visible />
     </div>
   </section>
-
+{/* Marcas */}
+  <div
+    class="bg-light dark:bg-dark p-8 border-b border-border dark:border-darkmode-border"
+  >
+    <BrandList />
+  </div>
   {/* Features Modernas */}
   <section class="py-20 bg-gray-50 dark:bg-[#0f0f0f]">
     <div class="container">
