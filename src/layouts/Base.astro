@@ -197,5 +197,34 @@ const { title, meta_title, description, image, noindex, canonical } =
     </main>
     <WhatsAppButton />
     <Footer />
+
+    {/* Global Navigation Loader */}
+    <div
+      id="page-loader"
+      class="fixed top-0 left-0 w-full h-1 bg-primary z-[9999] hidden origin-left scale-x-0 transition-transform duration-500"
+    >
+    </div>
+
+    <script>
+      const loader = document.getElementById("page-loader");
+
+      document.addEventListener("astro:before-preparation", () => {
+        if (loader) {
+          loader.classList.remove("hidden");
+          loader.classList.remove("scale-x-0");
+        }
+      });
+
+      document.addEventListener("astro:after-preparation", () => {
+        // Animación durante carga
+      });
+
+      document.addEventListener("astro:page-load", () => {
+        if (loader) {
+          loader.classList.add("scale-x-0");
+          setTimeout(() => loader.classList.add("hidden"), 500);
+        }
+      });
+    </script>
   </body>
 </html>

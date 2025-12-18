@@ -45,7 +45,7 @@ export default function CartModal() {
                     </h2>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-500"
+                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-500 dark:text-gray-400"
                     >
                         <FaTimes size={20} />
                     </button>
