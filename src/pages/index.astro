@@ -44,7 +44,7 @@ import { FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
   </section>
 {/* Marcas */}
   <div
-    class="bg-light dark:bg-dark p-8 border-b border-border dark:border-darkmode-border"
+    class="bg-light dark:bg-dark p-2 border-b border-border dark:border-darkmode-border"
   >
     <BrandList />
   </div>
@@ -102,83 +102,4 @@ import { FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
   </section>
 </Base>
 
-{/* Marcas */}
-<div
-  class="bg-light dark:bg-dark p-8 border-b border-border dark:border-darkmode-border"
->
-  <BrandList />
-</div>
 
-{/* Productos Destacados */}
-<section class="section bg-body dark:bg-darkmode-body">
-  <div class="container">
-    <div
-      class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4"
-    >
-      <div>
-        <span class="text-[#F2275D] font-bold uppercase tracking-wider text-sm"
-          >Selección Exclusiva</span
-        >
-        <h2 class="h2 mt-2">Productos Destacados</h2>
-      </div>
-      <a
-        href="/tienda"
-        class="text-secondary dark:text-accent font-bold hover:underline"
-        >Ver Todo el Catálogo &rarr;</a
-      >
-    </div>
-
-    <FeaturedProductsHelper client:visible />
-  </div>
-</section>
-
-{/* Features Modernas */}
-<section class="py-20 bg-gray-50 dark:bg-[#0f0f0f]">
-  <div class="container">
-    <div class="grid md:grid-cols-3 gap-8">
-      <div
-        class="bg-white dark:bg-[#1a1a1a] p-8 rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-800 group"
-      >
-        <div
-          class="w-16 h-16 rounded-2xl bg-[#F2275D]/10 text-[#F2275D] flex items-center justify-center text-3xl mb-6 group-hover:bg-[#F2275D] group-hover:text-white transition-colors"
-        >
-          <FaTruck />
-        </div>
-        <h3 class="font-bold text-xl mb-3 dark:text-white">
-          Envío Nacional Rápido
-        </h3>
-        <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-          Llegamos a cada rincón del país con seguridad y rapidez garantizada.
-        </p>
-      </div>
-      <div
-        class="bg-white dark:bg-[#1a1a1a] p-8 rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-800 group"
-      >
-        <div
-          class="w-16 h-16 rounded-2xl bg-[#451773]/10 text-[#451773] dark:text-[#a855f7] flex items-center justify-center text-3xl mb-6 group-hover:bg-[#451773] group-hover:text-white transition-colors"
-        >
-          <FaShieldAlt />
-        </div>
-        <h3 class="font-bold text-xl mb-3 dark:text-white">Compra Segura</h3>
-        <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-          Tus pagos están protegidos. Ofrecemos múltiples métodos de pago
-          verificados.
-        </p>
-      </div>
-      <div
-        class="bg-white dark:bg-[#1a1a1a] p-8 rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none hover:-translate-y-2 transition-transform duration-300 border border-gray-100 dark:border-gray-800 group"
-      >
-        <div
-          class="w-16 h-16 rounded-2xl bg-[#17BFBF]/10 text-[#17BFBF] flex items-center justify-center text-3xl mb-6 group-hover:bg-[#17BFBF] group-hover:text-white transition-colors"
-        >
-          <FaHeadset />
-        </div>
-        <h3 class="font-bold text-xl mb-3 dark:text-white">Soporte Premium</h3>
-        <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-          ¿Dudas? Nuestro equipo de expertos está listo para ayudarte en
-          WhatsApp.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>

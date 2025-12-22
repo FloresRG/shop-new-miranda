@@ -114,18 +114,6 @@ const { pathname } = Astro.url;
           </>
         ))
       }
-      {
-        navigation_button.enable && (
-          <li class="mt-4 inline-block lg:hidden">
-            <a
-              class="btn btn-outline-primary btn-sm"
-              href={navigation_button.link}
-            >
-              {navigation_button.label}
-            </a>
-          </li>
-        )
-      }
     </ul>
     <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
       <div className="mr-5 hidden md:block">
@@ -135,16 +123,6 @@ const { pathname } = Astro.url;
         <CartIcon client:load />
       </div>
       <ThemeSwitcher className="mr-5" />
-      {
-        navigation_button.enable && (
-          <a
-            class="btn btn-outline-primary btn-sm hidden lg:inline-block"
-            href={navigation_button.link}
-          >
-            {navigation_button.label}
-          </a>
-        )
-      }
     </div>
   </nav>
 </header>
