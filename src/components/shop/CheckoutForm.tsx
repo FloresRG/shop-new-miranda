@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useStore } from "@nanostores/react";
 import { cartItems, clearCart } from "../../store/cartStore";
 import type { CartStore } from "../../store/cartStore";
+import axios from "axios";
+import { jsPDF } from "jspdf";
 
 export default function CheckoutForm() {
   const $cartItems = useStore(cartItems) as CartStore | undefined;
@@ -16,8 +18,11 @@ export default function CheckoutForm() {
     nombre: "",
     ci: "",
     celular: "",
-    direccion: "",
+    departamento: "",
+    provincia: "",
   });
+
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -27,13 +32,120 @@ export default function CheckoutForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+    if (!formData.nombre.trim())
+      errors.nombre = "Por favor, ingrese su nombre.";
+    if (!formData.ci.trim())
+      errors.ci = "Por favor, ingrese su cédula de identidad.";
+    if (!formData.celular.trim())
+      errors.celular = "Por favor, ingrese su número de celular.";
+    if (!formData.departamento.trim())
+      errors.departamento = "Por favor, seleccione un departamento.";
+    if (!formData.provincia.trim())
+      errors.provincia = "Por favor, seleccione una provincia.";
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulando delay de API
-    setTimeout(() => {
+    if (validateForm()) {
+      await sendOrderToAPI();
+    }
+  };
+
+  const sendOrderToAPI = async () => {
+    try {
+      const apiFormData = new FormData();
+      apiFormData.append("nombre", formData.nombre);
+      apiFormData.append("ci", formData.ci);
+      apiFormData.append("celular", formData.celular);
+      apiFormData.append("destino", formData.departamento);
+      apiFormData.append("direccion", "Sin direccion");
+      apiFormData.append("estado", "POR COBRAR");
+      apiFormData.append("cantidad_productos", "0");
+      apiFormData.append("detalle", "Sin Detalle");
+      apiFormData.append("productos", JSON.stringify([]));
+      apiFormData.append("monto_deposito", "0");
+      apiFormData.append("monto_enviado_pagado", total.toString());
+      apiFormData.append("id_usuario", "0");
+
+      const apiResponse = await axios.post(
+        "https://test.importadoramiranda.com/api/pedidos/lupenuevo",
+        apiFormData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+
+      const pedidoNumero = apiResponse.data.message;
+      generatePDF(pedidoNumero);
+      handleRedirectToWhatsApp(pedidoNumero);
       clearCart();
-      window.location.href = "/success";
-    }, 1000);
+    } catch (error) {
+      console.error("Error al enviar el pedido:", error);
+    }
+  };
+
+  const generatePDF = (pedidoMessage: string): void => {
+    const date = new Date().toLocaleString();
+    const doc = new jsPDF();
+
+    doc.setFillColor(128, 0, 128);
+    doc.rect(10, 10, 190, 15, "F");
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text("CONFIRMACIÓN DE COMPRA", 105, 20, { align: "center" });
+
+    doc.setFontSize(12);
+    doc.setTextColor(80, 80, 80);
+    doc.text(`Fecha y Hora: ${date}`, 10, 30);
+
+    doc.setFillColor(230, 230, 250);
+    doc.rect(10, 35, 190, 10, "F");
+    doc.setFontSize(12);
+    doc.setTextColor(75, 0, 130);
+    doc.text("DETALLES DEL CLIENTE", 105, 42, { align: "center" });
+
+    doc.setTextColor(50, 50, 50);
+    doc.text(`Número de Pedido: ${pedidoMessage}`, 10, 50);
+    doc.text(`Nombre: ${formData.nombre}`, 10, 60);
+    doc.text(`CI: ${formData.ci}`, 10, 70);
+    doc.text(`Celular: ${formData.celular}`, 10, 80);
+
+    doc.setFillColor(230, 230, 250);
+    doc.rect(10, 95, 190, 10, "F");
+    doc.setFontSize(12);
+    doc.setTextColor(75, 0, 130);
+    doc.text("INFORMACIÓN DE ENVÍO", 105, 102, { align: "center" });
+
+    doc.setTextColor(50, 50, 50);
+    doc.text(`Provincia o Departamento: ${formData.departamento}`, 10, 110);
+
+    doc.setFontSize(14);
+    doc.setTextColor(128, 0, 128);
+    doc.text(
+      "Para confirmar completamente el pedido y saber más detalles,",
+      10,
+      130,
+      { maxWidth: 190 },
+    );
+    doc.text("envíe un mensaje a nuestro WhatsApp.", 10, 140, {
+      maxWidth: 190,
+    });
+
+    doc.setFontSize(16);
+    doc.setTextColor(75, 0, 130);
+    doc.text("WhatsApp: +591 70621016", 105, 155, { align: "center" });
+
+    doc.save(`Confirmación_de_Compra_${pedidoMessage}.pdf`);
+  };
+
+  const handleRedirectToWhatsApp = (pedidoMessage: string): void => {
+    const mensaje = `Hola, soy ${formData.nombre} y mi número de pedido es ${pedidoMessage}, soy de: ${formData.departamento}. Me gustaría confirmar mi pedido y conocer más detalles.`;
+    const enlaceWhatsApp = `https://wa.me/59170621016?text=${encodeURIComponent(
+      mensaje,
+    )}`;
+    window.location.href = enlaceWhatsApp;
   };
 
   if (items.length === 0) {
@@ -120,6 +232,9 @@ export default function CheckoutForm() {
             onChange={handleChange}
             className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
           />
+          {formErrors.nombre && (
+            <p className="text-red-500 text-xs mt-1">{formErrors.nombre}</p>
+          )}
         </div>
 
         <div>
@@ -134,6 +249,9 @@ export default function CheckoutForm() {
             onChange={handleChange}
             className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
           />
+          {formErrors.ci && (
+            <p className="text-red-500 text-xs mt-1">{formErrors.ci}</p>
+          )}
         </div>
 
         <div>
@@ -148,26 +266,62 @@ export default function CheckoutForm() {
             onChange={handleChange}
             className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
           />
+          {formErrors.celular && (
+            <p className="text-red-500 text-xs mt-1">{formErrors.celular}</p>
+          )}
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-            Dirección de Entrega
+            Departamento
           </label>
-          <textarea
+          <select
             required
-            name="direccion"
-            value={formData.direccion}
+            name="departamento"
+            value={formData.departamento}
             onChange={handleChange}
-            className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700 h-24"
-          ></textarea>
+            className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+          >
+            <option value="">Seleccione un departamento</option>
+            <option value="La Paz">La Paz</option>
+            <option value="Cochabamba">Cochabamba</option>
+            <option value="Santa Cruz">Santa Cruz</option>
+            <option value="Oruro">Oruro</option>
+            <option value="Potosí">Potosí</option>
+            <option value="Chuquisaca">Chuquisaca</option>
+            <option value="Tarija">Tarija</option>
+            <option value="Beni">Beni</option>
+            <option value="Pando">Pando</option>
+          </select>
+          {formErrors.departamento && (
+            <p className="text-red-500 text-xs mt-1">
+              {formErrors.departamento}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
+            Provincia
+          </label>
+          <input
+            required
+            type="text"
+            name="provincia"
+            value={formData.provincia}
+            onChange={handleChange}
+            className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+          />
+          {formErrors.provincia && (
+            <p className="text-red-500 text-xs mt-1">{formErrors.provincia}</p>
+          )}
         </div>
 
         <button
           type="submit"
           className="w-full btn btn-primary py-3 rounded-lg font-bold mt-4 shadow-lg hover:shadow-xl transition-all"
         >
-          Confirmar Pedido
+          Enviar Pedido
         </button>
       </form>
     </div>
