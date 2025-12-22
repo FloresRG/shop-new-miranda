@@ -66,9 +66,9 @@ const HeroHelper = () => {
 
                             <p className="text-lg md:text-xl text-gray-300/90 max-w-xl leading-relaxed font-light">
                                 Explora la colección más exclusiva de <strong className="text-white font-semibold">Smartwatches</strong>,
-                                <strong className="text-white font-semibold"> Audio</strong> y
-                                <strong className="text-white font-semibold"> Gadgets</strong> inteligentes.
-                                Innovación que transforma tu día a día.
+                                <strong className="text-white font-semibold"> Audifonos</strong> y
+                                <strong className="text-white font-semibold"> una gran variedad de productos</strong> inteligentes.
+                                Importadora Miranda a un click del producto que necesitas.
                             </p>
                         </div>
 
