@@ -116,7 +116,7 @@ const { pathname } = Astro.url;
       }
     </ul>
     <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
-      <div className="mr-5 hidden md:block">
+      <div class="mr-5 hidden md:block">
         <ProductSearch client:only="react" />
       </div>
       <div class="mr-5">
@@ -125,4 +125,11 @@ const { pathname } = Astro.url;
       <ThemeSwitcher className="mr-5" />
     </div>
   </nav>
+
+  <!-- Mobile Search Bar -->
+  <div
+    class="container md:hidden py-3 border-t border-border dark:border-darkmode-border"
+  >
+    <ProductSearch client:only="react" />
+  </div>
 </header>
