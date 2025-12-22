@@ -1,11 +1,3 @@
-/* --- Estilos de Sección y Contenedor --- */
-.section {
-  @apply py-24 xl:py-28;
-}
-
-.section-sm {
-  @apply py-16 xl:py-20;
-}
 
 .container {
   @apply mx-auto xl:!max-w-[1320px] px-4;
