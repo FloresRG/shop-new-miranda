@@ -4,7 +4,7 @@
     "base_url": "https://astroplate.netlify.app",
     "base_path": "/",
     "trailing_slash": false,
-    "favicon": "/images/favicon.png",
+    "favicon": "/images/logo.png",
     "logo": "/images/logo.png",
     "logo_darkmode": "/images/logo.png",
     "logo_width": "50",
@@ -22,7 +22,7 @@
   },
   "params": {
     "contact_form_action": "#",
-    "copyright": "© 2025 Importadora Miranda. Todos los derechos reservados."
+    "copyright": "© 2026 Importadora Miranda. Todos los derechos reservados."
   },
   "navigation_button": {
     "enable": true,
