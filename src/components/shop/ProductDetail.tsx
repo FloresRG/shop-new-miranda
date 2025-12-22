@@ -81,7 +81,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         </div>
 
         <div className="text-4xl font-bold text-primary mb-6">
-          {price > 0 ? `$${price.toFixed(2)}` : "Consultar Precio"}
+          {price > 0 ? `Bs ${price.toFixed(2)}` : "Consultar Precio"}
         </div>
 
         <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-8 flex-grow">

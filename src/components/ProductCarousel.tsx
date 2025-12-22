@@ -79,7 +79,7 @@ const ProductCarousel: React.FC = () => {
 
                     <div className="flex items-center gap-6">
                       <div className="text-4xl font-extrabold text-[#F2275D]">
-                        ${producto.precio}
+                        Bs {producto.precio}
                       </div>
 
                       {producto.inventario && (

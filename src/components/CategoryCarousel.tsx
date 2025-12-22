@@ -156,7 +156,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
                           <div className="flex items-center gap-1.5 pt-1">
                             <span className="text-xs text-gray-400 dark:text-gray-500">Desde</span>
                             <span className="text-sm font-bold text-[#451773] dark:text-[#a855f7]">
-                              ${parseFloat(product.precio).toFixed(2)}
+                              Bs {parseFloat(product.precio).toFixed(2)}
                             </span>
                           </div>
                         )}

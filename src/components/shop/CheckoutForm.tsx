@@ -189,27 +189,17 @@ export default function CheckoutForm() {
                 </p>
               </div>
               <p className="font-semibold text-primary">
-                ${(parseFloat(item.precio) * item.quantity).toFixed(2)}
+                Bs {(parseFloat(item.precio) * item.quantity).toFixed(2)}
               </p>
             </div>
           ))}
         </div>
         <div className="mt-4 pt-4 border-t dark:border-gray-700 space-y-2">
-          <div className="flex justify-between">
-            <span className="text-gray-900 dark:text-white">
-              Total Productos
-            </span>
-            <span className="font-bold text-gray-900 dark:text-white">
-              ${total.toFixed(2)}
-            </span>
-          </div>
-          <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
-            <span>Envío</span>
-            <span>Por calcular</span>
-          </div>
+          
+          
           <div className="flex justify-between text-2xl font-bold text-primary pt-2">
-            <span>Total Aprox.</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Total</span>
+            <span>Bs {total.toFixed(2)}</span>
           </div>
         </div>
       </div>
