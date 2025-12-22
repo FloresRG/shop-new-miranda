@@ -14,10 +14,9 @@ export default function CheckoutForm() {
 
     const [formData, setFormData] = useState({
         nombre: '',
-        email: '',
-        telefono: '',
+        ci: '',
+        celular: '',
         direccion: '',
-        metodoPago: 'transferencia'
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -96,24 +95,24 @@ export default function CheckoutForm() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Email</label>
+                    <label className="block text-sm font-medium mb-1">Cedula de Identidad</label>
                     <input
                         required
-                        type="email"
-                        name="email"
-                        value={formData.email}
+                        type="text"
+                        name="ci"
+                        value={formData.ci}
                         onChange={handleChange}
                         className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Teléfono / WhatsApp</label>
+                    <label className="block text-sm font-medium mb-1">Celular / WhatsApp</label>
                     <input
                         required
-                        type="tel"
-                        name="telefono"
-                        value={formData.telefono}
+                        type="text"
+                        name="celular"
+                        value={formData.celular}
                         onChange={handleChange}
                         className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
                     />
@@ -128,19 +127,6 @@ export default function CheckoutForm() {
                         onChange={handleChange}
                         className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700 h-24"
                     ></textarea>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Método de Pago</label>
-                    <select
-                        name="metodoPago"
-                        value={formData.metodoPago}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-                    >
-                        <option value="transferencia">Transferencia Bancaria / QR</option>
-                        <option value="efectivo">Efectivo contra entrega</option>
-                    </select>
                 </div>
 
                 <button

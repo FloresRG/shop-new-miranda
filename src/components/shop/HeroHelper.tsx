@@ -163,9 +163,6 @@ const HeroHelper = () => {
                                             {/* Overlay con info */}
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-end p-3">
                                                 <div className="text-white">
-                                                    <p className="text-xs font-bold truncate">
-                                                        {product.nombre}
-                                                    </p>
                                                     <p className="text-xs text-gray-300">
                                                         Bs. {parseFloat(product.precio).toLocaleString('es-BO', { minimumFractionDigits: 2 })}
                                                     </p>
