@@ -193,116 +193,265 @@ export default function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Nombre Completo
-        </label>
-        <input
-          required
-          type="text"
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
-          className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-        />
-        {formErrors.nombre && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.nombre}</p>
-        )}
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-4 border border-gray-100 dark:border-gray-800">
+      <div className="text-center mb-8">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Información Personal
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          Complete sus datos para procesar su pedido
+        </p>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Cedula de Identidad
-        </label>
-        <input
-          required
-          type="text"
-          name="ci"
-          value={formData.ci}
-          onChange={handleChange}
-          className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-        />
-        {formErrors.ci && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.ci}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Celular / WhatsApp
-        </label>
-        <input
-          required
-          type="text"
-          name="celular"
-          value={formData.celular}
-          onChange={handleChange}
-          className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-        />
-        {formErrors.celular && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.celular}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Departamento
-        </label>
-        <select
-          required
-          name="departamento"
-          value={formData.departamento}
-          onChange={handleChange}
-          className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-        >
-          <option value="">Seleccione un departamento</option>
-          <option value="La Paz">La Paz</option>
-          <option value="Cochabamba">Cochabamba</option>
-          <option value="Santa Cruz">Santa Cruz</option>
-          <option value="Oruro">Oruro</option>
-          <option value="Potosí">Potosí</option>
-          <option value="Chuquisaca">Chuquisaca</option>
-          <option value="Tarija">Tarija</option>
-          <option value="Beni">Beni</option>
-          <option value="Pando">Pando</option>
-        </select>
-        {formErrors.departamento && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.departamento}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Seleccione una provincia o ciudad
-        </label>
-        <div className="grid grid-cols-2 gap-2">
-          {provincias.map((prov) => (
-            <button
-              key={prov}
-              type="button"
-              onClick={() => setFormData({ ...formData, provincia: prov })}
-              className={`p-2 border rounded text-sm transition-colors ${
-                formData.provincia === prov
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              {prov}
-            </button>
-          ))}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Nombre Completo
+            </label>
+            <input
+              required
+              type="text"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              placeholder="Ingrese su nombre completo"
+            />
+            {formErrors.nombre && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {formErrors.nombre}
+              </p>
+            )}
+          </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Cédula de Identidad
+            </label>
+            <input
+              required
+              type="text"
+              name="ci"
+              value={formData.ci}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              placeholder="Ingrese su CI"
+            />
+            {formErrors.ci && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {formErrors.ci}
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+              </svg>
+              Celular / WhatsApp
+            </label>
+            <input
+              required
+              type="text"
+              name="celular"
+              value={formData.celular}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              placeholder="Ingrese su número de celular"
+            />
+            {formErrors.celular && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {formErrors.celular}
+              </p>
+            )}
+          </div>
         </div>
-        {formErrors.provincia && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.provincia}</p>
-        )}
-      </div>
 
-      <button
-        type="submit"
-        className="w-full btn btn-primary py-3 rounded-lg font-bold mt-4 shadow-lg hover:shadow-xl transition-all"
-      >
-        Enviar Mensaje
-      </button>
-    </form>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Departamento
+            </label>
+            <select
+              required
+              name="departamento"
+              value={formData.departamento}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <option value="">Seleccione un departamento</option>
+              <option value="La Paz">La Paz</option>
+              <option value="Cochabamba">Cochabamba</option>
+              <option value="Santa Cruz">Santa Cruz</option>
+              <option value="Oruro">Oruro</option>
+              <option value="Potosí">Potosí</option>
+              <option value="Chuquisaca">Chuquisaca</option>
+              <option value="Tarija">Tarija</option>
+              <option value="Beni">Beni</option>
+              <option value="Pando">Pando</option>
+            </select>
+            {formErrors.departamento && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {formErrors.departamento}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Provincia o Ciudad
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {provincias.map((prov) => (
+                <button
+                  key={prov}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, provincia: prov })}
+                  className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                    formData.provincia === prov
+                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                      : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                  }`}
+                >
+                  {prov}
+                </button>
+              ))}
+            </div>
+            {formErrors.provincia && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {formErrors.provincia}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-primary to-[#F20505] text-white py-4 px-6 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+              />
+            </svg>
+            Enviar Pedido
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
