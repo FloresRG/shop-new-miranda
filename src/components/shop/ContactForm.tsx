@@ -32,6 +32,18 @@ const departamentos = {
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
 
+const departamentoAbreviaturas: { [key: string]: string } = {
+  "Santa Cruz": "SCZ",
+  "La Paz": "LPZ",
+  Cochabamba: "CBB",
+  Potosí: "PTS",
+  Oruro: "ORU",
+  Chuquisaca: "CHU",
+  Tarija: "TJA",
+  Beni: "BEN",
+  Pando: "PAN",
+};
+
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -83,10 +95,13 @@ export default function ContactForm() {
   const sendContactToAPI = async () => {
     try {
       const apiFormData = new FormData();
+      const abbrev =
+        departamentoAbreviaturas[formData.departamento] ||
+        formData.departamento;
       apiFormData.append("nombre", formData.nombre);
       apiFormData.append("ci", formData.ci);
       apiFormData.append("celular", formData.celular);
-      apiFormData.append("destino", formData.departamento);
+      apiFormData.append("destino", `${abbrev} - ${formData.provincia}`);
       apiFormData.append("direccion", "Sin direccion");
       apiFormData.append("estado", "POR COBRAR");
       apiFormData.append("cantidad_productos", "0");
@@ -113,6 +128,8 @@ export default function ContactForm() {
   const generatePDF = (contactId: string): void => {
     const date = new Date().toLocaleString();
     const doc = new jsPDF();
+    const abbrev =
+      departamentoAbreviaturas[formData.departamento] || formData.departamento;
 
     doc.setFillColor(128, 0, 128);
     doc.rect(10, 10, 190, 15, "F");
@@ -136,6 +153,19 @@ export default function ContactForm() {
     doc.text(`CI: ${formData.ci}`, 10, 70);
     doc.text(`Celular: ${formData.celular}`, 10, 80);
 
+    doc.setFillColor(230, 230, 250);
+    doc.rect(10, 95, 190, 10, "F");
+    doc.setFontSize(12);
+    doc.setTextColor(75, 0, 130);
+    doc.text("INFORMACIÓN DE ENVÍO", 105, 102, { align: "center" });
+
+    doc.setTextColor(50, 50, 50);
+    doc.text(
+      `Provincia o Departamento: ${abbrev} - ${formData.provincia}`,
+      10,
+      110,
+    );
+
     doc.setFontSize(14);
     doc.setTextColor(128, 0, 128);
     doc.text(
@@ -153,7 +183,9 @@ export default function ContactForm() {
   };
 
   const handleRedirectToWhatsApp = (contactId: string): void => {
-    const mensaje = `Hola, soy ${formData.nombre} y mi número de pedido es ${contactId}, soy de: ${formData.departamento}. Me gustaría confirmar mi pedido y conocer más detalles.`;
+    const abbrev =
+      departamentoAbreviaturas[formData.departamento] || formData.departamento;
+    const mensaje = `Hola, soy ${formData.nombre} y mi número de pedido es ${contactId}, soy de: ${abbrev} - ${formData.provincia}. Me gustaría confirmar mi pedido y conocer más detalles.`;
     const enlaceWhatsApp = `https://wa.me/59170621016?text=${encodeURIComponent(
       mensaje,
     )}`;
