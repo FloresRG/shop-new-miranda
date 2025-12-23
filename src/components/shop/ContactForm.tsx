@@ -274,22 +274,24 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          Provincia
+          Seleccione una provincia o ciudad
         </label>
-        <select
-          required
-          name="provincia"
-          value={formData.provincia}
-          onChange={handleChange}
-          className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-        >
-          <option value="">Seleccione una provincia</option>
+        <div className="grid grid-cols-2 gap-2">
           {provincias.map((prov) => (
-            <option key={prov} value={prov}>
+            <button
+              key={prov}
+              type="button"
+              onClick={() => setFormData({ ...formData, provincia: prov })}
+              className={`p-2 border rounded text-sm transition-colors ${
+                formData.provincia === prov
+                  ? "bg-primary text-white border-primary"
+                  : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
               {prov}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
         {formErrors.provincia && (
           <p className="text-red-500 text-xs mt-1">{formErrors.provincia}</p>
         )}
