@@ -204,49 +204,44 @@ export default function ContactForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-primary"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg
+              className="w-4 h-4 text-primary"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Nombre Completo
+          </label>
+          <input
+            required
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            placeholder="Ingrese su nombre completo"
+          />
+          {formErrors.nombre && (
+            <p className="text-red-500 text-sm flex items-center gap-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                   clipRule="evenodd"
                 />
               </svg>
-              Nombre Completo
-            </label>
-            <input
-              required
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-              placeholder="Ingrese su nombre completo"
-            />
-            {formErrors.nombre && (
-              <p className="text-red-500 text-sm flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {formErrors.nombre}
-              </p>
-            )}
-          </div>
-        
+              {formErrors.nombre}
+            </p>
+          )}
+        </div>
+
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -380,54 +375,58 @@ export default function ContactForm() {
             )}
           </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-primary"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Provincia o Ciudad
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {provincias.map((prov) => (
-                <button
-                  key={prov}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, provincia: prov })}
-                  className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                    formData.provincia === prov
-                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                      : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                  }`}
-                >
-                  {prov}
-                </button>
-              ))}
-            </div>
-            {formErrors.provincia && (
-              <p className="text-red-500 text-sm flex items-center gap-1">
+          {formData.departamento && (
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <svg
-                  className="w-4 h-4"
+                  className="w-4 h-4 text-primary"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
                     clipRule="evenodd"
                   />
                 </svg>
-                {formErrors.provincia}
-              </p>
-            )}
-          </div>
+                Provincia o Ciudad
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {provincias.map((prov) => (
+                  <button
+                    key={prov}
+                    type="button"
+                    onClick={() =>
+                      setFormData({ ...formData, provincia: prov })
+                    }
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                      formData.provincia === prov
+                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                        : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                    }`}
+                  >
+                    {prov}
+                  </button>
+                ))}
+              </div>
+              {formErrors.provincia && (
+                <p className="text-red-500 text-sm flex items-center gap-1">
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {formErrors.provincia}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
