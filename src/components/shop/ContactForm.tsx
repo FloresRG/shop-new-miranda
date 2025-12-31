@@ -53,6 +53,18 @@ export default function ContactForm() {
     provincia: "",
   });
 
+  // 👇 Nuevos estados para los archivos
+  const [productosFiles, setProductosFiles] = useState<File[]>([]);
+  const [comprobanteFile, setComprobanteFile] = useState<File | null>(null);
+  // Función para convertir archivo a URL temporal (para previsualización)
+  const fileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const [provincias, setProvincias] = useState<string[]>([]);
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -425,6 +437,184 @@ export default function ContactForm() {
                   {formErrors.provincia}
                 </p>
               )}
+            </div>
+          )}
+        </div>
+        {/* Subir productos solicitados */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg
+              className="w-4 h-4 text-primary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Subir productos solicitados
+          </label>
+
+          {productosFiles.length === 0 ? (
+            <div className="relative">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  setProductosFiles(files);
+                }}
+              />
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center bg-gray-50 dark:bg-gray-800 transition-colors hover:border-primary">
+                <svg
+                  className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Arrastre aquí o haga clic para seleccionar
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Soporta múltiples imágenes (PNG, JPG)
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="relative">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  setProductosFiles(files);
+                }}
+              />
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                {productosFiles.map((file, index) => (
+                  <div
+                    key={index}
+                    className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600"
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${index}`}
+                      className="w-full h-full object-cover"
+                      onLoad={(e) =>
+                        URL.revokeObjectURL((e.target as HTMLImageElement).src)
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setProductosFiles([])}
+                className="mt-2 text-xs text-red-500 hover:text-red-700 font-medium"
+              >
+                Eliminar todas
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Subir comprobante de pago */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg
+              className="w-4 h-4 text-primary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Subir comprobante de pago
+          </label>
+
+          {comprobanteFile ? (
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setComprobanteFile(file);
+                }}
+              />
+              <div className="flex flex-col items-center">
+                <div className="relative w-full aspect-video max-w-xs rounded-xl overflow-hidden border-2 border-gray-300 dark:border-gray-600">
+                  <img
+                    src={URL.createObjectURL(comprobanteFile)}
+                    alt="comprobante"
+                    className="w-full h-full object-contain bg-white dark:bg-gray-900"
+                    onLoad={(e) =>
+                      URL.revokeObjectURL((e.target as HTMLImageElement).src)
+                    }
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setComprobanteFile(null)}
+                  className="mt-2 text-xs text-red-500 hover:text-red-700 font-medium"
+                >
+                  Cambiar imagen
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setComprobanteFile(file);
+                }}
+              />
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center bg-gray-50 dark:bg-gray-800 transition-colors hover:border-primary">
+                <svg
+                  className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Arrastre aquí o haga clic para seleccionar
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Solo una imagen (PNG, JPG)
+                </p>
+              </div>
             </div>
           )}
         </div>
