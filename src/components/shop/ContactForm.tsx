@@ -123,8 +123,14 @@ export default function ContactForm() {
       apiFormData.append("monto_enviado_pagado", "0");
       apiFormData.append("id_usuario", "0");
 
+      // 👇 AÑADE ESTA LÍNEA para incluir el comprobante
+      if (comprobanteFile) {
+        apiFormData.append("foto_comprobante", comprobanteFile);
+      }
+
       const apiResponse = await axios.post(
-        "https://test.importadoramiranda.com/api/pedidos/lupenuevo",
+        //"http://127.0.0.1:8000/api/pedidos/shop",
+        "https://test.importadoramiranda.com/api/pedidos/shop",
         apiFormData,
         { headers: { "Content-Type": "multipart/form-data" } },
       );
