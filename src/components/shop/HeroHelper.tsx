@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import type { Product, ApiResponse } from "../../interfaces/product";
 
-const HeroHelper = () => {
+interface HeroHelperProps {
+    bannerImages?: {
+        mobile: string;
+        pc: string;
+    };
+    logo?: string;
+}
+
+const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
     const [floatingProducts, setFloatingProducts] = useState<Product[]>([]);
 
     useEffect(() => {
@@ -22,7 +30,16 @@ const HeroHelper = () => {
     }, []);
 
     return (
-        <section className="relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-gradient-to-br from-[#0a0a0a] via-[#1a0a2e] to-[#0a0a0a]">
+        <section
+            className={`relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${bannerImages
+                ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
+                : "bg-[#0a0a0a]"
+                }`}
+            style={bannerImages ? ({
+                '--hero-bg-mobile': `url('${bannerImages.mobile}')`,
+                '--hero-bg-desktop': `url('${bannerImages.pc}')`
+            } as React.CSSProperties) : undefined}
+        >
             {/* Efectos de fondo con blur y gradientes */}
             <div className="absolute inset-0 opacity-40">
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#F2275D] rounded-full blur-[180px] opacity-30 animate-pulse"></div>
@@ -36,47 +53,40 @@ const HeroHelper = () => {
                 ></div>
             </div>
 
-            {/* Grid decorativo de fondo */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
+
 
             <div className="container relative z-10">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="flex flex-col lg:flex-row items-center ">
                     {/* Contenido Principal - Lado Izquierdo */}
-                    <div className="text-white space-y-8 py-12 lg:py-0">
-                        {/* Badge animado */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F2275D] opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F2275D]"></span>
-                            </span>
-                            <span className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                                TECNOLOGÍA DE VANGUARDIA
-                            </span>
-                        </div>
+                    <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        {/* Logo */}
+                        {logo && (
+                            <div className="relative group perspective-1000">
+                                <div className="absolute -inset-4 bg-gradient-to-r from-[#F2275D] to-[#451773] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                                <img
+                                    src={logo}
+                                    alt="Importadora Miranda"
+                                    className="relative w-64 md:w-60 lg:w-60 h-auto object-contain drop-shadow-2xl transform transition duration-500 hover:scale-105 hover:rotate-1"
+                                />
+                            </div>
+                        )}
 
-                        {/* Título Principal */}
+                        {/* Título Principal / Slogan */}
                         <div className="space-y-4">
-                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight">
-                                El futuro de la
-                                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#F2275D] via-[#F20505] to-[#ff6b9d] animate-gradient">
-                                    tecnología
+                            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight drop-shadow-lg">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-gray-300">
+                                    A un Click del Producto que Necesita!!
                                 </span>
-                                <span className="block mt-2">en tus manos</span>
                             </h1>
 
-                            <p className="text-lg md:text-xl text-gray-300/90 max-w-xl leading-relaxed font-light">
-                                Explora la colección más exclusiva de <strong className="text-white font-semibold">Smartwatches</strong>,
-                                <strong className="text-white font-semibold"> Audifonos</strong> y
-                                <strong className="text-white font-semibold"> una gran variedad de productos</strong> inteligentes.
-                                Importadora Miranda a un click del producto que necesitas.
-                            </p>
+
                         </div>
 
                         {/* Botones de acción */}
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full justify-center">
                             <a
                                 href="/tienda"
-                                className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#F2275D] to-[#F20505] rounded-full font-bold text-white shadow-[0_0_40px_rgba(242,39,93,0.4)] hover:shadow-[0_0_60px_rgba(242,39,93,0.6)] transition-all duration-300 hover:scale-[1.02] overflow-hidden"
+                                className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#F2275D] to-[#F20505] rounded-full font-bold text-white shadow-[0_0_40px_rgba(242,39,93,0.4)] hover:shadow-[0_0_60px_rgba(242,39,93,0.6)] transition-all duration-300 hover:scale-[1.02] overflow-hidden w-full sm:w-auto"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
                                     Explorar Tienda
@@ -87,7 +97,7 @@ const HeroHelper = () => {
 
                             <a
                                 href="/about"
-                                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-full font-semibold text-white transition-all duration-300"
+                                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-full font-semibold text-white transition-all duration-300 w-full sm:w-auto"
                             >
                                 Conócenos
                                 <svg
@@ -107,7 +117,7 @@ const HeroHelper = () => {
                         </div>
 
                         {/* Stats o badges informativos */}
-                        <div className="flex flex-wrap gap-6 pt-4 text-sm">
+                        <div className="flex flex-wrap gap-6 pt-4 text-sm justify-center">
                             <div className="flex items-center gap-2 text-gray-300">
                                 <svg className="w-5 h-5 text-[#17BFBF]" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
@@ -124,7 +134,7 @@ const HeroHelper = () => {
                     </div>
 
                     {/* Productos Flotantes - Lado Derecho */}
-                    <div className="relative hidden lg:block h-[600px]">
+                    <div className="flex-1 relative hidden lg:block h-[600px] w-full">
                         {floatingProducts.map((product, idx) => {
                             const positions = [
                                 { top: "5%", right: "10%", delay: "0s", duration: "20s" },

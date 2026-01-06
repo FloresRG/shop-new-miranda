@@ -6,18 +6,32 @@ import FeaturedProductsHelper from "@/components/shop/FeaturedProductsHelper";
 import HeroHelper from "@/components/shop/HeroHelper";
 import CategoryCarouselHelper from "@/components/shop/CategoryCarouselHelper";
 import { FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
+import BannerMobil from "@/assets/banner/Banner_mobil.webp";
+import BannerPc from "@/assets/banner/Banner_pc.webp";
+import logoWebp from "@/assets/logo.webp";
 ---
 
-<Base>
-  <CartModal client:only="react" />
+<Base headerTransparent={true}>
+  <CartModal
+    client:only="react"
+    bannerImages={{
+      mobile: BannerMobil.src,
+      pc: BannerPc.src,
+    }}
+  />
 
   {/* Hero Section Client Side */}
-  <HeroHelper client:load />
+  <HeroHelper
+    client:load
+    bannerImages={{
+      mobile: BannerMobil.src,
+      pc: BannerPc.src,
+    }}
+    logo={logoWebp.src}
+  />
 
   {/* Category Carousel Client Side */}
   <CategoryCarouselHelper client:load />
-
-  
 
   {/* Productos Destacados */}
   <section class="section bg-body dark:bg-darkmode-body">
@@ -42,7 +56,7 @@ import { FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
       <FeaturedProductsHelper client:load />
     </div>
   </section>
-{/* Marcas */}
+  {/* Marcas */}
   <div
     class="bg-light dark:bg-dark p-2 border-b border-border dark:border-darkmode-border"
   >
@@ -101,5 +115,3 @@ import { FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
     </div>
   </section>
 </Base>
-
-

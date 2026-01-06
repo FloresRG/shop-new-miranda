@@ -21,9 +21,50 @@ export interface NavigationLink {
 const { main }: { main: NavigationLink[] } = menu;
 const { navigation_button, settings } = config;
 const { pathname } = Astro.url;
+const { transparent } = Astro.props;
 ---
 
-<header class={`header z-30 ${settings.sticky_header && "sticky top-0"}`}>
+<header
+  id="main-header"
+  class={`z-30 transition-all duration-300 ${
+    transparent
+      ? "fixed top-0 w-full bg-transparent border-none py-6"
+      : `header ${settings.sticky_header && "sticky top-0"}`
+  }`}
+>
+  {
+    transparent && (
+      <script is:inline>
+        document.addEventListener("scroll", () => {
+          const header = document.getElementById("main-header");
+          if (!header) return;
+          if (window.scrollY > 10) {
+            header.classList.remove("bg-transparent", "py-6", "border-none");
+            header.classList.add(
+              "bg-body",
+              "dark:bg-darkmode-body",
+              "py-4",
+              "shadow-md",
+              "border-b", 
+              "border-border/50",
+              "dark:border-darkmode-border/30"
+            );
+          } else {
+            header.classList.add("bg-transparent", "py-6", "border-none");
+            header.classList.remove(
+              "bg-body",
+              "dark:bg-darkmode-body",
+              "py-4",
+              "shadow-md",
+              "border-b", 
+              "border-border/50",
+              "dark:border-darkmode-border/30"
+            );
+          }
+        });
+      </script>
+    )
+  }
   <nav class="navbar container">
     <!-- logo -->
     <div class="order-0">
@@ -43,8 +84,7 @@ const { pathname } = Astro.url;
         <title>Menu Close</title>
         <polygon
           points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-          transform="rotate(45 10 10)"
-        ></polygon>
+          transform="rotate(45 10 10)"></polygon>
       </svg>
     </label>
     <!-- /navbar toggler -->

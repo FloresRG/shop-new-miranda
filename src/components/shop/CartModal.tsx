@@ -14,7 +14,14 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
-export default function CartModal() {
+interface CartModalProps {
+  bannerImages?: {
+    mobile: string;
+    pc: string;
+  };
+}
+
+export default function CartModal({ bannerImages }: CartModalProps) {
   const $cartItems = useStore(cartItems) as CartStore | undefined;
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +54,17 @@ export default function CartModal() {
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-md bg-white dark:bg-black h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-border dark:border-gray-700">
+      <div
+        className={`relative w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-border dark:border-gray-700 ${bannerImages
+            ? "bg-[image:var(--bg-mobile)] md:bg-[image:var(--bg-desktop)] bg-cover bg-center bg-no-repeat"
+            : "bg-white dark:bg-black"
+          }`}
+        style={bannerImages ? ({
+          '--bg-mobile': `url('${bannerImages.mobile}')`,
+          '--bg-desktop': `url('${bannerImages.pc}')`
+        } as React.CSSProperties) : undefined}
+      >
+        {/* Helper for specific transparency if needed, currently keeping structure */}
         <div className="p-5 border-b border-border dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
           <h2 className="text-xl font-bold flex items-center gap-2 text-dark dark:text-white font-secondary">
             Tu Carrito
