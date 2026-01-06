@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { jsPDF } from "jspdf";
+import toast from "react-hot-toast";
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
@@ -52,20 +52,9 @@ export default function ContactForm() {
     provincia: "",
   });
 
-  // 👇 Nuevos estados para los archivos
   const [productosFiles, setProductosFiles] = useState<File[]>([]);
   const [comprobanteFile, setComprobanteFile] = useState<File | null>(null);
-  // Función para convertir archivo a URL temporal (para previsualización)
-  const fileToDataUrl = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(file);
-    });
-  };
-
   const [provincias, setProvincias] = useState<string[]>([]);
-
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (
@@ -74,28 +63,52 @@ export default function ContactForm() {
     >,
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    let processedValue = value;
+    if (name === "nombre" || name === "ci") {
+      processedValue = value.toUpperCase();
+    }
+
+    setFormData({ ...formData, [name]: processedValue });
 
     if (name === "departamento") {
       setProvincias(departamentos[value as keyof typeof departamentos] || []);
-      setFormData((prev) => ({ ...prev, provincia: "" })); // Reset provincia
+      setFormData((prev) => ({ ...prev, provincia: "" }));
     }
   };
+
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
     if (!formData.nombre.trim())
       errors.nombre = "Por favor, ingrese su nombre.";
     if (!formData.ci.trim())
       errors.ci = "Por favor, ingrese su cédula de identidad.";
-    if (!formData.celular.trim())
+    // ✅ Validación mejorada del celular
+    if (!formData.celular.trim()) {
       errors.celular = "Por favor, ingrese su número de celular.";
+    } else if (formData.celular.length !== 8) {
+      errors.celular = "El número debe tener 8 dígitos.";
+    } else if (!/^[67]/.test(formData.celular)) {
+      errors.celular = "El número debe comenzar con 6 o 7.";
+    }
     if (!formData.departamento.trim())
       errors.departamento = "Por favor, seleccione un departamento.";
     if (!formData.provincia.trim())
       errors.provincia = "Por favor, seleccione una provincia.";
+    // ✅ Validación: productos solicitados (al menos 1 archivo)
+    if (productosFiles.length === 0) {
+      errors.productos =
+        "Por favor, suba al menos una imagen de los productos solicitados.";
+    }
+
+    // ✅ Validación: comprobante de pago (1 archivo obligatorio)
+    if (!comprobanteFile) {
+      errors.comprobante = "Por favor, suba el comprobante de pago.";
+    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
@@ -109,6 +122,7 @@ export default function ContactForm() {
       const abbrev =
         departamentoAbreviaturas[formData.departamento] ||
         formData.departamento;
+
       apiFormData.append("nombre", formData.nombre);
       apiFormData.append("ci", formData.ci);
       apiFormData.append("celular", formData.celular);
@@ -122,91 +136,50 @@ export default function ContactForm() {
       apiFormData.append("monto_enviado_pagado", "0");
       apiFormData.append("id_usuario", "0");
 
-      // 👇 AÑADE ESTA LÍNEA para incluir el comprobante
       if (comprobanteFile) {
         apiFormData.append("foto_comprobante", comprobanteFile);
       }
 
+      // ✅ Corregido: eliminado el espacio al final de la URL
       const apiResponse = await axios.post(
-        //"http://127.0.0.1:8000/api/pedidos/shop",
         "https://test.importadoramiranda.com/api/pedidos/shop",
         apiFormData,
         { headers: { "Content-Type": "multipart/form-data" } },
       );
 
       const contactId = apiResponse.data.message;
-      generatePDF(contactId);
-      handleRedirectToWhatsApp(contactId);
+
+      // ✅ Mostrar toast de éxito
+      toast.success(
+        `Tu pedido ha sido registrado. Número de pedido: ${contactId}. Enseguida te mandaremos tu comprobante de pedido.`,
+        {
+          duration: 8000,
+          style: {
+            background: "#101010",
+            color: "#fff",
+            maxWidth: "500px",
+            textAlign: "center",
+          },
+        },
+      );
+
+      // ✅ Resetear formulario
+      setFormData({
+        nombre: "",
+        ci: "",
+        celular: "",
+        departamento: "",
+        provincia: "",
+      });
+      setComprobanteFile(null);
+      setProductosFiles([]);
+      setProvincias([]);
     } catch (error) {
       console.error("Error al enviar el contacto:", error);
+      toast.error(
+        "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+      );
     }
-  };
-
-  const generatePDF = (contactId: string): void => {
-    const date = new Date().toLocaleString();
-    const doc = new jsPDF();
-    const abbrev =
-      departamentoAbreviaturas[formData.departamento] || formData.departamento;
-
-    doc.setFillColor(128, 0, 128);
-    doc.rect(10, 10, 190, 15, "F");
-    doc.setFontSize(16);
-    doc.setTextColor(255, 255, 255);
-    doc.text("CONFIRMACIÓN DE CONTACTO", 105, 20, { align: "center" });
-
-    doc.setFontSize(12);
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Fecha y Hora: ${date}`, 10, 30);
-
-    doc.setFillColor(230, 230, 250);
-    doc.rect(10, 35, 190, 10, "F");
-    doc.setFontSize(12);
-    doc.setTextColor(75, 0, 130);
-    doc.text("DETALLES DEL CONTACTO", 105, 42, { align: "center" });
-
-    doc.setTextColor(50, 50, 50);
-    doc.text(`Número de Pedido: ${contactId}`, 10, 50);
-    doc.text(`Nombre: ${formData.nombre}`, 10, 60);
-    doc.text(`CI: ${formData.ci}`, 10, 70);
-    doc.text(`Celular: ${formData.celular}`, 10, 80);
-
-    doc.setFillColor(230, 230, 250);
-    doc.rect(10, 95, 190, 10, "F");
-    doc.setFontSize(12);
-    doc.setTextColor(75, 0, 130);
-    doc.text("INFORMACIÓN DE ENVÍO", 105, 102, { align: "center" });
-
-    doc.setTextColor(50, 50, 50);
-    doc.text(
-      `Provincia o Departamento: ${abbrev} - ${formData.provincia}`,
-      10,
-      110,
-    );
-
-    doc.setFontSize(14);
-    doc.setTextColor(128, 0, 128);
-    doc.text(
-      "Para más detalles, envíe un mensaje a nuestro WhatsApp.",
-      10,
-      130,
-      { maxWidth: 190 },
-    );
-
-    doc.setFontSize(16);
-    doc.setTextColor(75, 0, 130);
-    doc.text("WhatsApp: +591 70621016", 105, 155, { align: "center" });
-
-    doc.save(`Confirmación_de_Contacto_${contactId}.pdf`);
-  };
-
-  const handleRedirectToWhatsApp = (contactId: string): void => {
-    const abbrev =
-      departamentoAbreviaturas[formData.departamento] || formData.departamento;
-    const mensaje = `Hola, soy ${formData.nombre} y mi número de pedido es ${contactId}, soy de: ${abbrev} - ${formData.provincia}. Me gustaría confirmar mi pedido y conocer más detalles.`;
-    const enlaceWhatsApp = `https://wa.me/59170621016?text=${encodeURIComponent(
-      mensaje,
-    )}`;
-    window.location.href = enlaceWhatsApp;
   };
 
   return (
@@ -242,7 +215,7 @@ export default function ContactForm() {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
             placeholder="Ingrese su nombre completo"
           />
           {formErrors.nombre && (
@@ -260,6 +233,7 @@ export default function ContactForm() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
+          {/* Cédula de Identidad */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <svg
@@ -281,6 +255,7 @@ export default function ContactForm() {
               name="ci"
               value={formData.ci}
               onChange={handleChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
               className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               placeholder="Ingrese su CI"
             />
@@ -301,6 +276,8 @@ export default function ContactForm() {
               </p>
             )}
           </div>
+
+          {/* Celular / WhatsApp con prefijo de Bolivia */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <svg
@@ -312,6 +289,43 @@ export default function ContactForm() {
               </svg>
               Celular / WhatsApp
             </label>
+
+            {/* Contenedor del número con prefijo */}
+            <div className="w-full flex items-center border-2 border-gray-200 dark:border-gray-700 rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800">
+              {/* Prefijo fijo: bandera + código */}
+              <div className="flex-shrink-0 flex items-center px-3 py-3 border-r border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 whitespace-nowrap select-none">
+                <img
+                  src="https://flagcdn.com/w20/bo.png"
+                  alt="Bolivia"
+                  className="w-5 h-4 mr-2"
+                />
+                <span>+591</span>
+              </div>
+
+              {/* Input dinámico: solo 8 dígitos, empieza con 6 o 7 */}
+              <input
+                required
+                type="tel"
+                inputMode="numeric"
+                maxLength={8}
+                value={formData.celular}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const numericValue = value.replace(/\D/g, ""); // solo dígitos
+                  if (
+                    numericValue.length === 1 &&
+                    !["6", "7"].includes(numericValue)
+                  ) {
+                    return; // rechazar primer dígito si no es 6 o 7
+                  }
+                  const trimmed = numericValue.slice(0, 8);
+                  setFormData({ ...formData, celular: trimmed });
+                }}
+                className="flex-1 min-w-0 px-4 py-3 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                placeholder="70123456"
+              />
+            </div>
+
             <input
               required
               type="text"
@@ -444,6 +458,7 @@ export default function ContactForm() {
             </div>
           )}
         </div>
+
         {/* Subir productos solicitados */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -535,8 +550,20 @@ export default function ContactForm() {
               </button>
             </div>
           )}
+          {formErrors.productos && (
+          <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {formErrors.productos}
+          </p>
+        )}
         </div>
-
+        
         {/* Subir comprobante de pago */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -620,6 +647,18 @@ export default function ContactForm() {
                 </p>
               </div>
             </div>
+          )}
+          {formErrors.comprobante && (
+            <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {formErrors.comprobante}
+            </p>
           )}
         </div>
 
