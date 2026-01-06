@@ -215,7 +215,7 @@ export default function ContactForm() {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
             placeholder="Ingrese su nombre completo"
           />
           {formErrors.nombre && (
@@ -255,8 +255,7 @@ export default function ContactForm() {
               name="ci"
               value={formData.ci}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 uppercase-input"
               placeholder="Ingrese su CI"
             />
             {formErrors.ci && (
@@ -291,9 +290,9 @@ export default function ContactForm() {
             </label>
 
             {/* Contenedor del número con prefijo */}
-            <div className="w-full flex items-center border-2 border-gray-200 dark:border-gray-700 rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800">
+            <div className="w-full flex items-center border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body">
               {/* Prefijo fijo: bandera + código */}
-              <div className="flex-shrink-0 flex items-center px-3 py-3 border-r border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 whitespace-nowrap select-none">
+              <div className="flex-shrink-0 flex items-center px-3 py-3 border-r border-gray-300 dark:border-darkmode-border bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-gray-300 whitespace-nowrap select-none">
                 <img
                   src="https://flagcdn.com/w20/bo.png"
                   alt="Bolivia"
@@ -321,20 +320,12 @@ export default function ContactForm() {
                   const trimmed = numericValue.slice(0, 8);
                   setFormData({ ...formData, celular: trimmed });
                 }}
-                className="flex-1 min-w-0 px-4 py-3 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="flex-1 min-w-0 px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 placeholder="70123456"
               />
             </div>
 
-            <input
-              required
-              type="text"
-              name="celular"
-              value={formData.celular}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-              placeholder="Ingrese su número de celular"
-            />
+
             {formErrors.celular && (
               <p className="text-red-500 text-sm flex items-center gap-1">
                 <svg
@@ -431,8 +422,8 @@ export default function ContactForm() {
                       setFormData({ ...formData, provincia: prov })
                     }
                     className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
-                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                      : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
                       }`}
                   >
                     {prov}
@@ -551,19 +542,19 @@ export default function ContactForm() {
             </div>
           )}
           {formErrors.productos && (
-          <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {formErrors.productos}
-          </p>
-        )}
+            <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {formErrors.productos}
+            </p>
+          )}
         </div>
-        
+
         {/* Subir comprobante de pago */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
