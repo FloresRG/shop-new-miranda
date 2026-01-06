@@ -46,6 +46,7 @@ const departamentoAbreviaturas: { [key: string]: string } = {
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [contactId, setContactId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -151,8 +152,9 @@ export default function ContactForm() {
         { headers: { "Content-Type": "multipart/form-data" } },
       );
 
-      const contactId = apiResponse.data.message;
+      const contactIdResponse = apiResponse.data.message;
 
+      setContactId(contactIdResponse);
       setIsSubmitting(false);
       setIsSuccess(true);
 
@@ -703,6 +705,7 @@ export default function ContactForm() {
               ¡Pedido Enviado!
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Su pedido <span className="font-bold text-primary">#{contactId}</span> ha sido registrado. <br />
               Su comprobante ha sido enviado exitosamente al número registrado.
             </p>
             <button
