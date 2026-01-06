@@ -44,6 +44,9 @@ const departamentoAbreviaturas: { [key: string]: string } = {
 };
 
 export default function ContactForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     nombre: "",
     ci: "",
@@ -118,6 +121,7 @@ export default function ContactForm() {
 
   const sendContactToAPI = async () => {
     try {
+      setIsSubmitting(true);
       const apiFormData = new FormData();
       const abbrev =
         departamentoAbreviaturas[formData.departamento] ||
@@ -149,19 +153,8 @@ export default function ContactForm() {
 
       const contactId = apiResponse.data.message;
 
-      // ✅ Mostrar toast de éxito
-      toast.success(
-        `Tu pedido ha sido registrado. Número de pedido: ${contactId}. Enseguida te mandaremos tu comprobante de pedido.`,
-        {
-          duration: 8000,
-          style: {
-            background: "#101010",
-            color: "#fff",
-            maxWidth: "500px",
-            textAlign: "center",
-          },
-        },
-      );
+      setIsSubmitting(false);
+      setIsSuccess(true);
 
       // ✅ Resetear formulario
       setFormData({
@@ -176,6 +169,7 @@ export default function ContactForm() {
       setProvincias([]);
     } catch (error) {
       console.error("Error al enviar el contacto:", error);
+      setIsSubmitting(false);
       toast.error(
         "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
@@ -675,6 +669,51 @@ export default function ContactForm() {
           </button>
         </div>
       </form>
+
+      {isSubmitting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-8 flex flex-col items-center max-w-sm w-full mx-4">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-800 dark:text-white font-semibold text-lg">
+              Procesando pedido...
+            </p>
+          </div>
+        </div>
+      )}
+
+      {isSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-8 flex flex-col items-center max-w-sm w-full mx-4 text-center">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 text-green-500 dark:text-green-400">
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              ¡Pedido Enviado!
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Su comprobante ha sido enviado exitosamente al número registrado.
+            </p>
+            <button
+              onClick={() => setIsSuccess(false)}
+              className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
