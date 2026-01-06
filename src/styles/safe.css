@@ -9,7 +9,7 @@ input#nav-toggle:checked + label #hide-button {
 }
 
 input#nav-toggle:checked ~ #nav-menu {
-  @apply max-lg:block;
+  @apply max-lg:block bg-body dark:bg-darkmode-body;
   /* Solución al error: Usamos la animación nativa directamente */
   animation: fadeIn 0.4s ease-out forwards;
 }

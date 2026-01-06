@@ -50,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="relative block aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 z-10"
       >
         {!imageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse"></div>
+          <div className="absolute inset-0  from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse"></div>
         )}
 
         <img
@@ -58,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={product.nombre}
           onLoad={() => setImageLoaded(true)}
           className={`w-full h-full object-cover transition-all duration-700 ${
-            imageLoaded ? "opacity-100 group-hover:scale-110" : "opacity-0"
+            imageLoaded ? "opacity-100 group-hover:scale-110" : ""
           }`}
           loading="lazy"
         />

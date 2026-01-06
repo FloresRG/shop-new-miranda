@@ -53,7 +53,8 @@ export const getProducts = async (params: {
 export const getProductById = async (id: number): Promise<Product | null> => {
     // 1. Intenta Endpoint Especifico (Standard REST)
     try {
-        const res = await fetch(`${API_URL}/${id}`);
+        // La API usa 'producto' (singular) para obtener un solo item
+        const res = await fetch(`${API_URL.replace("productos", "producto")}/${id}`);
         if (res.ok) {
             const data = await res.json();
             return data.producto || data;

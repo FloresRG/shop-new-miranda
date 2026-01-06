@@ -69,6 +69,7 @@ export default function ProductSearch() {
                             <li key={product.id}>
                                 <a
                                     href={`/tienda/${product.id}`}
+                                    data-astro-prefetch
                                     className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-darkmode-theme-light transition-colors border-b border-gray-100 dark:border-gray-800 last:border-0 cursor-pointer block"
                                     onClick={() => {
                                         setIsOpen(false);

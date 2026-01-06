@@ -35,10 +35,15 @@ const { transparent } = Astro.props;
   {
     transparent && (
       <script is:inline>
-        document.addEventListener("scroll", () => {
-          const header = document.getElementById("main-header");
+        const header = document.getElementById("main-header");
+        const navToggle = document.getElementById("nav-toggle");
+
+        const updateHeader = () => {
           if (!header) return;
-          if (window.scrollY > 10) {
+          const isScroll = window.scrollY > 10;
+          const isMenuOpen = navToggle && navToggle.checked;
+
+          if (isScroll || isMenuOpen) {
             header.classList.remove("bg-transparent", "py-6", "border-none");
             header.classList.add(
               "bg-body",
@@ -61,7 +66,10 @@ const { transparent } = Astro.props;
               "dark:border-darkmode-border/30"
             );
           }
-        });
+        };
+
+        document.addEventListener("scroll", updateHeader);
+        if (navToggle) navToggle.addEventListener("change", updateHeader);
       </script>
     )
   }
@@ -156,6 +164,17 @@ const { transparent } = Astro.props;
       }
     </ul>
     <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
+      <!-- Mobile Search Toggle -->
+      <button 
+        id="mobile-search-toggle" 
+        aria-label="Toggle Search" 
+        class="mr-4 md:hidden text-text-dark dark:text-white hover:text-primary transition-colors focus:outline-none"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+
       <!-- Desktop Search: espacio reservado para evitar saltos -->
       <div class="mr-5 hidden md:block min-w-[240px]">
         <ProductSearch client:load />
@@ -169,10 +188,49 @@ const { transparent } = Astro.props;
 
   <!-- Mobile Search Bar: espacio reservado con altura mínima -->
   <div
-    class="container md:hidden py-3 border-t border-border dark:border-darkmode-border"
+    id="mobile-search-bar"
+    class="container md:hidden transition-all duration-300 ease-in-out overflow-hidden max-h-0 opacity-0 py-0 border-border dark:border-darkmode-border flex justify-center"
   >
     <div class="min-h-[40px]">
       <ProductSearch client:only="react" />
     </div>
   </div>
 </header>
+
+<script is:inline>
+  const toggleBtn = document.getElementById('mobile-search-toggle');
+  const searchBar = document.getElementById('mobile-search-bar');
+  
+  if (toggleBtn && searchBar) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isHidden = searchBar.classList.contains('max-h-0');
+      
+      if (isHidden) {
+          // Open
+          searchBar.classList.remove('max-h-0', 'opacity-0', 'py-0');
+          searchBar.classList.add('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
+          
+          // Wait for transition to finish then remove overflow hidden
+          setTimeout(() => {
+              if (searchBar.classList.contains('opacity-100')) {
+                  searchBar.classList.remove('overflow-hidden');
+                  searchBar.classList.add('overflow-visible');
+              }
+          }, 300);
+      } else {
+          // Close
+          searchBar.classList.remove('overflow-visible');
+          searchBar.classList.add('overflow-hidden');
+          
+          searchBar.classList.remove('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
+          searchBar.classList.add('max-h-0', 'opacity-0', 'py-0');
+      }
+      
+      const input = searchBar.querySelector('input');
+      if (isHidden && input) {
+          setTimeout(() => input.focus(), 300);
+      }
+    });
+  }
+</script>
