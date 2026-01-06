@@ -17,6 +17,10 @@
       "url": "/contact"
     },
     {
+      "name": "Verifica tu pedido",
+      "url": "/qr"
+    },
+    {
       "name": "Mis Deseos",
       "url": "/deseos"
     }

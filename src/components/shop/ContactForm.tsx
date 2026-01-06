@@ -7,7 +7,6 @@ const departamentos = {
   "La Paz": [
     "Caranavi",
     "Recojo en tienda",
-    "Caranavi",
     "Palos blancos",
     "Mapiri",
     "Guanay",
@@ -211,7 +210,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-4 border border-gray-100 dark:border-gray-800">
+    <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-4 border border-gray-100 dark:border-darkmode-border">
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Información Personal
@@ -243,7 +242,7 @@ export default function ContactForm() {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder="Ingrese su nombre completo"
           />
           {formErrors.nombre && (
@@ -282,7 +281,7 @@ export default function ContactForm() {
               name="ci"
               value={formData.ci}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               placeholder="Ingrese su CI"
             />
             {formErrors.ci && (
@@ -319,7 +318,7 @@ export default function ContactForm() {
               name="celular"
               value={formData.celular}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               placeholder="Ingrese su número de celular"
             />
             {formErrors.celular && (
@@ -362,7 +361,7 @@ export default function ContactForm() {
               name="departamento"
               value={formData.departamento}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white"
             >
               <option value="">Seleccione un departamento</option>
               <option value="La Paz">La Paz</option>
@@ -417,11 +416,10 @@ export default function ContactForm() {
                     onClick={() =>
                       setFormData({ ...formData, provincia: prov })
                     }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                      formData.provincia === prov
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
                         ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                    }`}
+                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                      }`}
                   >
                     {prov}
                   </button>
@@ -477,7 +475,7 @@ export default function ContactForm() {
                   setProductosFiles(files);
                 }}
               />
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center bg-gray-50 dark:bg-gray-800 transition-colors hover:border-primary">
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-darkmode-border rounded-xl p-6 text-center bg-gray-50 dark:bg-darkmode-body transition-colors hover:border-primary">
                 <svg
                   className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2"
                   fill="none"
@@ -515,7 +513,7 @@ export default function ContactForm() {
                 {productosFiles.map((file, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600"
+                    className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-300 dark:border-darkmode-border"
                   >
                     <img
                       src={URL.createObjectURL(file)}
@@ -570,11 +568,11 @@ export default function ContactForm() {
                 }}
               />
               <div className="flex flex-col items-center">
-                <div className="relative w-full aspect-video max-w-xs rounded-xl overflow-hidden border-2 border-gray-300 dark:border-gray-600">
+                <div className="relative w-full aspect-video max-w-xs rounded-xl overflow-hidden border-2 border-gray-300 dark:border-darkmode-border">
                   <img
                     src={URL.createObjectURL(comprobanteFile)}
                     alt="comprobante"
-                    className="w-full h-full object-contain bg-white dark:bg-gray-900"
+                    className="w-full h-full object-contain bg-white dark:bg-darkmode-body"
                     onLoad={(e) =>
                       URL.revokeObjectURL((e.target as HTMLImageElement).src)
                     }
@@ -600,7 +598,7 @@ export default function ContactForm() {
                   setComprobanteFile(file);
                 }}
               />
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center bg-gray-50 dark:bg-gray-800 transition-colors hover:border-primary">
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-darkmode-border rounded-xl p-6 text-center bg-gray-50 dark:bg-darkmode-body transition-colors hover:border-primary">
                 <svg
                   className="w-8 h-8 text-gray-400 dark:text-gray-500 mb-2"
                   fill="none"
@@ -625,7 +623,7 @@ export default function ContactForm() {
           )}
         </div>
 
-        <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-6 border-t border-gray-200 dark:border-darkmode-border">
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-primary to-[#F20505] text-white py-4 px-6 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"

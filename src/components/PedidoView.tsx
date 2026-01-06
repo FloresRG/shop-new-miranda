@@ -64,7 +64,7 @@ const PedidoView: React.FC = () => {
 
     try {
       // API Localhost según requerimiento
-      const API_BASE = 'http://localhost:8000/api';
+      const API_BASE = 'https://test.importadoramiranda.com/api';
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
@@ -186,10 +186,10 @@ const PedidoView: React.FC = () => {
     if (error && viewMode === 'result') {
       return (
         <div className="text-center animate-fade-in-up pt-8">
-          <div className="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm inline-block max-w-sm w-full mx-auto">
+          <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm inline-block max-w-sm w-full mx-auto">
             <FaTimesCircle className="text-5xl mx-auto mb-4" style={{ color: COLORS.danger }} />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Error de Verificación</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Error de Verificación</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
             <button
               onClick={resetView}
               className="w-full py-3 rounded-xl font-bold text-white shadow-lg transform transition hover:-translate-y-1"
@@ -207,27 +207,27 @@ const PedidoView: React.FC = () => {
       return (
         <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
           {/* Header de Estado */}
-          <div className="bg-white rounded-3xl p-6 shadow-xl border-t-8 relative overflow-hidden"
+          <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden"
             style={{ borderColor: COLORS.success }}>
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <FaCheckCircle size={100} color={COLORS.success} />
             </div>
 
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-full bg-green-100">
-                <FaCheckCircle className="text-3xl text-green-600" />
+              <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/20">
+                <FaCheckCircle className="text-3xl text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 uppercase tracking-wide font-bold">Estado del Pedido</p>
-                <h2 className="text-2xl font-bold text-gray-800">Verificado Exitosamente</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">Estado del Pedido</p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Verificado Exitosamente</h2>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+              <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-darkmode-body text-gray-700 dark:text-gray-300">
                 ID: #{pedido.pedido.id}
               </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${pedido.envio?.estado === 'Entregado' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${pedido.envio?.estado === 'Entregado' ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'}`}>
                 {pedido.envio?.estado || 'Procesando'}
               </span>
             </div>
@@ -235,23 +235,22 @@ const PedidoView: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Tarjeta Cliente */}
-            <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
                 <FaUser style={{ color: COLORS.secondary }} className="text-xl" />
-                <h3 className="font-bold text-gray-800 text-lg">Datos del Cliente</h3>
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Datos del Cliente</h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Nombre</span>
-                  <span className="font-semibold text-gray-800 text-right">{pedido.pedido.nombre}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Nombre</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.nombre}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Cédula (CI)</span>
-                  <span className="font-semibold text-gray-800 text-right">{pedido.pedido.ci}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Cédula (CI)</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.ci}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Celular</span>
-                  {/* Enlace a WhatsApp usando el nuevo color */}
+                  <span className="text-gray-500 dark:text-gray-400">Celular</span>
                   <a href={`https://wa.me/591${pedido.pedido.celular}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-right hover:underline" style={{ color: COLORS.accent }}>
                     {pedido.pedido.celular}
                   </a>
@@ -260,50 +259,50 @@ const PedidoView: React.FC = () => {
             </div>
 
             {/* Tarjeta Envío */}
-            <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
                 <FaMapMarkerAlt style={{ color: COLORS.primary }} className="text-xl" />
-                <h3 className="font-bold text-gray-800 text-lg">Detalles de Entrega</h3>
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Detalles de Entrega</h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Destino</span>
-                  <span className="font-semibold text-gray-800 text-right">{pedido.pedido.destino}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Destino</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.destino}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-gray-500 mb-1">Dirección</span>
-                  <span className="font-semibold text-gray-800 bg-gray-50 p-2 rounded-lg">{pedido.pedido.direccion}</span>
+                  <span className="text-gray-500 dark:text-gray-400 mb-1">Dirección</span>
+                  <span className="font-semibold text-gray-800 dark:text-white bg-gray-50 dark:bg-darkmode-body p-2 rounded-lg">{pedido.pedido.direccion}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Lista de Productos */}
-          <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
+          <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center gap-3 mb-6">
               <FaBoxOpen style={{ color: COLORS.secondary }} className="text-xl" />
-              <h3 className="font-bold text-gray-800 text-lg">Productos Comprados</h3>
+              <h3 className="font-bold text-gray-800 dark:text-white text-lg">Productos Comprados</h3>
             </div>
             <div className="space-y-4">
               {pedido.productos_detalles.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div key={idx} className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 dark:bg-darkmode-body hover:bg-gray-100 dark:hover:bg-darkmode-border transition-colors">
                   <div className="flex items-center gap-3">
                     {item.imagen ? (
-                      <img src={item.imagen} alt={item.nombre} className="w-12 h-12 rounded-lg object-cover border border-gray-200" />
+                      <img src={item.imagen} alt={item.nombre} className="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-darkmode-border" />
                     ) : (
                       <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
                         style={{ backgroundColor: COLORS.secondary }}>
                         {item.cantidad}x
                       </div>
                     )}
-                    <span className="font-medium text-gray-800">{item.nombre}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{item.nombre}</span>
                   </div>
-                  <span className="font-bold text-gray-900">{Number(item.total).toFixed(2)} Bs</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{Number(item.total).toFixed(2)} Bs</span>
                 </div>
               ))}
             </div>
-            <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end items-center gap-2">
-              <span className="text-gray-500 text-sm">Total Pedido</span>
+            <div className="mt-6 pt-4 border-t border-gray-100 dark:border-darkmode-border flex justify-end items-center gap-2">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">Total Pedido</span>
               <span className="text-xl font-bold" style={{ color: COLORS.primary }}>
                 {pedido.productos_detalles.reduce((acc, item) => acc + Number(item.total), 0).toFixed(2)} Bs
               </span>
@@ -327,7 +326,7 @@ const PedidoView: React.FC = () => {
     if (viewMode === 'camera') {
       return (
         <div className="max-w-md mx-auto animate-fade-in pt-8">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Escaneando QR</h2>
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">Escaneando QR</h2>
           <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black aspect-square mb-6">
             <div id="reader-camera" className="w-full h-full"></div>
             <div className="absolute inset-0 border-2 border-white/30 pointer-events-none rounded-3xl"></div>
@@ -335,7 +334,7 @@ const PedidoView: React.FC = () => {
 
           <button
             onClick={() => setViewMode('initial')}
-            className="w-full py-4 bg-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-200 transition"
+            className="w-full py-4 bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-white font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-darkmode-border transition"
           >
             Cancelar Escaneo
           </button>
@@ -350,8 +349,8 @@ const PedidoView: React.FC = () => {
           <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-[#F2275D] to-[#451773] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-4">
             <FaTruck className="text-4xl text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Verificar Pedido</h2>
-          <p className="text-gray-500">Escanea el código QR de tu comprobante digital</p>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Verificar Pedido</h2>
+          <p className="text-gray-500 dark:text-gray-400">Escanea el código QR de tu comprobante digital</p>
         </div>
 
         <div className="space-y-4">
@@ -379,21 +378,21 @@ const PedidoView: React.FC = () => {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full py-4 px-6 rounded-2xl bg-white shadow-lg border border-gray-100 flex items-center justify-between group transition-all hover:bg-gray-50 hover:-translate-y-1"
+              className="w-full py-4 px-6 rounded-2xl bg-white dark:bg-darkmode-light shadow-lg border border-gray-100 dark:border-darkmode-border flex items-center justify-between group transition-all hover:bg-gray-50 dark:hover:bg-darkmode-body hover:-translate-y-1"
             >
               <div className="text-left">
-                <span className="block text-gray-800 font-bold text-lg">Subir Imagen</span>
-                <span className="block text-gray-500 text-sm">Desde tu galería</span>
+                <span className="block text-gray-800 dark:text-white font-bold text-lg">Subir Imagen</span>
+                <span className="block text-gray-500 dark:text-gray-400 text-sm">Desde tu galería</span>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 bg-gray-100 dark:bg-darkmode-body rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FaImage style={{ color: COLORS.accent }} className="text-xl" />
               </div>
             </button>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-100 text-center">
-          <p className="text-sm text-gray-400">Shop Nexus &copy; {new Date().getFullYear()}</p>
+        <div className="mt-8 pt-8 border-t border-gray-100 dark:border-darkmode-border text-center">
+          <p className="text-sm text-gray-400 dark:text-gray-500">Shop Nexus &copy; {new Date().getFullYear()}</p>
         </div>
       </div>
     );

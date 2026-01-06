@@ -3,6 +3,7 @@ import SidebarFilters from "./SidebarFilters";
 import ProductGrid from "./ProductGrid";
 import SearchBar from "./SearchBar";
 import type { ApiResponse } from "../../interfaces/product";
+import { FaFilter } from "react-icons/fa";
 
 type SortOption = "default" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
 
@@ -18,6 +19,7 @@ const ShopContainer = () => {
     });
     const [sort, setSort] = useState<SortOption>("default");
     const [initialized, setInitialized] = useState(false);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     // 1. Initialize from URL
     useEffect(() => {
@@ -111,41 +113,61 @@ const ShopContainer = () => {
     const displayedProducts = getSortedProducts();
 
     return (
-        <section className="section">
+        <section className="section py-8">
             <div className="container">
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Sidebar */}
-                    <SidebarFilters
-                        categories={data?.categorias || []}
-                        brands={data?.marcas || []}
-                        types={data?.tipos || []}
-                        currentCategory={filters.categoriaId || undefined}
-                        currentBrand={filters.marcaId || undefined}
-                        currentType={filters.tipoId || undefined}
-                        onFilterChange={handleFilterChange}
-                        onClearFilters={handleClearFilters}
-                        isLoading={loading && !data}
-                    />
+                    {/* Sidebar Filters - Hidden on mobile unless toggled */}
+                    <div className={`lg:w-64 flex-shrink-0 transition-all duration-300 ${showMobileFilters ? "block" : "hidden lg:block"}`}>
+                        <SidebarFilters
+                            categories={data?.categorias || []}
+                            brands={data?.marcas || []}
+                            types={data?.tipos || []}
+                            currentCategory={filters.categoriaId || undefined}
+                            currentBrand={filters.marcaId || undefined}
+                            currentType={filters.tipoId || undefined}
+                            onFilterChange={handleFilterChange}
+                            onClearFilters={handleClearFilters}
+                            isLoading={loading && !data}
+                        />
+                    </div>
 
                     {/* Main Content */}
                     <main className="flex-1">
-                        <div className="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                            <h1 className="h3">Nuestros Productos</h1>
+                        <div className="mb-6 space-y-4">
+                            {/* Mobile Header & Controls */}
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                                <h1 className="h3 font-bold text-dark dark:text-white self-start md:self-auto hidden md:block">
+                                    Nuestros Productos
+                                </h1>
 
-                            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                                <SearchBar onSearch={handleSearch} />
+                                {/* Controls: Search, Filter Toggle, Sort */}
+                                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                                    <div className="flex-1 sm:w-80">
+                                        <SearchBar onSearch={handleSearch} />
+                                    </div>
 
-                                <select
-                                    className="select select-bordered w-full sm:w-auto dark:bg-darkmode-theme-light dark:text-white dark:border-gray-600"
-                                    value={sort}
-                                    onChange={(e) => setSort(e.target.value as SortOption)}
-                                >
-                                    <option value="default">Relevancia</option>
-                                    <option value="price-asc">Precio: Menor a Mayor</option>
-                                    <option value="price-desc">Precio: Mayor a Menor</option>
-                                    <option value="name-asc">Nombre: A-Z</option>
-                                    <option value="name-desc">Nombre: Z-A</option>
-                                </select>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => setShowMobileFilters(!showMobileFilters)}
+                                            className="lg:hidden px-4 py-2 rounded-lg bg-gray-100 dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border text-dark dark:text-white font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors"
+                                        >
+                                            <FaFilter />
+                                            {showMobileFilters ? "Ocultar" : "Filtrar"}
+                                        </button>
+
+                                        <select
+                                            className="select select-bordered flex-1 sm:flex-none bg-white dark:bg-darkmode-light dark:text-white dark:border-darkmode-border focus:border-primary focus:ring-primary rounded-lg"
+                                            value={sort}
+                                            onChange={(e) => setSort(e.target.value as SortOption)}
+                                        >
+                                            <option value="default">Relevancia</option>
+                                            <option value="price-asc">Precio: Menor a Mayor</option>
+                                            <option value="price-desc">Precio: Mayor a Menor</option>
+                                            <option value="name-asc">Nombre: A-Z</option>
+                                            <option value="name-desc">Nombre: Z-A</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -160,17 +182,17 @@ const ShopContainer = () => {
                                 <button
                                     onClick={() => handlePageChange(data.pagination.current_page - 1)}
                                     disabled={!data.pagination.prev_page_url}
-                                    className="btn btn-outline-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-4 py-2 rounded-lg border border-gray-200 dark:border-darkmode-border bg-white dark:bg-darkmode-light text-dark dark:text-white disabled:opacity-50 disabled:cursor-not-allowed hover:border-primary hover:text-primary transition-colors"
                                 >
                                     Anterior
                                 </button>
-                                <span className="px-4 py-2 text-sm font-medium flex items-center">
-                                    Página {data.pagination.current_page} de {data.pagination.last_page}
+                                <span className="px-4 py-2 text-sm font-bold flex items-center text-dark dark:text-white">
+                                    {data.pagination.current_page} / {data.pagination.last_page}
                                 </span>
                                 <button
                                     onClick={() => handlePageChange(data.pagination.current_page + 1)}
                                     disabled={!data.pagination.next_page_url}
-                                    className="btn btn-outline-primary btn-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-4 py-2 rounded-lg border border-gray-200 dark:border-darkmode-border bg-white dark:bg-darkmode-light text-dark dark:text-white disabled:opacity-50 disabled:cursor-not-allowed hover:border-primary hover:text-primary transition-colors"
                                 >
                                     Siguiente
                                 </button>

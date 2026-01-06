@@ -63,7 +63,7 @@ export default function ProductSearch() {
 
             {/* Sugerencias Dropdown */}
             {isOpen && results.length > 0 && (
-                <div className="absolute top-full mt-2 w-full bg-white dark:bg-darkmode-theme-dark rounded-xl shadow-2xl border border-border dark:border-gray-700 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute top-full mt-2 w-full bg-white dark:bg-darkmode-light rounded-xl shadow-2xl border border-border dark:border-gray-700 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                     <ul>
                         {results.map((product) => (
                             <li key={product.id}>

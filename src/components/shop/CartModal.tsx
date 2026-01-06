@@ -56,8 +56,8 @@ export default function CartModal({ bannerImages }: CartModalProps) {
       {/* Modal Content */}
       <div
         className={`relative w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-border dark:border-gray-700 ${bannerImages
-            ? "bg-[image:var(--bg-mobile)] md:bg-[image:var(--bg-desktop)] bg-cover bg-center bg-no-repeat"
-            : "bg-white dark:bg-black"
+          ? "bg-[image:var(--bg-mobile)] md:bg-[image:var(--bg-desktop)] bg-cover bg-center bg-no-repeat"
+          : "bg-white dark:bg-darkmode-body"
           }`}
         style={bannerImages ? ({
           '--bg-mobile': `url('${bannerImages.mobile}')`,
@@ -107,7 +107,7 @@ export default function CartModal({ bannerImages }: CartModalProps) {
               return (
                 <div
                   key={item.id}
-                  className="flex gap-4 p-3 bg-white dark:bg-gray-900 rounded-xl border border-border dark:border-gray-700 hover:border-primary transition-colors group shadow-sm"
+                  className="flex gap-4 p-3 bg-white dark:bg-darkmode-light rounded-xl border border-border dark:border-gray-700 hover:border-primary transition-colors group shadow-sm"
                 >
                   <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                     <img
@@ -162,7 +162,7 @@ export default function CartModal({ bannerImages }: CartModalProps) {
                         </button>
                       </div>
                       <p className="font-bold text-lg text-dark dark:text-white">
-                        ${(price * item.quantity).toFixed(2)}
+                        Bs{(price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -177,11 +177,11 @@ export default function CartModal({ bannerImages }: CartModalProps) {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-gray-500 dark:text-gray-400 text-sm">
                 <span>Subtotal</span>
-                <span>${total.toFixed(2)}</span>
+                <span>Bs{total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>Bs{total.toFixed(2)}</span>
               </div>
             </div>
 
