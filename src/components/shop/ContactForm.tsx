@@ -31,18 +31,6 @@ const departamentos = {
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
 
-const departamentoAbreviaturas: { [key: string]: string } = {
-  "Santa Cruz": "SCZ",
-  "La Paz": "LPZ",
-  Cochabamba: "CBB",
-  Potosí: "PTS",
-  Oruro: "ORU",
-  Chuquisaca: "CHU",
-  Tarija: "TJA",
-  Beni: "BEN",
-  Pando: "PAN",
-};
-
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -69,7 +57,12 @@ export default function ContactForm() {
     const { name, value } = e.target;
 
     let processedValue = value;
-    if (name === "nombre" || name === "ci") {
+    if (name === "nombre") {
+      // Permitir solo letras, espacios y tildes/ñ (pero convertir a mayúsculas)
+      processedValue = value
+        .replace(/[^a-zA-ZÀ-ÿ\s]/g, "") // Elimina todo lo que no sea letra o espacio
+        .toUpperCase();
+    } else if (name === "ci") {
       processedValue = value.toUpperCase();
     }
 
@@ -83,11 +76,13 @@ export default function ContactForm() {
 
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
-    if (!formData.nombre.trim())
+    if (!formData.nombre.trim()) {
       errors.nombre = "Por favor, ingrese su nombre.";
+    } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.nombre.trim())) {
+      errors.nombre = "El nombre solo puede contener letras y espacios.";
+    }
     if (!formData.ci.trim())
       errors.ci = "Por favor, ingrese su cédula de identidad.";
-    // ✅ Validación mejorada del celular
     if (!formData.celular.trim()) {
       errors.celular = "Por favor, ingrese su número de celular.";
     } else if (formData.celular.length !== 8) {
@@ -99,13 +94,10 @@ export default function ContactForm() {
       errors.departamento = "Por favor, seleccione un departamento.";
     if (!formData.provincia.trim())
       errors.provincia = "Por favor, seleccione una provincia.";
-    // ✅ Validación: productos solicitados (al menos 1 archivo)
     if (productosFiles.length === 0) {
       errors.productos =
         "Por favor, suba al menos una imagen de los productos solicitados.";
     }
-
-    // ✅ Validación: comprobante de pago (1 archivo obligatorio)
     if (!comprobanteFile) {
       errors.comprobante = "Por favor, suba el comprobante de pago.";
     }
@@ -117,6 +109,14 @@ export default function ContactForm() {
     e.preventDefault();
     if (validateForm()) {
       await sendContactToAPI();
+    } else {
+      // Mostrar mensaje con toast si hay errores
+      const firstError = Object.values(formErrors)[0];
+      if (firstError) {
+        toast.error(firstError);
+      } else {
+        toast.error("Por favor, complete todos los campos requeridos.");
+      }
     }
   };
 
@@ -124,41 +124,41 @@ export default function ContactForm() {
     try {
       setIsSubmitting(true);
       const apiFormData = new FormData();
-      const abbrev =
-        departamentoAbreviaturas[formData.departamento] ||
-        formData.departamento;
 
+      // Datos básicos
       apiFormData.append("nombre", formData.nombre);
       apiFormData.append("ci", formData.ci);
       apiFormData.append("celular", formData.celular);
-      apiFormData.append("destino", `${abbrev} - ${formData.provincia}`);
-      apiFormData.append("direccion", "Sin direccion");
-      apiFormData.append("estado", "POR COBRAR");
-      apiFormData.append("cantidad_productos", "0");
-      apiFormData.append("detalle", "Sin Detalle");
-      apiFormData.append("productos", JSON.stringify([]));
-      apiFormData.append("monto_deposito", "0");
-      apiFormData.append("monto_enviado_pagado", "0");
-      apiFormData.append("id_usuario", "0");
+      apiFormData.append("departamento", formData.departamento);
+      apiFormData.append("provincia", formData.provincia);
 
+      // Enviar imágenes de productos con tipo "producto"
+      productosFiles.forEach((file) => {
+        apiFormData.append("imagenes[]", file);
+        apiFormData.append("tipos_imagenes[]", "producto");
+      });
+
+      // Enviar comprobante con tipo "comprobante"
       if (comprobanteFile) {
-        apiFormData.append("foto_comprobante", comprobanteFile);
+        apiFormData.append("imagenes[]", comprobanteFile);
+        apiFormData.append("tipos_imagenes[]", "comprobante");
       }
 
-      // ✅ Corregido: eliminado el espacio al final de la URL
-      const apiResponse = await axios.post(
-        "https://test.importadoramiranda.com/api/pedidos/shop",
+      const response = await axios.post(
+        "http://localhost:8000/api/shoppedidos",
         apiFormData,
-        { headers: { "Content-Type": "multipart/form-data" } },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
-      const contactIdResponse = apiResponse.data.message;
-
-      setContactId(contactIdResponse);
-      setIsSubmitting(false);
+      setContactId(response.data.data?.id?.toString() || "ID no disponible");
       setIsSuccess(true);
+      setIsSubmitting(false);
 
-      // ✅ Resetear formulario
+      // Resetear formulario
       setFormData({
         nombre: "",
         ci: "",
@@ -166,14 +166,16 @@ export default function ContactForm() {
         departamento: "",
         provincia: "",
       });
-      setComprobanteFile(null);
       setProductosFiles([]);
+      setComprobanteFile(null);
       setProvincias([]);
-    } catch (error) {
-      console.error("Error al enviar el contacto:", error);
+      setFormErrors({});
+    } catch (error: any) {
+      console.error("Error al enviar el pedido:", error);
       setIsSubmitting(false);
       toast.error(
-        "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+        error?.response?.data?.message ||
+          "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
     }
   };
@@ -272,7 +274,7 @@ export default function ContactForm() {
             )}
           </div>
 
-          {/* Celular / WhatsApp con prefijo de Bolivia */}
+          {/* Celular */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <svg
@@ -282,12 +284,9 @@ export default function ContactForm() {
               >
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
-              Ingresa el celular desde el que nos inscribiste
+              Celular (WhatsApp)
             </label>
-
-            {/* Contenedor del número con prefijo */}
             <div className="w-full flex items-center border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body">
-              {/* Prefijo fijo: bandera + código */}
               <div className="flex-shrink-0 flex items-center px-3 py-3 border-r border-gray-300 dark:border-darkmode-border bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-gray-300 whitespace-nowrap select-none">
                 <img
                   src="https://flagcdn.com/w20/bo.png"
@@ -296,8 +295,6 @@ export default function ContactForm() {
                 />
                 <span>+591</span>
               </div>
-
-              {/* Input dinámico: solo 8 dígitos, empieza con 6 o 7 */}
               <input
                 required
                 type="tel"
@@ -306,22 +303,20 @@ export default function ContactForm() {
                 value={formData.celular}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const numericValue = value.replace(/\D/g, ""); // solo dígitos
+                  const numericValue = value.replace(/\D/g, "");
                   if (
                     numericValue.length === 1 &&
                     !["6", "7"].includes(numericValue)
                   ) {
-                    return; // rechazar primer dígito si no es 6 o 7
+                    return;
                   }
                   const trimmed = numericValue.slice(0, 8);
                   setFormData({ ...formData, celular: trimmed });
                 }}
-                className="flex-1 min-w-0 px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="flex-1 min-w-0 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 placeholder="70123456"
               />
             </div>
-
-
             {formErrors.celular && (
               <p className="text-red-500 text-sm flex items-center gap-1">
                 <svg
@@ -339,7 +334,6 @@ export default function ContactForm() {
               </p>
             )}
           </div>
-          
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -366,15 +360,11 @@ export default function ContactForm() {
               className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white"
             >
               <option value="">Seleccione un departamento</option>
-              <option value="La Paz">La Paz</option>
-              <option value="Cochabamba">Cochabamba</option>
-              <option value="Santa Cruz">Santa Cruz</option>
-              <option value="Oruro">Oruro</option>
-              <option value="Potosí">Potosí</option>
-              <option value="Chuquisaca">Chuquisaca</option>
-              <option value="Tarija">Tarija</option>
-              <option value="Beni">Beni</option>
-              <option value="Pando">Pando</option>
+              {Object.keys(departamentos).map((dep) => (
+                <option key={dep} value={dep}>
+                  {dep}
+                </option>
+              ))}
             </select>
             {formErrors.departamento && (
               <p className="text-red-500 text-sm flex items-center gap-1">
@@ -418,10 +408,11 @@ export default function ContactForm() {
                     onClick={() =>
                       setFormData({ ...formData, provincia: prov })
                     }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
-                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                      : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                      }`}
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                      formData.provincia === prov
+                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                    }`}
                   >
                     {prov}
                   </button>
@@ -447,7 +438,7 @@ export default function ContactForm() {
           )}
         </div>
 
-        {/* Subir productos solicitados */}
+        {/* Productos solicitados */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <svg
@@ -552,7 +543,7 @@ export default function ContactForm() {
           )}
         </div>
 
-        {/* Subir comprobante de pago */}
+        {/* Comprobante */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <svg
@@ -653,7 +644,8 @@ export default function ContactForm() {
         <div className="pt-6 border-t border-gray-200 dark:border-darkmode-border">
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-primary to-[#F20505] text-white py-4 px-6 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-primary to-[#F20505] text-white py-4 px-6 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3 disabled:opacity-70"
           >
             <svg
               className="w-5 h-5"
@@ -706,8 +698,9 @@ export default function ContactForm() {
               ¡Pedido Enviado!
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Su pedido <span className="font-bold text-primary">#{contactId}</span> ha sido registrado. <br />
-              Su comprobante ha sido enviado exitosamente al número registrado.
+              Su pedido{" "}
+              <span className="font-bold text-primary">#{contactId}</span> ha
+              sido registrado.
             </p>
             <button
               onClick={() => setIsSuccess(false)}
