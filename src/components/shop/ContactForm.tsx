@@ -146,7 +146,7 @@ export default function ContactForm() {
 
       const response = await axios.post(
         //"http://localhost:8000/api/shoppedidos",
-        "https://test.importadoramiranda.com/api/shoppedidos",
+        "https://importadoramiranda.com/api/shoppedidos",
         apiFormData,
         {
           headers: {

@@ -79,7 +79,7 @@ const PedidoView: React.FC = () => {
     setViewMode('result');
 
     try {
-      const API_BASE = 'http://localhost:8000/api';
+      const API_BASE = 'https://importadoramiranda.com/api';
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
