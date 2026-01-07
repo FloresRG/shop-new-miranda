@@ -132,7 +132,8 @@ export default function ContactFormold() {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/api/shoppedidos",
+        //"http://localhost:8000/api/shoppedidos",
+        "https://test.importadoramiranda.com/api/shoppedidos",
         payload,
         {
           headers: {
