@@ -1,41 +1,57 @@
 // src/components/PedidoView.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { FaCamera, FaImage, FaCheckCircle, FaTimesCircle, FaBoxOpen, FaTruck, FaUser, FaMapMarkerAlt, FaSpinner, FaArrowLeft } from 'react-icons/fa';
+import {
+  FaCamera,
+  FaImage,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaBoxOpen,
+  FaTruck,
+  FaUser,
+  FaMapMarkerAlt,
+  FaSpinner,
+  FaArrowLeft,
+} from 'react-icons/fa';
 
-// Tipos
+// Tipos actualizados para la nueva API
 interface ProductoDetalle {
-  id_producto: number;
+  producto_id: number;
   nombre: string;
   cantidad: number;
-  precio: number;
-  total: number;
-  imagen?: string;
+  precio_venta: number;
+  subtotal: number;
+}
+
+interface CuadernoData {
+  id: number;
+  nombre: string;
+  ci: string;
+  celular: string;
+  departamento: string;
+  provincia: string;
+  tipo: string | null;
+  estado: string | null;
+  detalle: string | null;
+  la_paz: boolean;
+  enviado: boolean;
+  p_listo: boolean;
+  p_pendiente: boolean;
+  created_at: string;
 }
 
 interface PedidoData {
-  pedido: {
-    id: number;
-    nombre: string;
-    ci: string;
-    celular: string;
-    destino: string;
-    direccion: string;
-    estado: string;
-  };
-  productos_detalles: ProductoDetalle[];
-  envio: {
-    estado: string;
-  } | null;
+  cuaderno: CuadernoData;
+  productos: ProductoDetalle[];
 }
 
 // Colores Premium
 const COLORS = {
-  primary: '#F2275D', // Pink/Red
+  primary: '#F2275D',   // Pink/Red
   secondary: '#451773', // Purple
-  accent: '#17BFBF', // Teal
-  danger: '#F20505', // Red
-  success: '#10B981', // Emerald
+  accent: '#17BFBF',    // Teal
+  danger: '#F20505',    // Red
+  success: '#10B981',   // Emerald
 };
 
 const PedidoView: React.FC = () => {
@@ -60,15 +76,17 @@ const PedidoView: React.FC = () => {
   const fetchPedido = async (id: string, ci: string, celular: string) => {
     setLoading(true);
     setError(null);
-    setViewMode('result'); // Cambiar a vista de resultado (o carga)
+    setViewMode('result');
 
     try {
-      // API Localhost según requerimiento
-      const API_BASE = 'https://test.importadoramiranda.com/api';
+      const API_BASE = 'http://localhost:8000/api';
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
-      if (!res.ok) throw new Error('Pedido no encontrado o credenciales incorrectas.');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Pedido no encontrado o credenciales incorrectas.');
+      }
 
       const data: PedidoData = await res.json();
       setPedido(data);
@@ -80,38 +98,30 @@ const PedidoView: React.FC = () => {
     }
   };
 
-  // Manejar escaneo desde archivo
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
     if (!target.files || target.files.length === 0) return;
 
     const file = target.files[0];
-    // Usar un ID único o constante que seguro existe
-    const elementId = "reader-hidden";
+    const elementId = 'reader-hidden';
 
     try {
       setLoading(true);
-      // Limpiar instancia previa si existe (aunque para scanFile no debería ser crítico, es mejor prevenir)
-      // Nota: Html5Qrcode detecta si ya hay una instancia en el elemento.
-      // Creamos una nueva instancia cada vez
       const html5QrCode = new Html5Qrcode(elementId);
-
       const decodedText = await html5QrCode.scanFile(file, true);
-      // Limpiamos (clear) para liberar el elemento por si acaso
       await html5QrCode.clear();
-
       processScannedUrl(decodedText);
     } catch (err) {
-      console.error("Error confirm scanning file", err);
-      // Intentar limpiar si falló
-      try { const temp = new Html5Qrcode(elementId); await temp.clear(); } catch (e) { }
-
-      alert("No se pudo leer el código QR de la imagen. Intenta con una imagen más clara o recortada.");
+      console.error('Error scanning file', err);
+      try {
+        const temp = new Html5Qrcode(elementId);
+        await temp.clear();
+      } catch (e) {}
+      alert('No se pudo leer el código QR. Intenta con una imagen más clara.');
       setLoading(false);
     }
   };
 
-  // Manejar escaneo de cámara
   useEffect(() => {
     let html5QrcodeScanner: Html5Qrcode | null = null;
     let isMounted = true;
@@ -119,9 +129,9 @@ const PedidoView: React.FC = () => {
     if (viewMode === 'camera') {
       const startScanner = async () => {
         try {
-          html5QrcodeScanner = new Html5Qrcode("reader-camera");
+          html5QrcodeScanner = new Html5Qrcode('reader-camera');
           await html5QrcodeScanner.start(
-            { facingMode: "environment" },
+            { facingMode: 'environment' },
             { fps: 10, qrbox: { width: 250, height: 250 } },
             (decodedText) => {
               if (isMounted) {
@@ -129,11 +139,11 @@ const PedidoView: React.FC = () => {
                 processScannedUrl(decodedText);
               }
             },
-            () => { }
+            () => {}
           );
         } catch (err) {
-          console.error("Error starting scanner", err);
-          alert("Error al iniciar la cámara. Por favor, permite el acceso.");
+          console.error('Error starting camera', err);
+          alert('Error al iniciar la cámara. Asegúrate de permitir el acceso.');
           setViewMode('initial');
         }
       };
@@ -144,7 +154,7 @@ const PedidoView: React.FC = () => {
     return () => {
       isMounted = false;
       if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
-        html5QrcodeScanner.stop().then(() => html5QrcodeScanner?.clear()).catch(() => { });
+        html5QrcodeScanner.stop().then(() => html5QrcodeScanner?.clear()).catch(() => {});
       }
     };
   }, [viewMode]);
@@ -157,18 +167,15 @@ const PedidoView: React.FC = () => {
       const newCelular = url.searchParams.get('celular');
 
       if (newId && newCi && newCelular) {
-        // Actualizar URL del navegador sin recargar
         const newBrowserUrl = `${window.location.origin}${window.location.pathname}?id=${newId}&ci=${encodeURIComponent(newCi)}&celular=${encodeURIComponent(newCelular)}`;
         window.history.pushState({}, '', newBrowserUrl);
-
-        // Fetch
         fetchPedido(newId, newCi, newCelular);
       } else {
-        alert('El QR escaneado no contiene los datos necesarios (id, ci, celular).');
+        alert('El QR no contiene los parámetros necesarios (id, ci, celular).');
         setLoading(false);
       }
     } catch (e) {
-      alert('El contenido escaneado no es una URL válida: ' + urlStr);
+      alert('El contenido escaneado no es una URL válida.');
       setLoading(false);
     }
   };
@@ -180,9 +187,7 @@ const PedidoView: React.FC = () => {
     setViewMode('initial');
   };
 
-  // Renderizado condicional del contenido principal
   const renderMainContent = () => {
-    // Vista de Resultado: Error
     if (error && viewMode === 'result') {
       return (
         <div className="text-center animate-fade-in-up pt-8">
@@ -202,17 +207,19 @@ const PedidoView: React.FC = () => {
       );
     }
 
-    // Vista de Resultado: Éxito (Pedido Encontrado)
     if (pedido && viewMode === 'result') {
+      const total = pedido.productos.reduce((acc, item) => acc + Number(item.subtotal), 0);
+      const estadoLabel = pedido.cuaderno.estado || (pedido.cuaderno.enviado ? 'Enviado' : 'Pendiente');
+      const estadoClass = pedido.cuaderno.enviado
+        ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+        : 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400';
+
       return (
         <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
-          {/* Header de Estado */}
-          <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden"
-            style={{ borderColor: COLORS.success }}>
+          <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden" style={{ borderColor: COLORS.success }}>
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <FaCheckCircle size={100} color={COLORS.success} />
             </div>
-
             <div className="flex items-center gap-4 mb-4">
               <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/20">
                 <FaCheckCircle className="text-3xl text-green-600 dark:text-green-400" />
@@ -222,19 +229,17 @@ const PedidoView: React.FC = () => {
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Verificado Exitosamente</h2>
               </div>
             </div>
-
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-darkmode-body text-gray-700 dark:text-gray-300">
-                ID: #{pedido.pedido.id}
+                ID: #{pedido.cuaderno.id}
               </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${pedido.envio?.estado === 'Entregado' ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'}`}>
-                {pedido.envio?.estado || 'Procesando'}
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${estadoClass}`}>
+                {estadoLabel}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Tarjeta Cliente */}
             <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
                 <FaUser style={{ color: COLORS.secondary }} className="text-xl" />
@@ -243,68 +248,67 @@ const PedidoView: React.FC = () => {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">Nombre</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.nombre}</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.nombre}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">Cédula (CI)</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.ci}</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.ci}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">Celular</span>
-                  <a href={`https://wa.me/591${pedido.pedido.celular}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-right hover:underline" style={{ color: COLORS.accent }}>
-                    {pedido.pedido.celular}
+                  <a
+                    href={`https://wa.me/591${pedido.cuaderno.celular.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-right hover:underline"
+                    style={{ color: COLORS.accent }}
+                  >
+                    {pedido.cuaderno.celular}
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Tarjeta Envío */}
             <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
                 <FaMapMarkerAlt style={{ color: COLORS.primary }} className="text-xl" />
-                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Detalles de Entrega</h3>
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Ubicación</h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Destino</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.pedido.destino}</span>
+                  <span className="text-gray-500 dark:text-gray-400">Departamento</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.departamento}</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-gray-500 dark:text-gray-400 mb-1">Dirección</span>
-                  <span className="font-semibold text-gray-800 dark:text-white bg-gray-50 dark:bg-darkmode-body p-2 rounded-lg">{pedido.pedido.direccion}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-500 dark:text-gray-400">Provincia</span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.provincia}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Lista de Productos */}
           <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center gap-3 mb-6">
               <FaBoxOpen style={{ color: COLORS.secondary }} className="text-xl" />
-              <h3 className="font-bold text-gray-800 dark:text-white text-lg">Productos Comprados</h3>
+              <h3 className="font-bold text-gray-800 dark:text-white text-lg">Productos</h3>
             </div>
             <div className="space-y-4">
-              {pedido.productos_detalles.map((item, idx) => (
+              {pedido.productos.map((item, idx) => (
                 <div key={idx} className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 dark:bg-darkmode-body hover:bg-gray-100 dark:hover:bg-darkmode-border transition-colors">
                   <div className="flex items-center gap-3">
-                    {item.imagen ? (
-                      <img src={item.imagen} alt={item.nombre} className="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-darkmode-border" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                        style={{ backgroundColor: COLORS.secondary }}>
-                        {item.cantidad}x
-                      </div>
-                    )}
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs" style={{ backgroundColor: COLORS.secondary }}>
+                      {item.cantidad}x
+                    </div>
                     <span className="font-medium text-gray-800 dark:text-white">{item.nombre}</span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-white">{Number(item.total).toFixed(2)} Bs</span>
+                  <span className="font-bold text-gray-900 dark:text-white">{Number(item.subtotal).toFixed(2)} Bs</span>
                 </div>
               ))}
             </div>
             <div className="mt-6 pt-4 border-t border-gray-100 dark:border-darkmode-border flex justify-end items-center gap-2">
               <span className="text-gray-500 dark:text-gray-400 text-sm">Total Pedido</span>
               <span className="text-xl font-bold" style={{ color: COLORS.primary }}>
-                {pedido.productos_detalles.reduce((acc, item) => acc + Number(item.total), 0).toFixed(2)} Bs
+                {total.toFixed(2)} Bs
               </span>
             </div>
           </div>
@@ -322,7 +326,6 @@ const PedidoView: React.FC = () => {
       );
     }
 
-    // Vista Cámara
     if (viewMode === 'camera') {
       return (
         <div className="max-w-md mx-auto animate-fade-in pt-8">
@@ -331,7 +334,6 @@ const PedidoView: React.FC = () => {
             <div id="reader-camera" className="w-full h-full"></div>
             <div className="absolute inset-0 border-2 border-white/30 pointer-events-none rounded-3xl"></div>
           </div>
-
           <button
             onClick={() => setViewMode('initial')}
             className="w-full py-4 bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-white font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-darkmode-border transition"
@@ -342,7 +344,6 @@ const PedidoView: React.FC = () => {
       );
     }
 
-    // Vista Inicial (Botones)
     return (
       <div className="max-w-md mx-auto space-y-6 py-8 animate-fade-in">
         <div className="text-center mb-8">
@@ -369,13 +370,7 @@ const PedidoView: React.FC = () => {
           </button>
 
           <div className="relative">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              accept="image/*"
-              className="hidden"
-            />
+            <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
             <button
               onClick={() => fileInputRef.current?.click()}
               className="w-full py-4 px-6 rounded-2xl bg-white dark:bg-darkmode-light shadow-lg border border-gray-100 dark:border-darkmode-border flex items-center justify-between group transition-all hover:bg-gray-50 dark:hover:bg-darkmode-body hover:-translate-y-1"
@@ -400,7 +395,6 @@ const PedidoView: React.FC = () => {
 
   return (
     <div className="relative min-h-[50vh]">
-      {/* Elemento oculto para escaneo de archivos - SIEMPRE RENDERIZADO y en posición fija fuera de pantalla */}
       <div id="reader-hidden" style={{ position: 'fixed', top: '-10000px', left: '-10000px', width: '300px', height: '300px' }}></div>
 
       {loading && (
@@ -410,7 +404,6 @@ const PedidoView: React.FC = () => {
         </div>
       )}
 
-      {/* Contenido Principal */}
       <div className={loading ? 'opacity-50 pointer-events-none' : ''}>
         {renderMainContent()}
       </div>
