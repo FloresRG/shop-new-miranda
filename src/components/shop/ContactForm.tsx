@@ -282,7 +282,7 @@ export default function ContactForm() {
               >
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
-              Celular / WhatsApp
+              Ingresa el celular desde el que nos inscribiste
             </label>
 
             {/* Contenedor del número con prefijo */}
@@ -339,6 +339,7 @@ export default function ContactForm() {
               </p>
             )}
           </div>
+          
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -462,7 +463,7 @@ export default function ContactForm() {
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
-            Subir productos solicitados
+            Suba las Capturas de los Productos del Live
           </label>
 
           {productosFiles.length === 0 ? (
@@ -567,7 +568,7 @@ export default function ContactForm() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            Subir comprobante de pago
+            Suba la Captura de su Comprobante de Pago
           </label>
 
           {comprobanteFile ? (
