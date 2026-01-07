@@ -1,0 +1,38 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getListPage } from "@/lib/contentParser.astro";
+import PageHeader from "@/partials/PageHeader.astro";
+import ContactForm from "@/components/shop/ContactFormold";
+
+const contactIndex = await getListPage("contact", "-index");
+const { title, description, meta_title, image } = contactIndex.data;
+import { Toaster } from "react-hot-toast";
+
+if (contactIndex.data.draft) {
+  return Astro.redirect("/404");
+}
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <section class="p-2">
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto md:col-10 lg:col-6">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-dark dark:text-white">
+              PEDIDOS MIRANDA
+            </h2>
+          </div>
+
+          <Toaster client:only="react" />
+          <ContactForm client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
