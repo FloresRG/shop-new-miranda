@@ -121,14 +121,13 @@ export default function ContactFormold() {
     try {
       setIsSubmitting(true);
 
-      // Datos a enviar (solo los del ejemplo)
       const payload = {
         nombre: formData.nombre,
         ci: formData.ci,
         celular: formData.celular,
         departamento: formData.departamento,
         provincia: formData.provincia,
-        tipo: "pedido", // valor fijo
+        tipo: "pedido",
       };
 
       const response = await axios.post(
@@ -142,9 +141,47 @@ export default function ContactFormold() {
         },
       );
 
-      setContactId(response.data.data?.id?.toString() || "ID no disponible");
+      const pedidoId =
+        response.data.pedido_id ||
+        response.data.data?.id?.toString() ||
+        "ID no disponible";
+      setContactId(pedidoId);
       setIsSuccess(true);
       setIsSubmitting(false);
+
+      if (response.data.whatsapp_connected === false) {
+        const mensaje = encodeURIComponent(
+          `Nuevo pedido recibido: #${pedidoId}\n\n¡Gracias por su compra!`,
+        );
+        window.open(`https://wa.me/59170621016?text=  ${mensaje}`, "_blank");
+
+        // ✅ DESCARGA AUTOMÁTICA DEL PDF
+        const pdfBase64 = response.data.pdf_base64;
+        if (pdfBase64) {
+          try {
+            const byteString = atob(pdfBase64);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+              uint8Array[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `pedido_${pedidoId}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            console.error("Error al procesar el PDF:", err);
+            toast.error("No se pudo generar el comprobante.");
+          }
+        } else {
+          toast.error("Comprobante no disponible.");
+        }
+      }
 
       // Resetear formulario
       setFormData({
@@ -275,7 +312,7 @@ export default function ContactFormold() {
             <div className="w-full flex items-center border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body">
               <div className="flex-shrink-0 flex items-center px-3 py-3 border-r border-gray-300 dark:border-darkmode-border bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-gray-300 whitespace-nowrap select-none">
                 <img
-                  src="https://flagcdn.com/w20/bo.png"
+                  src="https://flagcdn.com/w20/bo.png  "
                   alt="Bolivia"
                   className="w-5 h-4 mr-2"
                 />
