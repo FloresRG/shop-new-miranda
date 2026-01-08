@@ -151,7 +151,8 @@ export default function ContactFormold() {
 
       if (response.data.whatsapp_connected === false) {
         const mensaje = encodeURIComponent(
-          `Nuevo pedido recibido: #${pedidoId}\n\n¡Gracias por su compra!`,
+          `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\n` +
+            `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
         );
         window.open(`https://wa.me/59170621016?text=  ${mensaje}`, "_blank");
 
