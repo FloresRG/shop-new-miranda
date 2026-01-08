@@ -155,9 +155,47 @@ export default function ContactForm() {
         },
       );
 
-      setContactId(response.data.data?.id?.toString() || "ID no disponible");
+      const pedidoId =
+        response.data.pedido_id ||
+        response.data.data?.id?.toString() ||
+        "ID no disponible";
+      setContactId(pedidoId);
       setIsSuccess(true);
       setIsSubmitting(false);
+
+      if (response.data.whatsapp_connected === false) {
+        const mensaje = encodeURIComponent(
+          `Nuevo pedido recibido: #${pedidoId}\n\n¡Gracias por su compra!`,
+        );
+        window.open(`https://wa.me/59170621016?text=  ${mensaje}`, "_blank");
+
+        // ✅ DESCARGA AUTOMÁTICA DEL PDF
+        const pdfBase64 = response.data.pdf_base64;
+        if (pdfBase64) {
+          try {
+            const byteString = atob(pdfBase64);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+              uint8Array[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `pedido_${pedidoId}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            console.error("Error al procesar el PDF:", err);
+            toast.error("No se pudo generar el comprobante.");
+          }
+        } else {
+          toast.error("Comprobante no disponible.");
+        }
+      }
 
       // Resetear formulario
       setFormData({
