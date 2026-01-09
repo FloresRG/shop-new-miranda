@@ -5,11 +5,11 @@ import { useStore } from "@nanostores/react";
 import { FaCartPlus, FaHeart, FaRegHeart, FaTag } from "react-icons/fa";
 import React, { useState } from "react";
 
-interface ProductCardProps {
+interface LiquidacionCardProps {
   product: Product;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function LiquidacionCard({ product }: LiquidacionCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const price = parseFloat(product.precio) || 0;
@@ -31,9 +31,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     toggleWishlist(product);
   };
 
-  const imageUrl = product.fotos[0]?.foto
-    ? `${import.meta.env.PUBLIC_API_URL}/storage/${product.fotos[0].foto}`
-    : "https://placehold.co/400x300?text=No+Image";
+  const imageUrl =
+    product.fotos[0]?.foto || "https://placehold.co/400x300?text=No+Image";
 
   return (
     <div className="group relative bg-white dark:bg-darkmode-light rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-0 md:hover:-translate-y-2 border border-gray-100 dark:border-darkmode-border hover:border-[#F2275D]/30 dark:hover:border-[#F2275D]/50 flex flex-row md:flex-col h-32 md:h-full shadow-md hover:shadow-2xl">

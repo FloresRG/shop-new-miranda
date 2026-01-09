@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductGrid from "./ProductGrid";
+import LiquidacionGrid from "./LiquidacionGrid";
 import type { ApiResponse } from "../../interfaces/product";
 
 const LiquidacionesContainer = () => {
@@ -42,7 +42,7 @@ const LiquidacionesContainer = () => {
           </p>
         </div>
 
-        <ProductGrid products={data?.productos || []} isLoading={loading} />
+        <LiquidacionGrid products={data?.productos || []} isLoading={loading} />
 
         {/* Pagination */}
         {!loading && data && data.pagination.last_page > 1 && (

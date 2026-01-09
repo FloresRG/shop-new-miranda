@@ -59,7 +59,7 @@ export const getLiquidaciones = async (params: {
             categoria: { id: item.producto.id_categoria, categoria: "" }, // Placeholder
             marca: { id: item.producto.id_marca, marca: "" }, // Placeholder
             tipo: { id: item.producto.id_tipo, tipo: "" }, // Placeholder
-            fotos: [{ id: item.id, foto: item.foto_captura }],
+            fotos: [{ id: item.id, foto: `http://127.0.0.1:8000/storage/${item.foto_captura}` }],
             inventario: { id_sucursal: 1, cantidad: item.stock, transfer_date: null }
         }));
 
