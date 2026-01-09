@@ -3,6 +3,7 @@ import { useStore } from "@nanostores/react";
 import { cartItems, clearCart } from "../../store/cartStore";
 import type { CartStore } from "../../store/cartStore";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { jsPDF } from "jspdf";
 
 export default function CheckoutForm() {
@@ -13,6 +14,9 @@ export default function CheckoutForm() {
     const price = parseFloat(item.precio) || 0;
     return sum + price * item.quantity;
   }, 0);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [contactId, setContactId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -57,32 +61,50 @@ export default function CheckoutForm() {
 
   const sendOrderToAPI = async () => {
     try {
-      const apiFormData = new FormData();
-      apiFormData.append("nombre", formData.nombre);
-      apiFormData.append("ci", formData.ci);
-      apiFormData.append("celular", formData.celular);
-      apiFormData.append("destino", formData.departamento);
-      apiFormData.append("direccion", "Sin direccion");
-      apiFormData.append("estado", "POR COBRAR");
-      apiFormData.append("cantidad_productos", "0");
-      apiFormData.append("detalle", "Sin Detalle");
-      apiFormData.append("productos", JSON.stringify([]));
-      apiFormData.append("monto_deposito", "0");
-      apiFormData.append("monto_enviado_pagado", total.toString());
-      apiFormData.append("id_usuario", "0");
+      const data = {
+        nombre: formData.nombre,
+        ci: formData.ci,
+        celular: formData.celular,
+        departamento: formData.departamento,
+        provincia: formData.provincia,
+        tipo: "pedido",
+        productos: items.map((item) => ({
+          producto_id: item.id,
+          cantidad: item.quantity,
+          precio_venta: parseFloat(item.precio),
+        })),
+      };
+
+      console.log('Sending data:', data);
 
       const apiResponse = await axios.post(
-        "https://test.importadoramiranda.com/api/pedidos/lupenuevo",
-        apiFormData,
-        { headers: { "Content-Type": "multipart/form-data" } },
+        "http://127.0.0.1:8000/api/shoppedidos",
+        data,
+        { headers: { "Content-Type": "application/json" } },
       );
 
-      const pedidoNumero = apiResponse.data.message;
-      generatePDF(pedidoNumero);
-      handleRedirectToWhatsApp(pedidoNumero);
+      const pedidoId =
+        apiResponse.data.pedido_id ||
+        apiResponse.data.data?.id?.toString() ||
+        "ID no disponible";
+      setContactId(pedidoId);
+      setIsSuccess(true);
       clearCart();
-    } catch (error) {
+
+      if (apiResponse.data.whatsapp_connected === false) {
+        const mensaje = `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
+        window.open(
+          `https://wa.me/59170621016?text=${encodeURIComponent(mensaje)}`,
+          "_blank",
+        );
+      }
+    } catch (error: any) {
       console.error("Error al enviar el pedido:", error);
+      console.log("Validation errors:", error?.response?.data?.errors);
+      toast.error(
+        error?.response?.data?.message ||
+          "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+      );
     }
   };
 
@@ -174,7 +196,9 @@ export default function CheckoutForm() {
               <img
                 src={
                   item.fotos[0]?.foto
-                    ? `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}`
+                    ? item.fotos[0].foto.startsWith("http")
+                      ? item.fotos[0].foto
+                      : `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}`
                     : "https://placehold.co/100"
                 }
                 className="w-16 h-16 object-cover rounded bg-gray-100 dark:bg-gray-800"
@@ -195,8 +219,6 @@ export default function CheckoutForm() {
           ))}
         </div>
         <div className="mt-4 pt-4 border-t dark:border-gray-700 space-y-2">
-          
-          
           <div className="flex justify-between text-2xl font-bold text-primary pt-2">
             <span>Total</span>
             <span>Bs {total.toFixed(2)}</span>
@@ -314,6 +336,42 @@ export default function CheckoutForm() {
           Enviar Pedido
         </button>
       </form>
+
+      {isSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-8 flex flex-col items-center max-w-sm w-full mx-4 text-center">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 text-green-500 dark:text-green-400">
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              ¡Pedido Enviado!
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Su pedido{" "}
+              <span className="font-bold text-primary">#{contactId}</span> ha
+              sido registrado.
+            </p>
+            <button
+              onClick={() => setIsSuccess(false)}
+              className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
