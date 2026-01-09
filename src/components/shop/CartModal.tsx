@@ -113,7 +113,7 @@ export default function CartModal({ bannerImages }: CartModalProps) {
                     <img
                       src={
                         item.fotos[0]?.foto
-                          ? `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}`
+                          ? (item.fotos[0].foto.startsWith('http') ? item.fotos[0].foto : `${import.meta.env.PUBLIC_API_URL}/storage/${item.fotos[0].foto}`)
                           : "https://placehold.co/100"
                       }
                       alt={item.nombre}
