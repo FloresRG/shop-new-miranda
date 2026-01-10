@@ -11,10 +11,9 @@ import {
   FaUser,
   FaMapMarkerAlt,
   FaSpinner,
-  FaArrowLeft,
 } from 'react-icons/fa';
 
-// Tipos actualizados para la nueva API
+// Tipos actualizados
 interface ProductoDetalle {
   producto_id: number;
   nombre: string;
@@ -40,18 +39,24 @@ interface CuadernoData {
   created_at: string;
 }
 
+interface ImagenesData {
+  producto: string[];
+  comprobante: string[];
+}
+
 interface PedidoData {
   cuaderno: CuadernoData;
   productos: ProductoDetalle[];
+  imagenes: ImagenesData; // ← Añadido
 }
 
 // Colores Premium
 const COLORS = {
-  primary: '#F2275D',   // Pink/Red
-  secondary: '#451773', // Purple
-  accent: '#17BFBF',    // Teal
-  danger: '#F20505',    // Red
-  success: '#10B981',   // Emerald
+  primary: '#F2275D',
+  secondary: '#451773',
+  accent: '#17BFBF',
+  danger: '#F20505',
+  success: '#10B981',
 };
 
 const PedidoView: React.FC = () => {
@@ -61,7 +66,6 @@ const PedidoView: React.FC = () => {
   const [viewMode, setViewMode] = useState<'initial' | 'camera' | 'result'>('initial');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Leer parámetros de URL al montar
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
@@ -79,7 +83,7 @@ const PedidoView: React.FC = () => {
     setViewMode('result');
 
     try {
-      const API_BASE = 'https://importadoramiranda.com/api';
+      const API_BASE = 'https://importadoramiranda.com/api'; // ✅ Sin espacios
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
@@ -147,7 +151,6 @@ const PedidoView: React.FC = () => {
           setViewMode('initial');
         }
       };
-
       startScanner();
     }
 
@@ -216,6 +219,7 @@ const PedidoView: React.FC = () => {
 
       return (
         <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
+          {/* Encabezado de verificación */}
           <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden" style={{ borderColor: COLORS.success }}>
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <FaCheckCircle size={100} color={COLORS.success} />
@@ -239,6 +243,7 @@ const PedidoView: React.FC = () => {
             </div>
           </div>
 
+          {/* Datos del cliente y ubicación */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
@@ -287,6 +292,7 @@ const PedidoView: React.FC = () => {
             </div>
           </div>
 
+          {/* Productos */}
           <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center gap-3 mb-6">
               <FaBoxOpen style={{ color: COLORS.secondary }} className="text-xl" />
@@ -313,6 +319,75 @@ const PedidoView: React.FC = () => {
             </div>
           </div>
 
+          {/* Imágenes */}
+          {pedido.imagenes && (
+            <>
+              {(pedido.imagenes.producto.length > 0 || pedido.imagenes.comprobante.length > 0) && (
+                <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <FaImage style={{ color: COLORS.accent }} className="text-xl" />
+                    <h3 className="font-bold text-gray-800 dark:text-white text-lg">Imágenes del Pedido</h3>
+                  </div>
+
+                  {pedido.imagenes.producto.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                        Productos
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {pedido.imagenes.producto.map((img, idx) => (
+                          <a
+                            key={`prod-${idx}`}
+                            href={`https://importadoramiranda.com/storage/${img}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
+                          >
+                            <img
+                              src={`https://importadoramiranda.com/storage/${img}`}
+                              alt={`Producto ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {pedido.imagenes.comprobante.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        Comprobantes
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {pedido.imagenes.comprobante.map((img, idx) => (
+                          <a
+                            key={`comp-${idx}`}
+                            href={`https://importadoramiranda.com/storage/${img}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
+                          >
+                            <img
+                              src={`https://importadoramiranda.com/storage/${img}`}
+                              alt={`Comprobante ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Botón final */}
           <div className="text-center pt-8">
             <button
               onClick={resetView}
