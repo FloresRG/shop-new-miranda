@@ -433,32 +433,7 @@ const PedidoView: React.FC = () => {
                     </div>
                   )}
 
-                  {pedido.imagenes.comprobante.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                        Comprobantes
-                      </h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {pedido.imagenes.comprobante.map((img, idx) => (
-                          <a
-                            key={`comp-${idx}`}
-                            href={`https://importadoramiranda.com/storage/${img}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
-                          >
-                            <img
-                              src={`https://importadoramiranda.com/storage/${img}`}
-                              alt={`Comprobante ${idx + 1}`}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  
                 </div>
               )}
             </>
