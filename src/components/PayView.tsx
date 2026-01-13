@@ -58,42 +58,46 @@ const PayView: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const cod = params.get("codigo");
+    const params = new URLSearchParams(window.location.search);
+    const cod = params.get("codigo");
 
-  if (cod) {
-    if (cod.length < 5) {
-      setError("Código inválido. Debe contener al menos 5 dígitos.");
+    if (cod) {
+      if (cod.length < 5) {
+        setError("Código inválido. Debe contener al menos 5 dígitos.");
+        setLoading(false);
+        return;
+      }
+
+      // Los últimos 4 dígitos: 2 del CI + 2 del celular
+      const last4 = cod.slice(-4);
+      const ciShort = last4.substring(0, 2);
+      const celularShort = last4.substring(2, 4);
+      const id = cod.slice(0, -4); // Todo lo anterior es el ID
+
+      // Validar que sean solo dígitos
+      if (
+        !/^\d+$/.test(id) ||
+        !/^\d{2}$/.test(ciShort) ||
+        !/^\d{2}$/.test(celularShort)
+      ) {
+        setError("Código inválido. Debe contener solo números.");
+        setLoading(false);
+        return;
+      }
+
+      fetchPedido(id, ciShort, celularShort);
+    } else {
+      setError("Código no proporcionado.");
       setLoading(false);
-      return;
     }
-
-    // Los últimos 4 dígitos: 2 del CI + 2 del celular
-    const last4 = cod.slice(-4);
-    const ciShort = last4.substring(0, 2);
-    const celularShort = last4.substring(2, 4);
-    const id = cod.slice(0, -4); // Todo lo anterior es el ID
-
-    // Validar que sean solo dígitos
-    if (!/^\d+$/.test(id) || !/^\d{2}$/.test(ciShort) || !/^\d{2}$/.test(celularShort)) {
-      setError("Código inválido. Debe contener solo números.");
-      setLoading(false);
-      return;
-    }
-
-    fetchPedido(id, ciShort, celularShort);
-  } else {
-    setError("Código no proporcionado.");
-    setLoading(false);
-  }
-}, []);
+  }, []);
 
   const fetchPedido = async (id: string, ci: string, celular: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const url = `http://127.0.0.1:8000/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
+      const url = `https://importadoramiranda.com/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
       const res = await fetch(url);
 
       if (!res.ok) {
@@ -157,10 +161,13 @@ const PayView: React.FC = () => {
 
     setUploading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/pay/comprobante", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://importadoramiranda.com/api/pay/comprobante",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));

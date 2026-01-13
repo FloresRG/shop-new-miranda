@@ -146,7 +146,7 @@ export default function CheckoutForm() {
       };
 
       const apiResponse = await axios.post(
-        "http://localhost:8000/api/shoppedidos",
+        "https://importadoramiranda.com/api/shoppedidos",
         data,
         { headers: { "Content-Type": "application/json" } },
       );

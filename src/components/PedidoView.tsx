@@ -1,6 +1,6 @@
 // src/components/PedidoView.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import React, { useState, useEffect, useRef } from "react";
+import { Html5Qrcode } from "html5-qrcode";
 import {
   FaCamera,
   FaImage,
@@ -12,7 +12,7 @@ import {
   FaMapMarkerAlt,
   FaSpinner,
   FaArrowLeft,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 // Tipos actualizados para la nueva API
 interface ProductoDetalle {
@@ -47,26 +47,28 @@ interface PedidoData {
 
 // Colores Premium
 const COLORS = {
-  primary: '#F2275D',   // Pink/Red
-  secondary: '#451773', // Purple
-  accent: '#17BFBF',    // Teal
-  danger: '#F20505',    // Red
-  success: '#10B981',   // Emerald
+  primary: "#F2275D", // Pink/Red
+  secondary: "#451773", // Purple
+  accent: "#17BFBF", // Teal
+  danger: "#F20505", // Red
+  success: "#10B981", // Emerald
 };
 
 const PedidoView: React.FC = () => {
   const [pedido, setPedido] = useState<PedidoData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'initial' | 'camera' | 'result'>('initial');
+  const [viewMode, setViewMode] = useState<"initial" | "camera" | "result">(
+    "initial",
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Leer parámetros de URL al montar
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    const ci = params.get('ci');
-    const celular = params.get('celular');
+    const id = params.get("id");
+    const ci = params.get("ci");
+    const celular = params.get("celular");
 
     if (id && ci && celular) {
       fetchPedido(id, ci, celular);
@@ -76,22 +78,25 @@ const PedidoView: React.FC = () => {
   const fetchPedido = async (id: string, ci: string, celular: string) => {
     setLoading(true);
     setError(null);
-    setViewMode('result');
+    setViewMode("result");
 
     try {
-      const API_BASE = 'http://127.0.0.1:8000/api';
+      const API_BASE = "https://importadoramiranda.com/api";
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Pedido no encontrado o credenciales incorrectas.');
+        throw new Error(
+          errorData.message ||
+            "Pedido no encontrado o credenciales incorrectas.",
+        );
       }
 
       const data: PedidoData = await res.json();
       setPedido(data);
     } catch (err: any) {
-      setError(err.message || 'Error al cargar el pedido.');
+      setError(err.message || "Error al cargar el pedido.");
       setPedido(null);
     } finally {
       setLoading(false);
@@ -103,7 +108,7 @@ const PedidoView: React.FC = () => {
     if (!target.files || target.files.length === 0) return;
 
     const file = target.files[0];
-    const elementId = 'reader-hidden';
+    const elementId = "reader-hidden";
 
     try {
       setLoading(true);
@@ -112,12 +117,12 @@ const PedidoView: React.FC = () => {
       await html5QrCode.clear();
       processScannedUrl(decodedText);
     } catch (err) {
-      console.error('Error scanning file', err);
+      console.error("Error scanning file", err);
       try {
         const temp = new Html5Qrcode(elementId);
         await temp.clear();
       } catch (e) {}
-      alert('No se pudo leer el código QR. Intenta con una imagen más clara.');
+      alert("No se pudo leer el código QR. Intenta con una imagen más clara.");
       setLoading(false);
     }
   };
@@ -126,25 +131,28 @@ const PedidoView: React.FC = () => {
     let html5QrcodeScanner: Html5Qrcode | null = null;
     let isMounted = true;
 
-    if (viewMode === 'camera') {
+    if (viewMode === "camera") {
       const startScanner = async () => {
         try {
-          html5QrcodeScanner = new Html5Qrcode('reader-camera');
+          html5QrcodeScanner = new Html5Qrcode("reader-camera");
           await html5QrcodeScanner.start(
-            { facingMode: 'environment' },
+            { facingMode: "environment" },
             { fps: 10, qrbox: { width: 250, height: 250 } },
             (decodedText) => {
               if (isMounted) {
-                html5QrcodeScanner?.stop().then(() => html5QrcodeScanner?.clear()).catch(console.error);
+                html5QrcodeScanner
+                  ?.stop()
+                  .then(() => html5QrcodeScanner?.clear())
+                  .catch(console.error);
                 processScannedUrl(decodedText);
               }
             },
-            () => {}
+            () => {},
           );
         } catch (err) {
-          console.error('Error starting camera', err);
-          alert('Error al iniciar la cámara. Asegúrate de permitir el acceso.');
-          setViewMode('initial');
+          console.error("Error starting camera", err);
+          alert("Error al iniciar la cámara. Asegúrate de permitir el acceso.");
+          setViewMode("initial");
         }
       };
 
@@ -154,7 +162,10 @@ const PedidoView: React.FC = () => {
     return () => {
       isMounted = false;
       if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
-        html5QrcodeScanner.stop().then(() => html5QrcodeScanner?.clear()).catch(() => {});
+        html5QrcodeScanner
+          .stop()
+          .then(() => html5QrcodeScanner?.clear())
+          .catch(() => {});
       }
     };
   }, [viewMode]);
@@ -162,43 +173,50 @@ const PedidoView: React.FC = () => {
   const processScannedUrl = (urlStr: string) => {
     try {
       const url = new URL(urlStr);
-      const newId = url.searchParams.get('id');
-      const newCi = url.searchParams.get('ci');
-      const newCelular = url.searchParams.get('celular');
+      const newId = url.searchParams.get("id");
+      const newCi = url.searchParams.get("ci");
+      const newCelular = url.searchParams.get("celular");
 
       if (newId && newCi && newCelular) {
         const newBrowserUrl = `${window.location.origin}${window.location.pathname}?id=${newId}&ci=${encodeURIComponent(newCi)}&celular=${encodeURIComponent(newCelular)}`;
-        window.history.pushState({}, '', newBrowserUrl);
+        window.history.pushState({}, "", newBrowserUrl);
         fetchPedido(newId, newCi, newCelular);
       } else {
-        alert('El QR no contiene los parámetros necesarios (id, ci, celular).');
+        alert("El QR no contiene los parámetros necesarios (id, ci, celular).");
         setLoading(false);
       }
     } catch (e) {
-      alert('El contenido escaneado no es una URL válida.');
+      alert("El contenido escaneado no es una URL válida.");
       setLoading(false);
     }
   };
 
   const resetView = () => {
-    window.history.pushState({}, '', window.location.pathname);
+    window.history.pushState({}, "", window.location.pathname);
     setPedido(null);
     setError(null);
-    setViewMode('initial');
+    setViewMode("initial");
   };
 
   const renderMainContent = () => {
-    if (error && viewMode === 'result') {
+    if (error && viewMode === "result") {
       return (
         <div className="text-center animate-fade-in-up pt-8">
           <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm inline-block max-w-sm w-full mx-auto">
-            <FaTimesCircle className="text-5xl mx-auto mb-4" style={{ color: COLORS.danger }} />
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Error de Verificación</h2>
+            <FaTimesCircle
+              className="text-5xl mx-auto mb-4"
+              style={{ color: COLORS.danger }}
+            />
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+              Error de Verificación
+            </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
             <button
               onClick={resetView}
               className="w-full py-3 rounded-xl font-bold text-white shadow-lg transform transition hover:-translate-y-1"
-              style={{ background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.danger} 100%)` }}
+              style={{
+                background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.danger} 100%)`,
+              }}
             >
               Intentar Nuevamente
             </button>
@@ -207,16 +225,24 @@ const PedidoView: React.FC = () => {
       );
     }
 
-    if (pedido && viewMode === 'result') {
-      const total = pedido.productos.reduce((acc, item) => acc + Number(item.subtotal), 0);
-      const estadoLabel = pedido.cuaderno.estado || (pedido.cuaderno.enviado ? 'Enviado' : 'Pendiente');
+    if (pedido && viewMode === "result") {
+      const total = pedido.productos.reduce(
+        (acc, item) => acc + Number(item.subtotal),
+        0,
+      );
+      const estadoLabel =
+        pedido.cuaderno.estado ||
+        (pedido.cuaderno.enviado ? "Enviado" : "Pendiente");
       const estadoClass = pedido.cuaderno.enviado
-        ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-        : 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400';
+        ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400"
+        : "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400";
 
       return (
         <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
-          <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden" style={{ borderColor: COLORS.success }}>
+          <div
+            className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden"
+            style={{ borderColor: COLORS.success }}
+          >
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <FaCheckCircle size={100} color={COLORS.success} />
             </div>
@@ -225,15 +251,21 @@ const PedidoView: React.FC = () => {
                 <FaCheckCircle className="text-3xl text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">Estado del Pedido</p>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Verificado Exitosamente</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide font-bold">
+                  Estado del Pedido
+                </p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                  Verificado Exitosamente
+                </h2>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-darkmode-body text-gray-700 dark:text-gray-300">
                 ID: #{pedido.cuaderno.id}
               </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${estadoClass}`}>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${estadoClass}`}
+              >
                 {estadoLabel}
               </span>
             </div>
@@ -242,22 +274,37 @@ const PedidoView: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
-                <FaUser style={{ color: COLORS.secondary }} className="text-xl" />
-                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Datos del Cliente</h3>
+                <FaUser
+                  style={{ color: COLORS.secondary }}
+                  className="text-xl"
+                />
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg">
+                  Datos del Cliente
+                </h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Nombre</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.nombre}</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Nombre
+                  </span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">
+                    {pedido.cuaderno.nombre}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Cédula (CI)</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.ci}</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Cédula (CI)
+                  </span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">
+                    {pedido.cuaderno.ci}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Celular</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Celular
+                  </span>
                   <a
-                    href={`https://wa.me/591${pedido.cuaderno.celular.replace(/\D/g, '')}`}
+                    href={`https://wa.me/591${pedido.cuaderno.celular.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-semibold text-right hover:underline"
@@ -271,17 +318,30 @@ const PedidoView: React.FC = () => {
 
             <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
               <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
-                <FaMapMarkerAlt style={{ color: COLORS.primary }} className="text-xl" />
-                <h3 className="font-bold text-gray-800 dark:text-white text-lg">Ubicación</h3>
+                <FaMapMarkerAlt
+                  style={{ color: COLORS.primary }}
+                  className="text-xl"
+                />
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg">
+                  Ubicación
+                </h3>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Departamento</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.departamento}</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Departamento
+                  </span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">
+                    {pedido.cuaderno.departamento}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Provincia</span>
-                  <span className="font-semibold text-gray-800 dark:text-white text-right">{pedido.cuaderno.provincia}</span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Provincia
+                  </span>
+                  <span className="font-semibold text-gray-800 dark:text-white text-right">
+                    {pedido.cuaderno.provincia}
+                  </span>
                 </div>
               </div>
             </div>
@@ -289,25 +349,45 @@ const PedidoView: React.FC = () => {
 
           <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center gap-3 mb-6">
-              <FaBoxOpen style={{ color: COLORS.secondary }} className="text-xl" />
-              <h3 className="font-bold text-gray-800 dark:text-white text-lg">Productos</h3>
+              <FaBoxOpen
+                style={{ color: COLORS.secondary }}
+                className="text-xl"
+              />
+              <h3 className="font-bold text-gray-800 dark:text-white text-lg">
+                Productos
+              </h3>
             </div>
             <div className="space-y-4">
               {pedido.productos.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 dark:bg-darkmode-body hover:bg-gray-100 dark:hover:bg-darkmode-border transition-colors">
+                <div
+                  key={idx}
+                  className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 dark:bg-darkmode-body hover:bg-gray-100 dark:hover:bg-darkmode-border transition-colors"
+                >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs" style={{ backgroundColor: COLORS.secondary }}>
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                      style={{ backgroundColor: COLORS.secondary }}
+                    >
                       {item.cantidad}x
                     </div>
-                    <span className="font-medium text-gray-800 dark:text-white">{item.nombre}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">
+                      {item.nombre}
+                    </span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-white">{Number(item.subtotal).toFixed(2)} Bs</span>
+                  <span className="font-bold text-gray-900 dark:text-white">
+                    {Number(item.subtotal).toFixed(2)} Bs
+                  </span>
                 </div>
               ))}
             </div>
             <div className="mt-6 pt-4 border-t border-gray-100 dark:border-darkmode-border flex justify-end items-center gap-2">
-              <span className="text-gray-500 dark:text-gray-400 text-sm">Total Pedido</span>
-              <span className="text-xl font-bold" style={{ color: COLORS.primary }}>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">
+                Total Pedido
+              </span>
+              <span
+                className="text-xl font-bold"
+                style={{ color: COLORS.primary }}
+              >
                 {total.toFixed(2)} Bs
               </span>
             </div>
@@ -317,7 +397,9 @@ const PedidoView: React.FC = () => {
             <button
               onClick={resetView}
               className="px-8 py-3 rounded-full font-bold text-white shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl"
-              style={{ background: `linear-gradient(135deg, ${COLORS.secondary} 0%, ${COLORS.primary} 100%)` }}
+              style={{
+                background: `linear-gradient(135deg, ${COLORS.secondary} 0%, ${COLORS.primary} 100%)`,
+              }}
             >
               Verificar Otro Comprobante
             </button>
@@ -326,16 +408,18 @@ const PedidoView: React.FC = () => {
       );
     }
 
-    if (viewMode === 'camera') {
+    if (viewMode === "camera") {
       return (
         <div className="max-w-md mx-auto animate-fade-in pt-8">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">Escaneando QR</h2>
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+            Escaneando QR
+          </h2>
           <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black aspect-square mb-6">
             <div id="reader-camera" className="w-full h-full"></div>
             <div className="absolute inset-0 border-2 border-white/30 pointer-events-none rounded-3xl"></div>
           </div>
           <button
-            onClick={() => setViewMode('initial')}
+            onClick={() => setViewMode("initial")}
             className="w-full py-4 bg-gray-100 dark:bg-darkmode-light text-gray-700 dark:text-white font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-darkmode-border transition"
           >
             Cancelar Escaneo
@@ -350,19 +434,29 @@ const PedidoView: React.FC = () => {
           <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-[#F2275D] to-[#451773] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-4">
             <FaTruck className="text-4xl text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Verificar Pedido</h2>
-          <p className="text-gray-500 dark:text-gray-400">Escanea el código QR de tu comprobante digital</p>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            Verificar Pedido
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">
+            Escanea el código QR de tu comprobante digital
+          </p>
         </div>
 
         <div className="space-y-4">
           <button
-            onClick={() => setViewMode('camera')}
+            onClick={() => setViewMode("camera")}
             className="w-full py-4 px-6 rounded-2xl shadow-lg border border-transparent flex items-center justify-between group transition-all hover:-translate-y-1"
-            style={{ background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)` }}
+            style={{
+              background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+            }}
           >
             <div className="text-left">
-              <span className="block text-white font-bold text-lg">Usar Cámara</span>
-              <span className="block text-white/80 text-sm">Escanea directamente</span>
+              <span className="block text-white font-bold text-lg">
+                Usar Cámara
+              </span>
+              <span className="block text-white/80 text-sm">
+                Escanea directamente
+              </span>
             </div>
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
               <FaCamera className="text-white text-xl" />
@@ -370,14 +464,24 @@ const PedidoView: React.FC = () => {
           </button>
 
           <div className="relative">
-            <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept="image/*"
+              className="hidden"
+            />
             <button
               onClick={() => fileInputRef.current?.click()}
               className="w-full py-4 px-6 rounded-2xl bg-white dark:bg-darkmode-light shadow-lg border border-gray-100 dark:border-darkmode-border flex items-center justify-between group transition-all hover:bg-gray-50 dark:hover:bg-darkmode-body hover:-translate-y-1"
             >
               <div className="text-left">
-                <span className="block text-gray-800 dark:text-white font-bold text-lg">Subir Imagen</span>
-                <span className="block text-gray-500 dark:text-gray-400 text-sm">Desde tu galería</span>
+                <span className="block text-gray-800 dark:text-white font-bold text-lg">
+                  Subir Imagen
+                </span>
+                <span className="block text-gray-500 dark:text-gray-400 text-sm">
+                  Desde tu galería
+                </span>
               </div>
               <div className="w-10 h-10 bg-gray-100 dark:bg-darkmode-body rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FaImage style={{ color: COLORS.accent }} className="text-xl" />
@@ -387,7 +491,9 @@ const PedidoView: React.FC = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-100 dark:border-darkmode-border text-center">
-          <p className="text-sm text-gray-400 dark:text-gray-500">Shop Nexus &copy; {new Date().getFullYear()}</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            Shop Nexus &copy; {new Date().getFullYear()}
+          </p>
         </div>
       </div>
     );
@@ -395,16 +501,28 @@ const PedidoView: React.FC = () => {
 
   return (
     <div className="relative min-h-[50vh]">
-      <div id="reader-hidden" style={{ position: 'fixed', top: '-10000px', left: '-10000px', width: '300px', height: '300px' }}></div>
+      <div
+        id="reader-hidden"
+        style={{
+          position: "fixed",
+          top: "-10000px",
+          left: "-10000px",
+          width: "300px",
+          height: "300px",
+        }}
+      ></div>
 
       {loading && (
         <div className="absolute inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center animate-fade-in rounded-3xl">
-          <FaSpinner className="text-4xl animate-spin mb-4" style={{ color: COLORS.accent }} />
+          <FaSpinner
+            className="text-4xl animate-spin mb-4"
+            style={{ color: COLORS.accent }}
+          />
           <p className="text-gray-600 font-medium">Procesando...</p>
         </div>
       )}
 
-      <div className={loading ? 'opacity-50 pointer-events-none' : ''}>
+      <div className={loading ? "opacity-50 pointer-events-none" : ""}>
         {renderMainContent()}
       </div>
     </div>
