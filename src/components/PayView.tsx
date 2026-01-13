@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaSpinner,
   FaCheckCircle,
   FaTimesCircle,
   FaBoxOpen,
   FaUser,
-  FaMapMarkerAlt,
+  FaUpload,
 } from "react-icons/fa";
 
-// Tipos basados en PedidoView
+// Tipos
 interface ProductoDetalle {
   producto_id: number;
   nombre: string;
@@ -51,13 +51,17 @@ const PayView: React.FC = () => {
   const [pedido, setPedido] = useState<PedidoData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const cod = params.get("cod");
 
     if (cod) {
-      // Asumir que cod es {id}-{ci}-{celular}
       const parts = cod.split("-");
       if (parts.length === 3) {
         const [id, ci, celular] = parts;
@@ -72,36 +76,137 @@ const PayView: React.FC = () => {
     }
   }, []);
 
+  const setMockData = (id: string, ci: string, celular: string) => {
+    const mockPedido: PedidoData = {
+      cuaderno: {
+        id: parseInt(id),
+        nombre: "Juan Pérez",
+        ci: ci,
+        celular: celular,
+        departamento: "La Paz",
+        provincia: "La Paz",
+        tipo: "pedido",
+        estado: "Pendiente",
+        detalle: null,
+        la_paz: true,
+        enviado: false,
+        p_listo: false,
+        p_pendiente: true,
+        created_at: new Date().toISOString(),
+      },
+      productos: [
+        {
+          producto_id: 1,
+          nombre: "Producto Ejemplo 1",
+          cantidad: 2,
+          precio_venta: 50.0,
+          subtotal: 100.0,
+        },
+        {
+          producto_id: 2,
+          nombre: "Producto Ejemplo 2",
+          cantidad: 1,
+          precio_venta: 75.0,
+          subtotal: 75.0,
+        },
+      ],
+    };
+    setPedido(mockPedido);
+    setLoading(false);
+  };
+
   const fetchPedido = async (id: string, ci: string, celular: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const API_BASE = "https://importadoramiranda.com/api";
-      const url = `${API_BASE}/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
-
+      const url = `http://127.0.0.1:8000/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
       const res = await fetch(url);
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          errorData.message ||
-            "Pedido no encontrado o credenciales incorrectas.",
-        );
+        throw new Error(errorData.message || "Pedido no encontrado.");
       }
 
       const data: PedidoData = await res.json();
       setPedido(data);
     } catch (err: any) {
-      setError(err.message || "Error al cargar el pedido.");
-      setPedido(null);
+      console.error("Error al cargar el pedido:", err);
+      setError(err.message || "No se pudo cargar el pedido.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setReceiptFile(file);
+      if (file.type.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+      } else {
+        setPreviewUrl(null);
+      }
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setReceiptFile(file);
+      if (file.type.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+      } else {
+        setPreviewUrl(null);
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadReceipt = async () => {
+  if (!receiptFile || !pedido) return;
+
+  const formData = new FormData();
+  formData.append("id", pedido.cuaderno.id.toString());
+  formData.append("ci", pedido.cuaderno.ci || "");
+  formData.append("celular", pedido.cuaderno.celular);
+  formData.append("comprobante", receiptFile);
+
+  setUploading(true);
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/pay/comprobante", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Error al subir el comprobante.");
+    }
+
+    setUploadSuccess(true);
+    alert("✅ Comprobante subido exitosamente. ¡Gracias!");
+  } catch (err: any) {
+    console.error("Error:", err);
+    alert("❌ " + (err.message || "No se pudo subir el comprobante."));
+  } finally {
+    setUploading(false);
+  }
+};
+
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
+      <div className="flex flex-col items-center justify-center min-h-screen py-16">
         <FaSpinner
           className="text-4xl animate-spin mb-4"
           style={{ color: COLORS.accent }}
@@ -115,8 +220,8 @@ const PayView: React.FC = () => {
 
   if (error) {
     return (
-      <div className="text-center py-16">
-        <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm inline-block max-w-sm w-full mx-auto">
+      <div className="flex justify-center py-16">
+        <div className="bg-red-50 dark:bg-red-900/10 p-8 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm max-w-md w-full text-center">
           <FaTimesCircle
             className="text-5xl mx-auto mb-4"
             style={{ color: COLORS.danger }}
@@ -124,7 +229,7 @@ const PayView: React.FC = () => {
           <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
             Error
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <p className="text-gray-600 dark:text-gray-300">{error}</p>
         </div>
       </div>
     );
@@ -138,108 +243,197 @@ const PayView: React.FC = () => {
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-          Información del Pedido
+    <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+          Confirmación de Pago
         </h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Detalles para proceder con el pago
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Revisa tu pedido y sube el comprobante de pago
         </p>
       </div>
 
-      <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
-        <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-darkmode-border">
-          <FaUser style={{ color: COLORS.secondary }} className="text-xl" />
-          <h3 className="font-bold text-gray-800 dark:text-white text-lg">
-            Datos del Cliente
-          </h3>
-        </div>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Nombre</span>
-            <span className="font-semibold text-gray-800 dark:text-white text-right">
-              {pedido.cuaderno.nombre}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">
-              Cédula (CI)
-            </span>
-            <span className="font-semibold text-gray-800 dark:text-white text-right">
-              {pedido.cuaderno.ci}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Celular</span>
-            <span className="font-semibold text-gray-800 dark:text-white text-right">
-              {pedido.cuaderno.celular}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">
-              Departamento
-            </span>
-            <span className="font-semibold text-gray-800 dark:text-white text-right">
-              {pedido.cuaderno.departamento}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Provincia</span>
-            <span className="font-semibold text-gray-800 dark:text-white text-right">
-              {pedido.cuaderno.provincia}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
-        <div className="flex items-center gap-3 mb-6">
-          <FaBoxOpen style={{ color: COLORS.secondary }} className="text-xl" />
-          <h3 className="font-bold text-gray-800 dark:text-white text-lg">
-            Productos
-          </h3>
-        </div>
-        <div className="space-y-4">
-          {pedido.productos.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex justify-between items-center p-4 rounded-2xl bg-gray-50 dark:bg-darkmode-body"
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                  style={{ backgroundColor: COLORS.secondary }}
-                >
-                  {item.cantidad}x
-                </div>
-                <span className="font-medium text-gray-800 dark:text-white">
-                  {item.nombre}
-                </span>
+      {/* ✅ LAYOUT PRINCIPAL: IZQUIERDA = DATOS | DERECHA = COMPROBANTE */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* 👈 LADO IZQUIERDO: CLIENTE + PRODUCTOS */}
+        <div className="space-y-6">
+          {/* Cliente */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                <FaUser className="text-xl text-[#451773]" />
               </div>
-              <span className="font-bold text-gray-900 dark:text-white">
-                {Number(item.subtotal).toFixed(2)} Bs
+              <h2 className="font-bold text-gray-800 dark:text-white text-lg">
+                Cliente
+              </h2>
+            </div>
+            <div className="space-y-3 text-sm">
+              {[
+                { label: "Nombre", value: pedido.cuaderno.nombre },
+                { label: "Cédula (CI)", value: pedido.cuaderno.ci },
+                { label: "Celular", value: pedido.cuaderno.celular },
+                { label: "Departamento", value: pedido.cuaderno.departamento },
+                { label: "Provincia", value: pedido.cuaderno.provincia },
+              ].map((item, i) => (
+                <div key={i} className="flex justify-between">
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {item.label}
+                  </span>
+                  <span className="font-medium text-gray-800 dark:text-white text-right">
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Productos */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <FaBoxOpen className="text-xl text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <h2 className="font-bold text-gray-800 dark:text-white text-lg">
+                Productos
+              </h2>
+            </div>
+            <div className="space-y-4">
+              {pedido.productos.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between items-start p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#451773] text-white text-xs font-bold">
+                      {item.cantidad}
+                    </span>
+                    <span className="font-medium text-gray-800 dark:text-white">
+                      {item.nombre}
+                    </span>
+                  </div>
+                  <span className="font-bold text-gray-900 dark:text-white">
+                    {Number(item.subtotal).toFixed(2)} Bs
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+              <span className="text-gray-600 dark:text-gray-300 font-medium">
+                Total a pagar
+              </span>
+              <span
+                className="text-2xl font-bold"
+                style={{ color: COLORS.primary }}
+              >
+                {total.toFixed(2)} Bs
               </span>
             </div>
-          ))}
+          </div>
         </div>
-        <div className="mt-6 pt-4 border-t border-gray-100 dark:border-darkmode-border flex justify-end items-center gap-2">
-          <span className="text-gray-500 dark:text-gray-400 text-sm">
-            Total a Pagar
-          </span>
-          <span className="text-xl font-bold" style={{ color: COLORS.primary }}>
-            {total.toFixed(2)} Bs
-          </span>
+
+        {/* 👉 LADO DERECHO: SUBIR COMPROBANTE */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <FaCheckCircle className="text-xl text-green-600 dark:text-green-400" />
+            </div>
+            <h2 className="font-bold text-gray-800 dark:text-white text-lg">
+              Subir Comprobante
+            </h2>
+          </div>
+
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Una vez realizado el pago, adjunta tu comprobante para confirmar la
+            transacción.
+          </p>
+
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClick={handleClick}
+            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+              previewUrl
+                ? "border-[#F2275D] bg-pink-50 dark:bg-pink-900/10"
+                : "border-gray-300 dark:border-gray-600 hover:border-[#F2275D]"
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,.pdf"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {previewUrl ? (
+              <div className="space-y-3">
+                <img
+                  src={previewUrl}
+                  alt="Vista previa"
+                  className="max-h-48 mx-auto rounded-lg shadow object-contain"
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate px-2">
+                  {receiptFile?.name}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="mx-auto w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                  <FaUpload className="text-2xl text-gray-500 dark:text-gray-400" />
+                </div>
+                <p className="font-medium text-gray-800 dark:text-white">
+                  Arrastra tu comprobante aquí
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  o{" "}
+                  <span className="text-[#F2275D] font-semibold">
+                    haz clic para buscar
+                  </span>
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  JPG, PNG o PDF (máx. 5 MB)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {receiptFile && (
+            <button
+              onClick={handleUploadReceipt}
+              disabled={uploading || uploadSuccess}
+              className={`mt-6 w-full py-3 rounded-xl font-semibold text-white shadow-md transition-all ${
+                uploadSuccess
+                  ? "bg-green-500"
+                  : uploading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-[#F2275D] to-[#F20505] hover:opacity-90"
+              }`}
+            >
+              {uploading ? (
+                <>
+                  <FaSpinner className="inline-block animate-spin mr-2" />{" "}
+                  Subiendo...
+                </>
+              ) : uploadSuccess ? (
+                <>
+                  <FaCheckCircle className="inline-block mr-2" /> ¡Subido con
+                  éxito!
+                </>
+              ) : (
+                "Confirmar Pago"
+              )}
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="text-center">
+      {/* Pie */}
+      <div className="text-center mt-10">
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Escanea el QR enviado a tu WhatsApp para realizar el pago.
+          ¿No has pagado aún? Escanea el QR que te enviamos por WhatsApp.
         </p>
         <button
           onClick={() => window.history.back()}
-          className="px-8 py-3 rounded-full font-bold text-white shadow-lg"
+          className="px-6 py-3 rounded-full font-semibold text-white shadow-md"
           style={{
             background: `linear-gradient(135deg, ${COLORS.secondary} 0%, ${COLORS.primary} 100%)`,
           }}
