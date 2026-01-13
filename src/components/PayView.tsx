@@ -58,62 +58,35 @@ const PayView: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cod = params.get("cod");
+  const params = new URLSearchParams(window.location.search);
+  const cod = params.get("codigo");
 
-    if (cod) {
-      const parts = cod.split("-");
-      if (parts.length === 3) {
-        const [id, ci, celular] = parts;
-        fetchPedido(id, ci, celular);
-      } else {
-        setError("Código inválido. El formato esperado es id-ci-celular.");
-        setLoading(false);
-      }
-    } else {
-      setError("Código no proporcionado.");
+  if (cod) {
+    if (cod.length < 5) {
+      setError("Código inválido. Debe contener al menos 5 dígitos.");
       setLoading(false);
+      return;
     }
-  }, []);
 
-  const setMockData = (id: string, ci: string, celular: string) => {
-    const mockPedido: PedidoData = {
-      cuaderno: {
-        id: parseInt(id),
-        nombre: "Juan Pérez",
-        ci: ci,
-        celular: celular,
-        departamento: "La Paz",
-        provincia: "La Paz",
-        tipo: "pedido",
-        estado: "Pendiente",
-        detalle: null,
-        la_paz: true,
-        enviado: false,
-        p_listo: false,
-        p_pendiente: true,
-        created_at: new Date().toISOString(),
-      },
-      productos: [
-        {
-          producto_id: 1,
-          nombre: "Producto Ejemplo 1",
-          cantidad: 2,
-          precio_venta: 50.0,
-          subtotal: 100.0,
-        },
-        {
-          producto_id: 2,
-          nombre: "Producto Ejemplo 2",
-          cantidad: 1,
-          precio_venta: 75.0,
-          subtotal: 75.0,
-        },
-      ],
-    };
-    setPedido(mockPedido);
+    // Los últimos 4 dígitos: 2 del CI + 2 del celular
+    const last4 = cod.slice(-4);
+    const ciShort = last4.substring(0, 2);
+    const celularShort = last4.substring(2, 4);
+    const id = cod.slice(0, -4); // Todo lo anterior es el ID
+
+    // Validar que sean solo dígitos
+    if (!/^\d+$/.test(id) || !/^\d{2}$/.test(ciShort) || !/^\d{2}$/.test(celularShort)) {
+      setError("Código inválido. Debe contener solo números.");
+      setLoading(false);
+      return;
+    }
+
+    fetchPedido(id, ciShort, celularShort);
+  } else {
+    setError("Código no proporcionado.");
     setLoading(false);
-  };
+  }
+}, []);
 
   const fetchPedido = async (id: string, ci: string, celular: string) => {
     setLoading(true);
@@ -174,35 +147,73 @@ const PayView: React.FC = () => {
   };
 
   const handleUploadReceipt = async () => {
-  if (!receiptFile || !pedido) return;
+    if (!receiptFile || !pedido) return;
 
-  const formData = new FormData();
-  formData.append("id", pedido.cuaderno.id.toString());
-  formData.append("ci", pedido.cuaderno.ci || "");
-  formData.append("celular", pedido.cuaderno.celular);
-  formData.append("comprobante", receiptFile);
+    const formData = new FormData();
+    formData.append("id", pedido.cuaderno.id.toString());
+    formData.append("ci", pedido.cuaderno.ci || "");
+    formData.append("celular", pedido.cuaderno.celular);
+    formData.append("comprobante", receiptFile);
 
-  setUploading(true);
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/pay/comprobante", {
-      method: "POST",
-      body: formData,
-    });
+    setUploading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/pay/comprobante", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || "Error al subir el comprobante.");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Error al subir el comprobante.");
+      }
+
+      const responseData = await res.json();
+
+      setUploadSuccess(true);
+
+      if (responseData.whatsapp_connected === false) {
+        const mensaje = `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedido.cuaderno.id}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
+        window.open(
+          `https://wa.me/59170621016?text=${encodeURIComponent(mensaje)}`,
+          "_blank",
+        );
+
+        // ✅ DESCARGA AUTOMÁTICA DEL PDF
+        const pdfBase64 = responseData.pdf_base64;
+        if (pdfBase64) {
+          try {
+            const byteString = atob(pdfBase64);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+              uint8Array[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `pedido_${pedido.cuaderno.id}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          } catch (err) {
+            console.error("Error al procesar el PDF:", err);
+            alert("No se pudo generar el comprobante.");
+          }
+        } else {
+          alert("Comprobante no disponible.");
+        }
+      }
+
+      alert("✅ Comprobante subido exitosamente. ¡Gracias!");
+    } catch (err: any) {
+      console.error("Error:", err);
+      alert("❌ " + (err.message || "No se pudo subir el comprobante."));
+    } finally {
+      setUploading(false);
     }
-
-    setUploadSuccess(true);
-    alert("✅ Comprobante subido exitosamente. ¡Gracias!");
-  } catch (err: any) {
-    console.error("Error:", err);
-    alert("❌ " + (err.message || "No se pudo subir el comprobante."));
-  } finally {
-    setUploading(false);
-  }
-};
+  };
 
   if (loading) {
     return (
