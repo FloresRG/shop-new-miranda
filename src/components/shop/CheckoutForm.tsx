@@ -4,7 +4,36 @@ import { cartItems, clearCart } from "../../store/cartStore";
 import type { CartStore } from "../../store/cartStore";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { jsPDF } from "jspdf";
+
+// 🔹 AÑADIDO: Objeto de departamentos y provincias
+const departamentos = {
+  "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
+  "La Paz": [
+    "Caranavi",
+    "Recojo en tienda",
+    "Palos blancos",
+    "Mapiri",
+    "Guanay",
+    "Riveralta",
+    "Coripata",
+    "Asunta",
+  ],
+  Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
+  Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
+  Oruro: ["Oruro"],
+  Chuquisaca: ["Sucre"],
+  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo"],
+  Beni: [
+    "Trinidad",
+    "Riberalta",
+    "Guayaramerín",
+    "San Borja",
+    "Santa Rosa",
+    "Santa Ana del Yacuma",
+    "Rurrenabaque",
+  ],
+  Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
+};
 
 export default function CheckoutForm() {
   const $cartItems = useStore(cartItems) as CartStore | undefined;
@@ -16,6 +45,7 @@ export default function CheckoutForm() {
   }, 0);
 
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 🔹 Estado para loader
   const [contactId, setContactId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -26,14 +56,41 @@ export default function CheckoutForm() {
     provincia: "",
   });
 
+  // 🔹 AÑADIDO: Estado para provincias dinámicas
+  const [provincias, setProvincias] = useState<string[]>([]);
+
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
+  // 🔹 MODIFICADO: handleChange ahora maneja el cambio de departamento
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    let processedValue = value;
+
+    if (name === "nombre") {
+      // Solo letras, espacios, tildes y ñ (sin números ni símbolos)
+      processedValue = value
+        .replace(/[^a-zA-ZÀ-ÿ\s]/g, "") // Elimina caracteres no permitidos
+        .toUpperCase(); // Convierte a mayúsculas
+    } else if (name === "ci") {
+      // Permite letras, números y guiones (común en CIs bolivianas)
+      processedValue = value
+        .replace(/[^a-zA-Z0-9\-]/g, "") // Solo alfanumérico y guion
+        .toUpperCase(); // Asegura mayúsculas
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: processedValue }));
+
+    if (name === "departamento") {
+      const nuevasProvincias =
+        departamentos[value as keyof typeof departamentos] || [];
+      setProvincias(nuevasProvincias);
+      setFormData((prev) => ({ ...prev, provincia: "" }));
+    }
   };
 
   const validateForm = (): boolean => {
@@ -64,10 +121,14 @@ export default function CheckoutForm() {
     e.preventDefault();
     if (validateForm()) {
       await sendOrderToAPI();
+    } else {
+      const firstError = Object.values(formErrors)[0];
+      toast.error(firstError || "Complete todos los campos requeridos.");
     }
   };
 
   const sendOrderToAPI = async () => {
+    setIsSubmitting(true); // 🔹 Activar loader
     try {
       const data = {
         nombre: formData.nombre,
@@ -83,10 +144,8 @@ export default function CheckoutForm() {
         })),
       };
 
-      console.log("Sending data:", data);
-
       const apiResponse = await axios.post(
-        "http://127.0.0.1:8000/api/shoppedidos",
+        "http://localhost:8000/api/shoppedidos",
         data,
         { headers: { "Content-Type": "application/json" } },
       );
@@ -124,7 +183,7 @@ export default function CheckoutForm() {
         }
       }
 
-      // Mandar mensaje de WhatsApp
+      // WhatsApp
       const mensaje = `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
       window.open(
         `https://wa.me/59170621016?text=${encodeURIComponent(mensaje)}`,
@@ -132,11 +191,12 @@ export default function CheckoutForm() {
       );
     } catch (error: any) {
       console.error("Error al enviar el pedido:", error);
-      console.log("Validation errors:", error?.response?.data?.errors);
       toast.error(
         error?.response?.data?.message ||
           "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
+    } finally {
+      setIsSubmitting(false); // 🔹 Siempre desactivar loader
     }
   };
 
@@ -166,7 +226,7 @@ export default function CheckoutForm() {
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Su pedido{" "}
               <span className="font-bold text-primary">#{contactId}</span> ha
-              sido registrado.
+              sido registrado. Un encargado se comunicará con usted pronto para confirmar su pedido  se le enviar un QR al numero que ingreso para realizar el pago
             </p>
             <button
               onClick={() => setIsSuccess(false)}
@@ -247,6 +307,7 @@ export default function CheckoutForm() {
                 value={formData.nombre}
                 onChange={handleChange}
                 className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                placeholder="Ingrese su nombre completo"
               />
               {formErrors.nombre && (
                 <p className="text-red-500 text-xs mt-1">{formErrors.nombre}</p>
@@ -264,6 +325,7 @@ export default function CheckoutForm() {
                 value={formData.ci}
                 onChange={handleChange}
                 className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                placeholder="Ingrese su CI"
               />
               {formErrors.ci && (
                 <p className="text-red-500 text-xs mt-1">{formErrors.ci}</p>
@@ -276,11 +338,20 @@ export default function CheckoutForm() {
               </label>
               <input
                 required
-                type="text"
-                name="celular"
+                type="tel"
+                inputMode="numeric"
+                maxLength={8}
                 value={formData.celular}
-                onChange={handleChange}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, "");
+                  if (value.length > 8) value = value.slice(0, 8);
+                  if (value.length === 1 && !["6", "7"].includes(value)) {
+                    value = "";
+                  }
+                  setFormData((prev) => ({ ...prev, celular: value }));
+                }}
                 className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
+                placeholder="Ej. 70123456"
               />
               {formErrors.celular && (
                 <p className="text-red-500 text-xs mt-1">
@@ -301,15 +372,11 @@ export default function CheckoutForm() {
                 className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
               >
                 <option value="">Seleccione un departamento</option>
-                <option value="La Paz">La Paz</option>
-                <option value="Cochabamba">Cochabamba</option>
-                <option value="Santa Cruz">Santa Cruz</option>
-                <option value="Oruro">Oruro</option>
-                <option value="Potosí">Potosí</option>
-                <option value="Chuquisaca">Chuquisaca</option>
-                <option value="Tarija">Tarija</option>
-                <option value="Beni">Beni</option>
-                <option value="Pando">Pando</option>
+                {Object.keys(departamentos).map((dep) => (
+                  <option key={dep} value={dep}>
+                    {dep}
+                  </option>
+                ))}
               </select>
               {formErrors.departamento && (
                 <p className="text-red-500 text-xs mt-1">
@@ -318,30 +385,75 @@ export default function CheckoutForm() {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-                Provincia
-              </label>
-              <input
-                required
-                type="text"
-                name="provincia"
-                value={formData.provincia}
-                onChange={handleChange}
-                className="w-full p-2 border rounded dark:bg-darkmode-body dark:border-gray-700"
-              />
-              {formErrors.provincia && (
-                <p className="text-red-500 text-xs mt-1">
-                  {formErrors.provincia}
-                </p>
-              )}
-            </div>
+            {/* 🔹 Reemplazado: Provincia ahora es botones */}
+            {formData.departamento && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
+                  Provincia o Ciudad
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {provincias.map((prov) => (
+                    <button
+                      key={prov}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, provincia: prov })
+                      }
+                      className={`px-3 py-2 text-sm rounded border transition-all ${
+                        formData.provincia === prov
+                          ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary"
+                          : "bg-gray-100 dark:bg-darkmode-body border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 hover:border-primary"
+                      }`}
+                    >
+                      {prov}
+                    </button>
+                  ))}
+                </div>
+                {formErrors.provincia && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formErrors.provincia}
+                  </p>
+                )}
+              </div>
+            )}
 
+            {/* 🔹 Botón con loader */}
             <button
               type="submit"
-              className="w-full btn btn-primary py-3 rounded-lg font-bold mt-4 shadow-lg hover:shadow-xl transition-all"
+              disabled={isSubmitting}
+              className={`w-full py-3 rounded-lg font-bold mt-4 shadow-lg transition-all ${
+                isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "btn btn-primary hover:shadow-xl"
+              }`}
             >
-              Enviar Pedido
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Enviando...
+                </span>
+              ) : (
+                "Enviar Pedido"
+              )}
             </button>
           </form>
         </div>
