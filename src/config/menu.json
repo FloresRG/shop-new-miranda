@@ -9,6 +9,10 @@
       "url": "/tienda"
     },
     {
+      "name": "Liquidaciones",
+      "url": "/liquidaciones"
+    },
+    {
       "name": "Nosotros",
       "url": "/about"
     },
@@ -29,6 +33,10 @@
     {
       "name": "Políticas de Privacidad",
       "url": "#"
+    },
+    {
+      "name": "Liquidaciones",
+      "url": "/liquidaciones"
     },
     {
       "name": "Tienda",
