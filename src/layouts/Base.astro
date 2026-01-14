@@ -200,7 +200,13 @@ const {
 
     <TwSizeIndicator />
     <Header transparent={headerTransparent} />
-    <Toaster client:load position="top-center" />
+    <Toaster
+      client:load
+      position="top-center"
+      containerStyle={{
+        top: "100px",
+      }}
+    />
     <SearchModal client:load />
     <main id="main-content">
       <slot />
