@@ -106,30 +106,31 @@ export default function CheckoutForm() {
   const sendOrderToAPI = async () => {
     try {
       setIsSubmitting(true);
-      const apiFormData = new FormData();
-      apiFormData.append("nombre", formData.nombre);
-      apiFormData.append("ci", formData.ci);
-      apiFormData.append("celular", formData.celular);
-      apiFormData.append("destino", `${formData.departamento} - ${formData.provincia}`);
-      apiFormData.append("direccion", "Sin direccion");
-      apiFormData.append("estado", "POR COBRAR");
-      apiFormData.append("cantidad_productos", items.length.toString());
-      apiFormData.append("detalle", "Pedido desde Checkout Web (Premium)");
-      apiFormData.append("productos", JSON.stringify(items.map(i => ({ id: i.id, quantity: i.quantity }))));
-      apiFormData.append("monto_deposito", "0");
-      apiFormData.append("monto_enviado_pagado", total.toString());
-      apiFormData.append("id_usuario", "0");
+
+      const orderData = {
+        nombre: formData.nombre,
+        ci: formData.ci,
+        celular: formData.celular,
+        departamento: formData.departamento,
+        provincia: formData.provincia,
+        tipo: "Cliente Web",
+        productos: items.map(i => ({
+          producto_id: i.id,
+          cantidad: i.quantity,
+          precio_venta: parseFloat(i.precio) || 0
+        }))
+      };
 
       const apiResponse = await axios.post(
         "https://importadoramiranda.com/api/shoppedidos",
-        apiFormData,
-        { headers: { "Content-Type": "multipart/form-data" } },
+        orderData,
+        { headers: { "Content-Type": "application/json" } },
       );
 
       const pedidoNumero = apiResponse.data.pedido_id || apiResponse.data.message || "Pedido Registrado";
       setPedidoId(pedidoNumero);
 
-      // WhatsApp (como solicitó el usuario en su última instrucción funcional antes del merge)
+      // WhatsApp
       const mensaje = `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoNumero}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
       window.open(
         `https://wa.me/59170621016?text=${encodeURIComponent(mensaje)}`,
@@ -421,7 +422,7 @@ export default function CheckoutForm() {
               ¡Pedido Registrado!
             </h3>
             <p className="text-primary font-black text-lg mb-4">
-              Orden: #{pedidoId}
+              Pedido: #{pedidoId}
             </p>
             <div className="space-y-4 mb-8">
               <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
