@@ -9,12 +9,12 @@ import CheckoutForm from "@/components/shop/CheckoutForm";
     <div class="container">
       <h1 class="h3 mb-8 text-center">Finalizar Compra</h1>
 
+      <CartModal client:only="react" />
       <div
-        class="max-w-4xl mx-auto  dark:bg-darkmode-theme-light p-8 rounded-lg shadow-lg border border-border dark:border-darkmode-border"
+        class="max-w-4xl mx-auto dark:bg-darkmode-theme-light p-4 md:p-8 rounded-lg shadow-lg border border-border dark:border-darkmode-border"
       >
         <CheckoutForm client:only="react" />
       </div>
     </div>
   </section>
-  <CartModal client:only="react" />
 </Base>
