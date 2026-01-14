@@ -1,0 +1,12 @@
+---
+import Base from "@/layouts/Base.astro";
+import PayView from "@/components/PayView";
+---
+
+<Base title="Pago - Importadora Miranda">
+  <section class="section py-8">
+    <div class="container">
+      <PayView client:only="react" />
+    </div>
+  </section>
+</Base>

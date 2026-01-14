@@ -25,6 +25,10 @@
       "url": "/qr"
     },
     {
+      "name": "Liquidaciones",
+      "url": "/liquidaciones"
+    },
+    {
       "name": "Mis Deseos",
       "url": "/deseos"
     }

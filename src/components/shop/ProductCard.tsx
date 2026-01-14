@@ -37,12 +37,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group relative bg-white dark:bg-darkmode-light rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-0 md:hover:-translate-y-2 border border-gray-100 dark:border-darkmode-border hover:border-[#F2275D]/30 dark:hover:border-[#F2275D]/50 flex flex-row md:flex-col h-32 md:h-full shadow-md hover:shadow-2xl">
-
       {/* Glow hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/0 via-[#451773]/0 to-[#17BFBF]/0 
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/0 via-[#451773]/0 to-[#17BFBF]/0 
         group-hover:from-[#F2275D]/5 group-hover:via-[#451773]/5 group-hover:to-[#17BFBF]/5 
-        transition-all duration-500 pointer-events-none rounded-2xl z-0">
-      </div>
+        transition-all duration-500 pointer-events-none rounded-2xl z-0"
+      ></div>
 
       {/* Imagen */}
       <a
@@ -57,35 +57,43 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={imageUrl}
           alt={product.nombre}
           onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? "opacity-100 group-hover:scale-110" : ""
-            }`}
+          className={`w-full h-full object-cover transition-all duration-700 ${
+            imageLoaded ? "opacity-100 group-hover:scale-110" : ""
+          }`}
           loading="lazy"
         />
 
         {/* Overlay (Desktop Only) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#4b0082]/80 via-[#9370db]/40 to-transparent 
-          opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10 hidden md:block">
-        </div>
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[#4b0082]/80 via-[#9370db]/40 to-transparent 
+          opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10 hidden md:block"
+        ></div>
 
         {/* BOTÓN WISHLIST */}
         <div className="absolute top-2 left-2 md:top-3 md:right-3 md:left-auto z-30">
           <button
             onClick={handleWishlist}
-            className={`w-8 h-8 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${isWishlisted
-              ? "bg-red-500 text-white"
-              : "bg-white/90 dark:bg-black/70 text-gray-600 dark:text-gray-300 hover:text-red-500"
-              }`}
+            className={`w-8 h-8 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${
+              isWishlisted
+                ? "bg-red-500 text-white"
+                : "bg-white/90 dark:bg-black/70 text-gray-600 dark:text-gray-300 hover:text-red-500"
+            }`}
             title={isWishlisted ? "Quitar de favoritos" : "Añadir a favoritos"}
           >
-            {isWishlisted ? <FaHeart className="text-xs md:text-base" /> : <FaRegHeart className="text-xs md:text-base" />}
+            {isWishlisted ? (
+              <FaHeart className="text-xs md:text-base" />
+            ) : (
+              <FaRegHeart className="text-xs md:text-base" />
+            )}
           </button>
         </div>
 
         {/* MARCA Y CATEGORÍA — Desktop Only Animation */}
-        <div className="absolute bottom-0 inset-x-0 p-4 transform translate-y-full 
-          group-hover:translate-y-0 transition-transform duration-500 z-20 hidden md:block">
+        <div
+          className="absolute bottom-0 inset-x-0 p-4 transform translate-y-full 
+          group-hover:translate-y-0 transition-transform duration-500 z-20 hidden md:block"
+        >
           <div className="flex items-center justify-between gap-2">
-
             {/* Marca */}
             <div className="flex items-center gap-2 px-3 py-2 bg-white/95 dark:bg-black/90 backdrop-blur-md rounded-xl shadow-xl">
               <div className="w-1.5 h-1.5 rounded-full bg-[#F2275D] animate-pulse"></div>
@@ -101,7 +109,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {product.categoria.categoria}
               </span>
             </div>
-
           </div>
         </div>
       </a>
@@ -111,7 +118,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div>
           {/* Mobile Brand Label */}
           <div className="flex md:hidden items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 mb-1">
-            <span className="uppercase font-bold text-primary">{product.marca.marca}</span>
+            <span className="uppercase font-bold text-primary">
+              {product.marca.marca}
+            </span>
           </div>
 
           <a href={`/tienda/${product.id}`} className="block mb-1 md:mb-4">
@@ -130,10 +139,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             disabled={!hasStock}
-            className={`p-2 md:px-5 md:py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg flex-shrink-0 ${hasStock
-              ? "bg-gradient-to-r from-[#F2275D] to-[#F20505] text-white hover:scale-105"
-              : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
-              }`}
+            className={`p-2 md:px-5 md:py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg flex-shrink-0 ${
+              hasStock
+                ? "bg-gradient-to-r from-[#F2275D] to-[#F20505] text-white hover:scale-105"
+                : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
+            }`}
           >
             <FaCartPlus className="text-sm md:text-base" />
           </button>

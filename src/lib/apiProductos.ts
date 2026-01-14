@@ -5,8 +5,8 @@ import type { ApiResponse, Producto } from '@/types/api.d.ts';
  * - PUBLIC_API_URL: URL base de la API (opcional, fallback a test.importadoramiranda.com)
  * - PUBLIC_STORAGE_URL: URL base del storage de imágenes (opcional, fallback a test.importadoramiranda.com/storage)
  */
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://test.importadoramiranda.com/storage';
-const STORAGE_BASE_URL = import.meta.env.PUBLIC_STORAGE_URL || 'https://test.importadoramiranda.com/storage';
+const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://importadoramiranda.com/storage';
+const STORAGE_BASE_URL = import.meta.env.PUBLIC_STORAGE_URL || 'https://importadoramiranda.com/storage';
 
 /**
  * Clase de error personalizada para la API de productos
