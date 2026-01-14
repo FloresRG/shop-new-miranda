@@ -10,14 +10,7 @@ import toast from "react-hot-toast";
 // 🔹 AÑADIDO: Objeto de departamentos y provincias
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
-  "La Paz": [
-    "La Paz (Ciudad)",
-    "El Alto",
-    "Viacha",
-    "Caranavi",
-    "Achacachi",
-    "Recojo en tienda"
-  ],
+
   Cochabamba: ["Cochabamba", "Quillacollo", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],

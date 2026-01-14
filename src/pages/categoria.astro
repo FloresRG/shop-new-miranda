@@ -3,7 +3,6 @@ import Base from "@/layouts/Base.astro";
 import ProductGrid from "@/components/shop/ProductGrid.astro";
 import BrandList from "@/components/shop/BrandList.astro";
 import { getProducts, getFeaturedProducts } from "@/lib/products";
-import CartModal from "@/components/shop/CartModal";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import { FaArrowRight, FaTruck, FaShieldAlt, FaHeadset } from "react-icons/fa";
 const featuredProducts = await getFeaturedProducts(8);
@@ -21,8 +20,6 @@ const categoryProducts = await Promise.all(
 ).then((results) => results.filter(Boolean));
 ---
 
-<Base
->
-
+<Base>
   <CategoryCarousel categoryProducts={categoryProducts} client:load />
 </Base>

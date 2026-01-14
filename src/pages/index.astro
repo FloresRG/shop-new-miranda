@@ -1,7 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
 import BrandList from "@/components/shop/BrandList.astro";
-import CartModal from "@/components/shop/CartModal";
 import FeaturedProductsHelper from "@/components/shop/FeaturedProductsHelper";
 import HeroHelper from "@/components/shop/HeroHelper";
 import CategoryCarouselHelper from "@/components/shop/CategoryCarouselHelper";
@@ -12,14 +11,6 @@ import logoWebp from "@/assets/logo.webp";
 ---
 
 <Base headerTransparent={true}>
-  <CartModal
-    client:only="react"
-    bannerImages={{
-      mobile: BannerMobil.src,
-      pc: BannerPc.src,
-    }}
-  />
-
   {/* Hero Section Client Side */}
   <HeroHelper
     client:load

@@ -1,7 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
 import WishlistContainer from "@/components/shop/WishlistContainer";
-import CartModal from "@/components/shop/CartModal";
 ---
 
 <Base title="Mis Deseos - Importadora Miranda">
@@ -22,5 +21,4 @@ import CartModal from "@/components/shop/CartModal";
       </div>
     </div>
   </WishlistContainer>
-  <CartModal client:only="react" />
 </Base>

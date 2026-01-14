@@ -189,7 +189,7 @@ export default function CartModal({ bannerImages }: CartModalProps) {
               onClick={handleCheckout}
               className="w-full btn btn-primary py-4 rounded-xl font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all flex items-center justify-center gap-2 group"
             >
-              Proceder al Pago{" "}
+              Proceder al Pedido{" "}
               <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
