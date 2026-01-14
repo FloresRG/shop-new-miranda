@@ -19,19 +19,19 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
 
     // Extraemos datos del JSON anidado
     const precioLiquidacion = parseFloat(product.precio_venta) || 0;
-    const precioOriginal = parseFloat(product.producto.precio) || 0;
-    const stockDisponible = product.stock;
+    const precioOriginal = parseFloat(product?.producto?.precio || "0") || 0;
+    const stockDisponible = product.stock || 0;
     const hasStock = stockDisponible > 0;
 
     // Wishlist Store - Usamos el ID del producto base
     const $wishlist = useStore(wishlistItems);
-    const isWishlisted = !!$wishlist[product.producto.id];
+    const isWishlisted = !!product?.producto?.id && !!$wishlist[product.producto.id];
 
     // Handlers de interacción
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (hasStock) {
+        if (hasStock && product.producto) {
             // CONSTRUIMOS EL OBJETO COMPLETO para que el carrito no aparezca vacío
             addCartItem({
                 ...product.producto,
@@ -60,7 +60,9 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
     const handleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleWishlist(product.producto as any);
+        if (product.producto) {
+            toggleWishlist(product.producto as any);
+        }
 
         if (!isWishlisted) {
             toast.success('Favorito guardado', {
@@ -104,7 +106,7 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
 
                 <img
                     src={imageUrl}
-                    alt={product.producto.nombre}
+                    alt={product?.producto?.nombre || "Producto en Liquidación"}
                     onLoad={() => setImageLoaded(true)}
                     className={`max-w-[90%] max-h-128 object-contain transition-all duration-700 ${imageLoaded ? "opacity-100 group-hover:scale-[1.08]" : "opacity-0"
                         }`}
@@ -115,8 +117,8 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
                 <button
                     onClick={handleWishlist}
                     className={`absolute top-5 right-5 z-10 w-11 h-11 rounded-2xl backdrop-blur-xl flex items-center justify-center transition-all duration-500 hover:scale-110 shadow-xl border border-gray-200 dark:border-gray-600 ${isWishlisted
-                            ? "bg-[#F2275D] text-white border-transparent"
-                            : "bg-white/90 dark:bg-black/40 text-gray-600 dark:text-gray-300 hover:text-[#F2275D]"
+                        ? "bg-[#F2275D] text-white border-transparent"
+                        : "bg-white/90 dark:bg-black/40 text-gray-600 dark:text-gray-300 hover:text-[#F2275D]"
                         }`}
                 >
                     {isWishlisted ? <FaHeart size={18} /> : <FaRegHeart size={18} />}
@@ -128,7 +130,7 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
 
                 <div className="flex-grow">
                     <h3 className="text-[19px] font-black text-gray-900 dark:text-white line-clamp-2 group-hover:text-[#F2275D] transition-colors leading-[1.2]">
-                        {product.producto.nombre}
+                        {product?.producto?.nombre || "Cargando nombre..."}
                     </h3>
                 </div>
 
@@ -152,8 +154,8 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
                         onClick={handleAddToCart}
                         disabled={!hasStock}
                         className={`flex items-center justify-center h-[54px] w-[54px] rounded-2xl transition-all duration-500 shadow-[0_10px_25px_rgba(242,39,93,0.3)] hover:shadow-[0_15px_30px_rgba(242,39,93,0.5)] border border-white/10 ${hasStock
-                                ? "bg-gradient-to-br from-[#F2275D] to-[#451773] text-white hover:scale-110 active:scale-95"
-                                : "bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                            ? "bg-gradient-to-br from-[#F2275D] to-[#451773] text-white hover:scale-110 active:scale-95"
+                            : "bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
                             }`}
                         title={hasStock ? "Añadir al carrito" : "Sin stock"}
                     >

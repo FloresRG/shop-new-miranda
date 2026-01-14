@@ -1,47 +1,288 @@
 ---
-import ImageMod from "@/components/ImageMod.astro";
 import Base from "@/layouts/Base.astro";
 import { getListPage } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { render } from "astro:content";
+import { Image } from "astro:assets";
+import logo from "@/assets/logo.webp";
 
 const aboutIndex = await getListPage("about", "-index");
 const { Content } = await render(aboutIndex);
-const { title, description, meta_title, image } = aboutIndex.data;
+const { title, description, meta_title } = aboutIndex.data;
 
 if (aboutIndex.data.draft) {
   return Astro.redirect("/404");
 }
 ---
 
-<Base
-  title={title}
-  meta_title={meta_title}
-  description={description}
-  image={image}
->
-  <section class="section-sm">
-    <div class="container">
-      <div class="row justify-center">
-        <div class="text-center md:col-10 lg:col-7">
-          {
-            image && (
-              <ImageMod
-                class="mx-auto mb-6 rounded-lg"
-                src={image}
-                width={200}
-                height={200}
-                alt={title}
-                format="webp"
-              />
-            )
-          }
-          <h2 set:html={markdownify(title)} class="h3 mb-6" />
-          <div class="content">
-            <Content />
+<Base title={title} meta_title={meta_title} description={description}>
+  <section class="relative overflow-hidden py-20 lg:py-32">
+    <!-- Animated background elements -->
+    <div
+      class="absolute top-0 left-0 w-full h-full -z-10 opacity-30 dark:opacity-20 pointer-events-none"
+    >
+      <div
+        class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary rounded-full blur-[120px] animate-pulse"
+      >
+      </div>
+      <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#FF0040] rounded-full blur-[120px] animate-pulse"
+        style="animation-delay: 2s"
+      >
+      </div>
+    </div>
+
+    <div class="container relative z-10">
+      <div class="row justify-center text-center">
+        <div class="lg:col-10">
+          <!-- Logo Section -->
+          <div class="mb-12 relative inline-block group" id="hero-logo">
+            <div
+              class="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700"
+            >
+            </div>
+            <Image
+              src={logo}
+              width={350}
+              height={350}
+              alt="Importadora Miranda Logo"
+              class="relative z-10 mx-auto drop-shadow-[0_20px_50px_rgba(128,0,128,0.3)] dark:drop-shadow-[0_20px_50px_rgba(255,0,64,0.4)] transition-all duration-500 hover:scale-105"
+            />
+          </div>
+
+          <!-- Hero Text -->
+          <h1
+            class="text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight tracking-tight bg-gradient-to-r from-primary via-[#FF0040] to-primary bg-clip-text text-transparent animate-gradient-x"
+            id="hero-title"
+          >
+            IMPORTADORA MIRANDA
+          </h1>
+
+          <p
+            class="text-xl md:text-3xl font-bold text-gray-800 dark:text-white/90 mb-12 italic tracking-wide"
+            id="hero-phrase"
+          >
+            "A un click del producto que necesitas"
+          </p>
+
+          <div class="max-w-3xl mx-auto">
+            <div
+              class="bg-white/40 dark:bg-darkmode-light/20 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 md:p-12 rounded-[40px] shadow-2xl relative overflow-hidden"
+              id="about-content"
+            >
+              <!-- Decorative corner -->
+              <div
+                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-[100px]"
+              >
+              </div>
+
+              <h2
+                class="h3 mb-8 text-primary dark:text-[#FF0040] font-black uppercase tracking-widest text-sm"
+              >
+                Nuestra Misión
+              </h2>
+
+              <div
+                class="content text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed space-y-6 font-medium"
+              >
+                <Content />
+              </div>
+
+              <div class="mt-12 flex flex-wrap justify-center gap-6">
+                <div
+                  class="px-6 py-4 bg-primary/10 dark:bg-primary/20 rounded-2xl border border-primary/20 backdrop-blur-sm"
+                >
+                  <span class="block text-2xl font-black text-primary"
+                    >100%</span
+                  >
+                  <span
+                    class="text-xs uppercase font-bold tracking-widest text-primary/70"
+                    >Interés por el cliente</span
+                  >
+                </div>
+                <div
+                  class="px-6 py-4 bg-[#FF0040]/10 dark:bg-[#FF0040]/20 rounded-2xl border border-[#FF0040]/20 backdrop-blur-sm"
+                >
+                  <span class="block text-2xl font-black text-[#FF0040]"
+                    >24/7</span
+                  >
+                  <span
+                    class="text-xs uppercase font-bold tracking-widest text-[#FF0040]/70"
+                    >Mejora continua</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Commitment Section -->
+  <section
+    class="section py-24 bg-gray-50 dark:bg-darkmode-body overflow-hidden"
+  >
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="md:col-6 mb-12 md:mb-0">
+          <div class="relative">
+            <div
+              class="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"
+            >
+            </div>
+            <h2
+              class="h2 mb-6 font-black leading-tight text-gray-900 dark:text-white"
+            >
+              Nos interesa mucho <br /><span class="text-primary italic"
+                >tu experiencia</span>
+            </h2>
+            <p
+              class="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed"
+            >
+              En Importadora Miranda no solo vendemos productos; creamos
+              conexiones. Trabajamos incansablemente para mejorar cada día,
+              optimizando nuestros procesos para que encuentres exactamente lo
+              que buscas en cuestión de segundos.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary"
+                >
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                    ><path
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    ></path></svg
+                  >
+                </div>
+                <span
+                  class="font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide text-sm"
+                  >Atención Personalizada</span
+                >
+              </div>
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-12 h-12 bg-[#FF0040]/20 rounded-xl flex items-center justify-center text-[#FF0040]"
+                >
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                    ><path
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    ></path></svg
+                  >
+                </div>
+                <span
+                  class="font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide text-sm"
+                  >Envío Seguro a Nivel Nacional</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-6">
+          <div
+            class="bg-gradient-to-br from-primary to-[#FF0040] p-[2px] rounded-[40px] shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500"
+          >
+            <div
+              class="bg-white dark:bg-darkmode-light p-10 rounded-[38px] h-full flex flex-col justify-center"
+            >
+              <div
+                class="text-6xl font-black text-primary/10 dark:text-white/5 mb-4"
+              >
+                "
+              </div>
+              <p
+                class="text-2xl italic font-bold text-gray-900 dark:text-white leading-relaxed"
+              >
+                "Nuestra meta es que Importadora Miranda sea sinónimo de
+                confianza y excelencia. Cada click es un voto de confianza que
+                honramos con calidad."
+              </p>
+              <div class="mt-8 flex items-center gap-4">
+                <div class="w-12 h-2 bg-primary rounded-full"></div>
+                <span
+                  class="font-black uppercase tracking-widest text-xs text-primary"
+                  >Equipo Miranda</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    @keyframes gradient-x {
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+    .animate-gradient-x {
+      background-size: 200% 100%;
+      animation: gradient-x 15s ease infinite;
+    }
+  </style>
+
+  <script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initial animations
+    window.addEventListener("load", () => {
+      const tl = gsap.timeline();
+
+      tl.from("#hero-logo", {
+        y: 50,
+        opacity: 0,
+        scale: 0.8,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.5)",
+      })
+        .from(
+          "#hero-title",
+          {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=1",
+        )
+        .from(
+          "#hero-phrase",
+          {
+            scale: 0.9,
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out",
+          },
+          "-=0.5",
+        )
+        .from(
+          "#about-content",
+          {
+            y: 50,
+            opacity: 0,
+            duration: 1.2,
+            ease: "power4.out",
+          },
+          "-=0.7",
+        );
+
+      // Floating effect for logo
+      gsap.to("#hero-logo", {
+        y: -15,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    });
+  </script>
 </Base>
