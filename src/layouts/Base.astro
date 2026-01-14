@@ -14,6 +14,7 @@ import { AstroFont } from "astro-font";
 // ❌ Eliminado: import { ClientRouter } from "astro:transitions";
 import SearchModal from "./helpers/SearchModal";
 import WhatsAppButton from "@/components/WhatsAppButton.astro";
+import { Toaster } from "react-hot-toast";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -199,6 +200,7 @@ const {
 
     <TwSizeIndicator />
     <Header transparent={headerTransparent} />
+    <Toaster client:load position="top-center" />
     <SearchModal client:load />
     <main id="main-content">
       <slot />
