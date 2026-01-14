@@ -8,8 +8,15 @@ import { FaUser, FaIdCard, FaPhone, FaMapMarkerAlt, FaMinus, FaPlus, FaTrash, Fa
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
-
-  Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
+  "La Paz": [
+    "La Paz (Ciudad)",
+    "El Alto",
+    "Viacha",
+    "Caranavi",
+    "Achacachi",
+    "Recojo en tienda"
+  ],
+  Cochabamba: ["Cochabamba", "Quillacollo", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],
   Chuquisaca: ["Sucre"],
@@ -199,11 +206,11 @@ export default function CheckoutForm() {
   }
 
   return (
-    <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
-      {/* Resumen de Orden - Now naturally first in DOM, so first on mobile */}
-      <div className="lg:col-span-5 order-1">
-        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border border-gray-100 dark:border-darkmode-border overflow-hidden">
-          <div className="p-6 border-b border-gray-100 dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body">
+    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full max-w-full overflow-hidden">
+      {/* Resumen de Orden */}
+      <div className="w-full lg:w-5/12 order-1 flex flex-col">
+        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border-2 border-primary/10 dark:border-primary/5 overflow-hidden">
+          <div className="p-6 border-b-2 border-primary/20 bg-primary/5 dark:bg-primary/10">
             <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
               <FaShoppingCart className="text-primary" />
               Resumen de Orden
@@ -254,9 +261,11 @@ export default function CheckoutForm() {
                       </button>
                     </div>
 
-                    <p className="font-black text-primary text-sm whitespace-nowrap">
-                      Bs {(parseFloat(item.precio) * item.quantity).toFixed(2)}
-                    </p>
+                    <div className="flex-1 w-full">
+                      <p className="font-black text-primary text-sm whitespace-nowrap">
+                        Bs {(parseFloat(item.precio) * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -285,10 +294,10 @@ export default function CheckoutForm() {
         </div>
       </div>
 
-      {/* Formulario - Now naturally second in DOM, so second on mobile */}
-      <form onSubmit={handleSubmit} className="lg:col-span-7 order-2 space-y-6">
-        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border border-gray-100 dark:border-darkmode-border p-5 md:p-8">
-          <div className="text-center mb-8">
+      {/* Formulario */}
+      <form onSubmit={handleSubmit} className="w-full lg:w-7/12 order-2 flex flex-col space-y-6">
+        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border-2 border-gray-100/80 dark:border-darkmode-border/30 p-5 md:p-8">
+          <div className="text-center mb-8 border-b-2 border-primary/10 pb-6">
             <h3 className="text-2xl font-black text-gray-900 dark:text-white flex items-center justify-center gap-3">
               <FaCheckCircle className="text-primary" />
               Datos de Envío
@@ -296,11 +305,11 @@ export default function CheckoutForm() {
             <p className="text-gray-500 dark:text-gray-400 mt-2">Complete sus datos para procesar su orden de compra</p>
           </div>
 
-          <div className="space-y-6">
-            <div>
-              <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+          <div className="flex flex-col space-y-6">
+            <div className="w-full">
+              <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                 <FaUser className="text-primary text-xs" />
-                Nombre Completo
+                NOMBRE COMPLETO
               </label>
               <input
                 required
@@ -309,7 +318,7 @@ export default function CheckoutForm() {
                 placeholder="EJ: JUAN PEREZ"
                 value={formData.nombre}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-400"
+                className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white placeholder-gray-400 font-medium"
               />
               {formErrors.nombre && (
                 <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -319,11 +328,11 @@ export default function CheckoutForm() {
               )}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6">
               <div>
-                <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                   <FaIdCard className="text-primary text-xs" />
-                  Cédula de Identidad
+                  NRO. CARNET (C.I.)
                 </label>
                 <input
                   required
@@ -332,7 +341,7 @@ export default function CheckoutForm() {
                   placeholder="EJ: 1234567 LP"
                   value={formData.ci}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white"
+                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white font-medium"
                 />
                 {formErrors.ci && (
                   <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -343,9 +352,9 @@ export default function CheckoutForm() {
               </div>
 
               <div>
-                <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                   <FaPhone className="text-primary text-xs" />
-                  Celular / WhatsApp
+                  CELULAR / WHATSAPP
                 </label>
                 <input
                   required
@@ -354,7 +363,7 @@ export default function CheckoutForm() {
                   placeholder="EJ: 70621016"
                   value={formData.celular}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white"
+                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white font-medium"
                 />
                 {formErrors.celular && (
                   <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -365,18 +374,18 @@ export default function CheckoutForm() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6">
               <div>
-                <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                   <FaMapMarkerAlt className="text-primary text-xs" />
-                  Departamento
+                  DEPARTAMENTO
                 </label>
                 <select
                   required
                   name="departamento"
                   value={formData.departamento}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white appearance-none cursor-pointer"
+                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white appearance-none cursor-pointer font-medium"
                 >
                   <option value="">Seleccione...</option>
                   {Object.keys(departamentos).map((dep) => (
@@ -394,12 +403,12 @@ export default function CheckoutForm() {
               </div>
 
               {formData.departamento && (
-                <div>
-                  <label className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                <div className="flex-1 w-full">
+                  <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                     <FaCity className="text-primary text-xs" />
-                    Provincia / Ciudad
+                    PROVINCIA / CIUDAD
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {(departamentos[formData.departamento as keyof typeof departamentos] || []).map((prov) => (
                       <button
                         key={prov}
@@ -407,12 +416,12 @@ export default function CheckoutForm() {
                         onClick={() =>
                           setFormData({ ...formData, provincia: prov })
                         }
-                        className={`px-3 py-2 border-2 rounded-xl text-xs font-bold transition-all transform hover:scale-[1.03] active:scale-95 ${formData.provincia === prov
-                            ? "bg-linear-to-r from-primary to-[#F20505] text-white border-transparent shadow-md"
-                            : "bg-gray-50 dark:bg-darkmode-body border-gray-100 dark:border-darkmode-border text-gray-600 dark:text-gray-400 hover:border-primary/30"
+                        className={`flex-1 min-w-[140px] px-4 py-4 border-2 rounded-xl text-xs md:text-[11px] font-black transition-all transform hover:scale-[1.03] active:scale-95 flex items-center justify-center text-center leading-tight ${formData.provincia === prov
+                          ? "bg-linear-to-r from-primary to-[#F20505] text-white border-transparent shadow-lg"
+                          : "bg-white dark:bg-darkmode-body border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary/50"
                           }`}
                       >
-                        {prov}
+                        {prov.toUpperCase()}
                       </button>
                     ))}
                   </div>
@@ -442,9 +451,8 @@ export default function CheckoutForm() {
         </div>
       </form>
 
-      {/* Modal de Carga */}
       {isSubmitting && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
           <div className="bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-sm w-full mx-4 border border-white/20">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
             <p className="text-gray-900 dark:text-white font-black text-xl text-center">
@@ -457,9 +465,8 @@ export default function CheckoutForm() {
         </div>
       )}
 
-      {/* Modal de Éxito */}
       {isSuccess && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
           <div className="bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-md w-full mx-4 text-center border border-white/20">
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 text-green-500 dark:text-green-400 animate-bounce">
               <FaCheckCircle size={40} />
