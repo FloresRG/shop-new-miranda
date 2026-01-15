@@ -45,9 +45,10 @@ export const apiProductos = {
     estado_producto?: string;
     sucursal_id?: number;
   }): Promise<ApiResponse> {
+    const finalParams = { sucursal_id: 1, ...params };
     const url = new URL(API_BASE_URL);
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
+    if (finalParams) {
+      Object.entries(finalParams).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           url.searchParams.append(key, value.toString());
         }

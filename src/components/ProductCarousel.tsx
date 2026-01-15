@@ -1,3 +1,4 @@
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
@@ -84,15 +85,25 @@ const ProductCarousel: React.FC = () => {
 
                       {producto.inventario && (
                         <div
-                          className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider ${
-                            producto.inventario.cantidad > 10
-                              ? "bg-[#17BFBF]/10 text-[#17BFBF] border border-[#17BFBF]/20"
-                              : producto.inventario.cantidad > 0
-                                ? "bg-yellow-400/10 text-yellow-600 border border-yellow-400/20"
-                                : "bg-red-500/10 text-red-600 border border-red-500/20"
-                          }`}
+                          className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider ${(() => {
+                              const inv = producto.inventario;
+                              const item = Array.isArray(inv)
+                                ? inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1)
+                                : ((inv.id_sucursal == 1 || inv.sucursal_id == 1) ? inv : null);
+
+                              if (item && item.cantidad > 10) return "bg-[#17BFBF]/10 text-[#17BFBF] border border-[#17BFBF]/20";
+                              if (item && item.cantidad > 0) return "bg-yellow-400/10 text-yellow-600 border border-yellow-400/20";
+                              return "bg-red-500/10 text-red-600 border border-red-500/20";
+                            })()
+                            }`}
                         >
-                          Disponibles: {producto.inventario.cantidad}
+                          Disponibles: {(() => {
+                            const inv = producto.inventario;
+                            const item = Array.isArray(inv)
+                              ? inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1)
+                              : ((inv.id_sucursal == 1 || inv.sucursal_id == 1) ? inv : null);
+                            return item ? item.cantidad : 0;
+                          })()}
                         </div>
                       )}
                     </div>

@@ -16,7 +16,24 @@ export const cartItems = persistentMap<CartStore>('cart', {}, {
 export const addCartItem = (product: Product) => {
     const currentStore = cartItems.get();
     const existingItem = currentStore[product.id];
-    const maxStock = product.inventario?.cantidad ?? 0;
+    const getStock = (p: any) => {
+        if (!p) return 0;
+        const inv = p.inventario || p.inventarios;
+        if (inv) {
+            if (Array.isArray(inv)) {
+                const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
+                if (item) return item.cantidad ?? item.stock ?? 0;
+            } else {
+                if (inv.id_sucursal != null || inv.sucursal_id != null) {
+                    if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
+                    return 0;
+                }
+                return inv.cantidad ?? inv.stock ?? 0;
+            }
+        }
+        return p.stock ?? p.cantidad ?? 0;
+    };
+    const maxStock = getStock(product);
 
     if (existingItem) {
         const newQuantity = existingItem.quantity + 1;
@@ -39,7 +56,24 @@ export const removeCartItem = (productId: number) => {
 export const updateQuantity = (productId: number, quantity: number) => {
     const currentStore = cartItems.get();
     const item = currentStore[productId];
-    const maxStock = item?.inventario?.cantidad ?? 0;
+    const getStock = (p: any) => {
+        if (!p) return 0;
+        const inv = p.inventario || p.inventarios;
+        if (inv) {
+            if (Array.isArray(inv)) {
+                const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
+                if (item) return item.cantidad ?? item.stock ?? 0;
+            } else {
+                if (inv.id_sucursal != null || inv.sucursal_id != null) {
+                    if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
+                    return 0;
+                }
+                return inv.cantidad ?? inv.stock ?? 0;
+            }
+        }
+        return p.stock ?? p.cantidad ?? 0;
+    };
+    const maxStock = getStock(item);
 
     if (item) {
         if (quantity <= 0) {

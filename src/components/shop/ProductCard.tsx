@@ -13,7 +13,25 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const price = parseFloat(product.precio) || 0;
-  const stock = product.inventario?.cantidad ?? 0;
+  const getStock = (p: any) => {
+    if (!p) return 0;
+    const inv = p.inventario || p.inventarios;
+    if (inv) {
+      if (Array.isArray(inv)) {
+        const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
+        if (item) return item.cantidad ?? item.stock ?? 0;
+      } else {
+        if (inv.id_sucursal != null || inv.sucursal_id != null) {
+          if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
+          return 0;
+        }
+        return inv.cantidad ?? inv.stock ?? 0;
+      }
+    }
+    return p.stock ?? p.cantidad ?? 0;
+  };
+
+  const stock = getStock(product);
   const hasStock = stock > 0;
 
   const $wishlist = useStore(wishlistItems);
@@ -73,8 +91,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             onClick={handleWishlist}
             className={`w-8 h-8 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${isWishlisted
-                ? "bg-red-500 text-white"
-                : "bg-white/90 dark:bg-black/70 text-gray-600 dark:text-gray-300 hover:text-red-500"
+              ? "bg-red-500 text-white"
+              : "bg-white/90 dark:bg-black/70 text-gray-600 dark:text-gray-300 hover:text-red-500"
               }`}
             title={isWishlisted ? "Quitar de favoritos" : "Añadir a favoritos"}
           >
@@ -147,8 +165,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={!hasStock}
             className={`p-2 md:px-5 md:py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg flex-shrink-0 ${hasStock
-                ? "bg-gradient-to-r from-[#F2275D] to-[#F20505] text-white hover:scale-105"
-                : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
+              ? "bg-gradient-to-r from-[#F2275D] to-[#F20505] text-white hover:scale-105"
+              : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
               }`}
           >
             <FaCartPlus className="text-sm md:text-base" />

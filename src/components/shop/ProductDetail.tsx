@@ -18,7 +18,38 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   );
 
   const price = parseFloat(product.precio) || 0;
-  const stock = product.inventario?.cantidad ?? 0;
+  const getStock = (p: any) => {
+    console.log("DEBUG Product Stock Info:", { id: p.id, inventario: p.inventario, stock_directo: p.stock, cantidad_directa: p.cantidad });
+
+    // Prioridad 1: Campo inventario (objeto o array)
+    if (p.inventario) {
+      const inv = p.inventario;
+      if (Array.isArray(inv)) {
+        const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
+        if (item) return item.cantidad ?? item.stock ?? 0;
+      } else {
+        // Si tiene sucursal definida, validamos que sea la 1
+        if (inv.id_sucursal != null || inv.sucursal_id != null) {
+          if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
+          return 0; // Es de otra sucursal
+        }
+        // Si es un objeto sin id_sucursal, asumimos que es el del producto actual (ya filtrado por API)
+        return inv.cantidad ?? inv.stock ?? 0;
+      }
+    }
+
+    // Prioridad 2: Campo inventarios (plural)
+    if (p.inventarios && Array.isArray(p.inventarios)) {
+      const item = p.inventarios.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
+      if (item) return item.cantidad ?? item.stock ?? 0;
+    }
+
+    // Prioridad 3: Campos directos (stock o cantidad)
+    // Solo si no hay info de sucursal que contradiga que es la 1
+    return p.stock ?? p.cantidad ?? 0;
+  };
+
+  const stock = getStock(product);
 
   // Función para cambiar imagen principal
   const handleImageClick = (img: string) => {
@@ -43,11 +74,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               <button
                 key={i}
                 onClick={() => handleImageClick(f.foto)}
-                className={`w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                  mainImage.endsWith(f.foto)
-                    ? "border-primary opacity-100"
-                    : "border-transparent opacity-70 hover:opacity-100"
-                }`}
+                className={`w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${mainImage.endsWith(f.foto)
+                  ? "border-primary opacity-100"
+                  : "border-transparent opacity-70 hover:opacity-100"
+                  }`}
               >
                 <img
                   src={
@@ -102,11 +132,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             <button
               onClick={() => addCartItem(product)}
               disabled={stock <= 0}
-              className={`flex-1 py-4 px-6 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all transform active:scale-95 text-white ${
-                stock > 0
-                  ? "bg-primary hover:bg-primary/90"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
+              className={`flex-1 py-4 px-6 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all transform active:scale-95 text-white ${stock > 0
+                ? "bg-primary hover:bg-primary/90"
+                : "bg-gray-400 cursor-not-allowed"
+                }`}
             >
               {stock > 0 ? "Añadir al Carrito" : "Sin Stock"}
             </button>

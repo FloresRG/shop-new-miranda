@@ -18,6 +18,7 @@ export const getProducts = async (params: {
     if (categoriaId) url.searchParams.append("categoria_id", categoriaId.toString());
     if (marcaId) url.searchParams.append("marca_id", marcaId.toString());
     if (tipoId) url.searchParams.append("tipo_id", tipoId.toString());
+    url.searchParams.append("sucursal_id", "1");
 
     try {
         const res = await fetch(url.toString());
@@ -54,7 +55,7 @@ export const getProductById = async (id: number): Promise<Product | null> => {
     // 1. Intenta Endpoint Especifico (Standard REST)
     try {
         // La API usa 'producto' (singular) para obtener un solo item
-        const res = await fetch(`${API_URL.replace("productos", "producto")}/${id}`);
+        const res = await fetch(`${API_URL.replace("productos", "producto")}/${id}?sucursal_id=1`);
         if (res.ok) {
             const data = await res.json();
             return data.producto || data;
