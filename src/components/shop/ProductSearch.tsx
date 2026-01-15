@@ -54,7 +54,7 @@ export default function ProductSearch() {
         <input
           type="text"
           placeholder="Buscar productos..."
-          className="w-full bg-gray-100 dark:bg-darkmode-theme-light border border-transparent focus:border-primary focus:bg-white dark:focus:bg-darkmode-body rounded-full py-2 pl-4 pr-10 outline-none transition-all text-sm"
+          className="w-full bg-gray-100 dark:bg-darkmode-theme-light border border-transparent focus:border-primary focus:bg-white dark:focus:bg-darkmode-body rounded-full py-2 pl-4 pr-10 outline-none transition-all text-sm text-dark dark:text-white dark:placeholder-gray-400"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query.length > 2 && setIsOpen(true)}

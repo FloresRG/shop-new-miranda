@@ -57,9 +57,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={imageUrl}
           alt={product.nombre}
           onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover transition-all duration-700 ${
-            imageLoaded ? "opacity-100 group-hover:scale-110" : ""
-          }`}
+          className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? "opacity-100 group-hover:scale-110" : ""
+            }`}
           loading="lazy"
         />
 
@@ -73,11 +72,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="absolute top-2 left-2 md:top-3 md:right-3 md:left-auto z-30">
           <button
             onClick={handleWishlist}
-            className={`w-8 h-8 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${
-              isWishlisted
+            className={`w-8 h-8 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg ${isWishlisted
                 ? "bg-red-500 text-white"
                 : "bg-white/90 dark:bg-black/70 text-gray-600 dark:text-gray-300 hover:text-red-500"
-            }`}
+              }`}
             title={isWishlisted ? "Quitar de favoritos" : "Añadir a favoritos"}
           >
             {isWishlisted ? (
@@ -87,6 +85,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </button>
         </div>
+
+        {/* AGOTADO BADGE */}
+        {!hasStock && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+            <span className="bg-red-600 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-xl border border-red-400/50 transform -rotate-12 animate-pulse">
+              Agotado
+            </span>
+          </div>
+        )}
 
         {/* MARCA Y CATEGORÍA — Desktop Only Animation */}
         <div
@@ -139,11 +146,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             disabled={!hasStock}
-            className={`p-2 md:px-5 md:py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg flex-shrink-0 ${
-              hasStock
+            className={`p-2 md:px-5 md:py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg flex-shrink-0 ${hasStock
                 ? "bg-gradient-to-r from-[#F2275D] to-[#F20505] text-white hover:scale-105"
                 : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
-            }`}
+              }`}
           >
             <FaCartPlus className="text-sm md:text-base" />
           </button>

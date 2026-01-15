@@ -74,7 +74,7 @@ const SidebarFilters: React.FC<SidebarFiltersProps> = ({
                         placeholder="Buscar categoría..."
                         value={catQuery}
                         onChange={(e) => setCatQuery(e.target.value)}
-                        className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-darkmode-body border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary outline-none transition-colors"
+                        className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-darkmode-body border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary outline-none transition-colors text-dark dark:text-white dark:placeholder-gray-400"
                     />
                     <FaSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-3 h-3" />
                 </div>
@@ -124,7 +124,7 @@ const SidebarFilters: React.FC<SidebarFiltersProps> = ({
                         placeholder="Buscar marca..."
                         value={brandQuery}
                         onChange={(e) => setBrandQuery(e.target.value)}
-                        className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-darkmode-body border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary outline-none transition-colors"
+                        className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-darkmode-body border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary outline-none transition-colors text-dark dark:text-white dark:placeholder-gray-400"
                     />
                     <FaSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-3 h-3" />
                 </div>
@@ -157,7 +157,7 @@ const SidebarFilters: React.FC<SidebarFiltersProps> = ({
                 </div>
             </div>
 
-           
+
         </aside>
     );
 };

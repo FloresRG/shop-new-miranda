@@ -13,9 +13,9 @@ const ShopContainer = () => {
     const [filters, setFilters] = useState({
         page: 1,
         search: "",
-        categoriaId: null as number | null,
-        marcaId: null as number | null,
-        tipoId: null as number | null
+        categoria_id: null as number | null,
+        marca_id: null as number | null,
+        tipo_id: null as number | null
     });
     const [sort, setSort] = useState<SortOption>("default");
     const [initialized, setInitialized] = useState(false);
@@ -27,9 +27,9 @@ const ShopContainer = () => {
         setFilters({
             page: parseInt(params.get("page") || "1"),
             search: params.get("search") || "",
-            categoriaId: params.get("categoria_id") ? parseInt(params.get("categoria_id")!) : null,
-            marcaId: params.get("marca_id") ? parseInt(params.get("marca_id")!) : null,
-            tipoId: params.get("tipo_id") ? parseInt(params.get("tipo_id")!) : null,
+            categoria_id: params.get("categoria_id") ? parseInt(params.get("categoria_id")!) : null,
+            marca_id: params.get("marca_id") ? parseInt(params.get("marca_id")!) : null,
+            tipo_id: params.get("tipo_id") ? parseInt(params.get("tipo_id")!) : null,
         });
         setInitialized(true);
     }, []);
@@ -44,9 +44,9 @@ const ShopContainer = () => {
                 const params = new URLSearchParams();
                 params.set("page", filters.page.toString());
                 if (filters.search) params.set("search", filters.search);
-                if (filters.categoriaId) params.set("categoria_id", filters.categoriaId.toString());
-                if (filters.marcaId) params.set("marca_id", filters.marcaId.toString());
-                if (filters.tipoId) params.set("tipo_id", filters.tipoId.toString());
+                if (filters.categoria_id) params.set("categoria_id", filters.categoria_id.toString());
+                if (filters.marca_id) params.set("marca_id", filters.marca_id.toString());
+                if (filters.tipo_id) params.set("tipo_id", filters.tipo_id.toString());
 
                 const newUrl = `${window.location.pathname}?${params.toString()}`;
                 window.history.replaceState(null, "", newUrl);
@@ -85,9 +85,9 @@ const ShopContainer = () => {
         setFilters({
             page: 1,
             search: "",
-            categoriaId: null,
-            marcaId: null,
-            tipoId: null
+            categoria_id: null,
+            marca_id: null,
+            tipo_id: null
         });
     }, []);
 
@@ -122,9 +122,9 @@ const ShopContainer = () => {
                             categories={data?.categorias || []}
                             brands={data?.marcas || []}
                             types={data?.tipos || []}
-                            currentCategory={filters.categoriaId || undefined}
-                            currentBrand={filters.marcaId || undefined}
-                            currentType={filters.tipoId || undefined}
+                            currentCategory={filters.categoria_id || undefined}
+                            currentBrand={filters.marca_id || undefined}
+                            currentType={filters.tipo_id || undefined}
                             onFilterChange={handleFilterChange}
                             onClearFilters={handleClearFilters}
                             isLoading={loading && !data}
