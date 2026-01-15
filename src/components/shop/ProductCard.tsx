@@ -25,10 +25,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
           return 0;
         }
-        return inv.cantidad ?? inv.stock ?? 0;
+        return 0;
       }
     }
-    return p.stock ?? p.cantidad ?? 0;
+    return 0;
   };
 
   const stock = getStock(product);

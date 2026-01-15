@@ -45,8 +45,9 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     }
 
     // Prioridad 3: Campos directos (stock o cantidad)
-    // Solo si no hay info de sucursal que contradiga que es la 1
-    return p.stock ?? p.cantidad ?? 0;
+    // Solo permitimos esto si NO hay objeto de inventario explícito como null
+    // Si p.inventario === null, significa que no hay stock para las sucursales vinculadas
+    return 0;
   };
 
   const stock = getStock(product);
