@@ -27,7 +27,7 @@ const LiquidacionesContainer = () => {
             setLoading(true);
             try {
                 const API_URL = import.meta.env.PUBLIC_API_URL;
-                const res = await fetch(`${API_URL}/api/liquidaciones?page=${page}`);
+                const res = await fetch(`${API_URL}api/liquidaciones?page=${page}`);
                 if (!res.ok) throw new Error("Failed to fetch");
                 const jsonData: LiquidacionResponse = await res.json();
                 setData(jsonData);
