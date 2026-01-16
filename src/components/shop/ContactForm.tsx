@@ -150,7 +150,7 @@ export default function ContactForm() {
       productos.forEach((prod) => {
         apiFormData.append("imagenes[]", prod.file);
         apiFormData.append("tipos_imagenes[]", "producto");
-        apiFormData.append("cantidades[]", prod.quantity.toString());
+        apiFormData.append("cantidades_imagenes[]", prod.quantity.toString());
       });
 
       if (comprobanteFile) {
