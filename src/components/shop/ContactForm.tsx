@@ -13,6 +13,7 @@ const departamentos = {
     "Riveralta",
     "Coripata",
     "Asunta",
+    "Coroico",
   ],
   Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
