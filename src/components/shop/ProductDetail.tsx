@@ -1,26 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Product } from "../../interfaces/product";
 import { addCartItem } from "../../store/cartStore";
 import { FaTag, FaFlag, FaBox, FaWhatsapp } from "react-icons/fa";
+import ProductDetailSkeleton from "./ProductDetailSkeleton";
 
 interface ProductDetailProps {
-  product: Product;
+  product?: Product;
+  productId?: number;
 }
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function ProductDetail({ product: initialProduct, productId }: ProductDetailProps) {
+  const [product, setProduct] = useState<Product | null>(initialProduct || null);
+  const [loading, setLoading] = useState(!initialProduct);
+  const [error, setError] = useState(false);
+
+  // Fetch client-side si no viene el producto completo
+  useEffect(() => {
+    if (!product && productId) {
+      const fetchProduct = async () => {
+        setLoading(true);
+        try {
+          const res = await fetch(`/api/productos/${productId}`);
+          if (!res.ok) throw new Error("Product not found");
+          const data = await res.json();
+          setProduct(data);
+        } catch (err) {
+          console.error(err);
+          setError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProduct();
+    }
+  }, [productId, product]);
+
   const defaultImage = "https://placehold.co/600x600?text=No+Image";
 
-  // Inicializamos la imagen principal usando la URL completa del backend
-  const [mainImage, setMainImage] = useState(
-    product.fotos[0]?.foto
-      ? `${import.meta.env.PUBLIC_API_URL}/storage/${product.fotos[0].foto}`
-      : defaultImage
-  );
+  // Estado para la imagen principal
+  const [mainImage, setMainImage] = useState("");
+
+  // Actualizar imagen principal cuando llega el producto
+  useEffect(() => {
+    if (product?.fotos?.[0]?.foto) {
+      setMainImage(`${import.meta.env.PUBLIC_API_URL}/storage/${product.fotos[0].foto}`);
+    } else {
+      setMainImage(defaultImage);
+    }
+  }, [product]);
+
+  if (loading) return <ProductDetailSkeleton />;
+  if (error || !product) return <div className="text-center py-20 text-gray-500">Producto no encontrado</div>;
 
   const price = parseFloat(product.precio) || 0;
   const getStock = (p: any) => {
-    console.log("DEBUG Product Stock Info:", { id: p.id, inventario: p.inventario, stock_directo: p.stock, cantidad_directa: p.cantidad });
-
     // Prioridad 1: Campo inventario (objeto o array)
     if (p.inventario) {
       const inv = p.inventario;
@@ -44,9 +77,6 @@ export default function ProductDetail({ product }: ProductDetailProps) {
       if (item) return item.cantidad ?? item.stock ?? 0;
     }
 
-    // Prioridad 3: Campos directos (stock o cantidad)
-    // Solo permitimos esto si NO hay objeto de inventario explícito como null
-    // Si p.inventario === null, significa que no hay stock para las sucursales vinculadas
     return 0;
   };
 
@@ -131,7 +161,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
 
           <div className="flex gap-4">
             <button
-              onClick={() => addCartItem(product)}
+              onClick={() => addCartItem(product!)}
               disabled={stock <= 0}
               className={`flex-1 py-4 px-6 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all transform active:scale-95 text-white ${stock > 0
                 ? "bg-primary hover:bg-primary/90"

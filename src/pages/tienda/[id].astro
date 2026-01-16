@@ -12,36 +12,23 @@ if (!id) {
   return Astro.redirect("/404");
 }
 
-let product = null;
+const productId = parseInt(id);
+
+// Ya no bloqueamos el render con la búsqueda del producto en el servidor
+// para permitir que el skeleton se muestre inmediatamente en el cliente/
+// let product = null;
 let relatedProducts = [];
 
-try {
-  product = await getProductById(parseInt(id));
+// Opcional: Podríamos intentar cargar related products o metadatos básicos si es rápido,
+// pero para la "experiencia YouTube" es mejor renderizar el shell HTML vacío rápido.
+// Para SEO real, deberíamos mantener el SSR, pero el usuario pidió esto específicamente.
 
-  if (product) {
-    // Buscar productos relacionados por categoría
-    const relatedData = await getProducts({
-      categoriaId: product.categoria.id,
-      page: 1,
-    });
-    // Filtrar el producto actual y tomar solo 4
-    relatedProducts = relatedData.productos
-      .filter((p) => p.id !== product!.id)
-      .slice(0, 4);
-  }
-} catch (e) {
-  console.error(e);
-}
-
-if (!product) {
-  return Astro.redirect("/404");
-}
+// Mock o datos básicos para el Base Layout (Title)
+const pageTitle = "Cargando Producto...";
+const pageDesc = "Detalles del producto";
 ---
 
-<Base
-  title={`${product.nombre} - Importadora Miranda`}
-  description={product.descripcion.substring(0, 150)}
->
+<Base title={pageTitle} description={pageDesc}>
   <section class="">
     <div class="container">
       {/* Breadcrumb */}
@@ -53,23 +40,20 @@ if (!product) {
         <a href="/tienda" class="hover:text-primary transition-colors">Tienda</a
         >
         <span class="mx-2">/</span>
-        <a
-          href={`/tienda?categoria_id=${product.categoria.id}`}
-          class="hover:text-primary transition-colors"
-          >{product.categoria.categoria}</a
-        >
-        <span class="mx-2">/</span>
-        <span class="text-dark dark:text-white font-medium truncat"
-          >{product.nombre}</span
+        <span class="text-dark dark:text-white font-medium truncate"
+          >Detalle del Producto</span
         >
       </nav>
 
-      <ProductDetail client:load product={product} />
+      <ProductDetail client:load productId={productId} />
     </div>
   </section>
 
-  {/* Productos Relacionados */}
   {
+    /* Productos Relacionados - TODO: Mover a componente cliente para no bloquear carga */
+  }
+  {
+    /* 
     relatedProducts.length > 0 && (
       <section class="section pt-0 pb-20">
         <div class="container">
@@ -80,5 +64,6 @@ if (!product) {
         </div>
       </section>
     )
+  */
   }
 </Base>
