@@ -38,12 +38,14 @@ export const addCartItem = (product: Product) => {
     if (existingItem) {
         const newQuantity = existingItem.quantity + 1;
         // Si no tiene stock (0) no debería agregar, pero si tiene inventario limitado se valida
-        if (newQuantity <= maxStock) {
+        // SE AGREGA LA VALIDACIÓN DE ignoreStock
+        if ((product as any).ignoreStock || newQuantity <= maxStock) {
             cartItems.setKey(product.id.toString(), { ...existingItem, quantity: newQuantity });
         }
     } else {
         // Validar que haya al menos 1
-        if (maxStock > 0) {
+        // SE AGREGA LA VALIDACIÓN DE ignoreStock
+        if ((product as any).ignoreStock || maxStock > 0) {
             cartItems.setKey(product.id.toString(), { ...product, quantity: 1 });
         }
     }

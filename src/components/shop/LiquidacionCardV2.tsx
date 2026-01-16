@@ -21,7 +21,8 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
     const precioLiquidacion = parseFloat(product.precio_venta) || 0;
     const precioOriginal = parseFloat(product?.producto?.precio || "0") || 0;
     const stockDisponible = product.stock || 0;
-    const hasStock = stockDisponible > 0;
+    // const hasStock = stockDisponible > 0;
+    const hasStock = true; // Se permite añadir al carrito aunque no haya stock (pedido explícito)
 
     // Wishlist Store - Usamos el ID del producto base
     const $wishlist = useStore(wishlistItems);
@@ -38,7 +39,8 @@ export default function LiquidacionCardV2({ product }: LiquidacionCardProps) {
                 precio: product.precio_venta,
                 inventario: { cantidad: product.stock },
                 fotos: [{ foto: product.foto_captura }],
-                marca: { marca: 'Importadora Miranda' } // Nombre formal por defecto
+                marca: { marca: 'Importadora Miranda' }, // Nombre formal por defecto
+                ignoreStock: true // Bypasses stock check
             } as any);
 
             // Animación/Notificación de éxito
