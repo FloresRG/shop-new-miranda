@@ -11,7 +11,8 @@ import {
   GoogleTagmanagerNoscript,
 } from "@digi4care/astro-google-tagmanager";
 import { AstroFont } from "astro-font";
-// ❌ Eliminado: import { ClientRouter } from "astro:transitions";
+import { Action } from "astro:actions"; // Kept just in case, but ClientRouter is the key
+import { ClientRouter } from "astro:transitions"; // Importamos ClientRouter
 import SearchModal from "./helpers/SearchModal";
 import WhatsAppButton from "@/components/WhatsAppButton.astro";
 import { Toaster } from "react-hot-toast";
@@ -132,7 +133,8 @@ const {
       )}
     />
 
-    <!-- ❌ Eliminado: <ClientRouter /> -->
+    <!-- View Transitions -->
+    <ClientRouter />
 
     <!-- author from config.json -->
     <meta name="author" content={config.metadata.meta_author} />
@@ -215,63 +217,5 @@ const {
     </main>
     <WhatsAppButton />
     <Footer />
-
-    <!-- Full-screen loader (invisible by default) -->
-    <div
-      id="global-loader"
-      style="position: fixed; inset: 0; background: white; display: flex; align-items: center; justify-content: center; z-index: 2147483647; opacity: 0; pointer-events: none; transition: opacity 0.2s;"
-    >
-      <svg
-        class="animate-spin h-12 w-12 text-gray-700"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </div>
-
-    <!-- Loader trigger on internal link clicks -->
-    <script>
-      document.addEventListener("click", function (e) {
-        // Buscar el enlace más cercano (incluyendo dentro de botones, íconos, etc.)
-        const link = e.target.closest("a");
-        if (!link) return;
-
-        const href = link.getAttribute("href");
-        if (!href) return;
-
-        // Ignorar enlaces externos, anclas, tel, mailto, etc.
-        if (
-          href.startsWith("#") ||
-          href.startsWith("http") ||
-          href.startsWith("mailto:") ||
-          href.startsWith("tel:") ||
-          href.startsWith("javascript:")
-        ) {
-          return;
-        }
-
-        // Mostrar loader inmediatamente
-        const loader = document.getElementById("global-loader");
-        if (loader) {
-          loader.style.opacity = "1";
-          loader.style.pointerEvents = "auto";
-        }
-
-        // No prevenimos la navegación: dejamos que la recarga ocurra normalmente
-      });
-    </script>
   </body>
 </html>
