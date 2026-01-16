@@ -350,7 +350,7 @@ const PedidoView: React.FC = () => {
           </div>
 
           {/* Productos */}
-          <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+          {/* <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
             <div className="flex items-center gap-3 mb-6">
               <FaBoxOpen
                 style={{ color: COLORS.secondary }}
@@ -394,7 +394,7 @@ const PedidoView: React.FC = () => {
                 {total.toFixed(2)} Bs
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Imágenes */}
           {pedido.imagenes && (
@@ -564,7 +564,7 @@ const PedidoView: React.FC = () => {
 
         <div className="mt-8 pt-8 border-t border-gray-100 dark:border-darkmode-border text-center">
           <p className="text-sm text-gray-400 dark:text-gray-500">
-            Shop Nexus &copy; {new Date().getFullYear()}
+            Shop Importadora Miranda &copy; {new Date().getFullYear()}
           </p>
         </div>
       </div>
