@@ -1,0 +1,12 @@
+---
+import Base from "@/layouts/Base.astro";
+import LiveQR from "@/components/LiveQR";
+---
+
+<Base
+  title="Pago con QR - Miranda"
+  meta_title="Realiza tu pago escaneando el código QR"
+  description="Escanea el código QR, realiza tu pago y completa el formulario para recibir tu pedido"
+>
+  <LiveQR client:load />
+</Base>
