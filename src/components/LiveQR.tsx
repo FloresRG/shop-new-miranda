@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logoImage from "@/assets/logo.webp";
+import logoImage from "@/assets/qr.png";
 
 export default function LiveQR() {
   const [showModal, setShowModal] = useState(true);
@@ -20,7 +20,7 @@ export default function LiveQR() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'QR-Miranda.webp';
+        a.download = 'QR-Miranda.png';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -30,7 +30,7 @@ export default function LiveQR() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-white to-red-50 dark:from-darkmode-body dark:via-darkmode-light dark:to-darkmode-body flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-darkmode-body dark:via-darkmode-light dark:to-darkmode-body flex items-center justify-center p-4">
       {/* Main QR Content - Always visible but blurred when modal is open */}
       <div className={`max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border border-gray-100 dark:border-darkmode-border transition-all duration-500 ${showModal ? 'blur-sm scale-95' : 'blur-0 scale-100'}`}>
         {/* Title */}
@@ -124,7 +124,7 @@ export default function LiveQR() {
       {/* Modal Overlay - Instructions */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border border-gray-100 dark:border-darkmode-border max-h-[90vh] overflow-y-auto animate-slideUp">
+          <div className="max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border-2 border-purple-200 dark:border-purple-500/30 max-h-[90vh] overflow-y-auto animate-slideUp animate-pulse-slow">
 
             {/* Title */}
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6">
@@ -132,11 +132,11 @@ export default function LiveQR() {
             </h1>
 
             {/* Instructions */}
-            <div className="bg-gradient-to-r from-primary/5 to-red-50 dark:from-primary/10 dark:to-red-900/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-primary/20">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-purple-200 dark:border-purple-500/30">
 
               <ol className="space-y-3 sm:space-y-4">
                 <li className="flex items-start gap-2 sm:gap-3">
-                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     1
                   </span>
                   <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
@@ -148,7 +148,7 @@ export default function LiveQR() {
                 </li>
 
                 <li className="flex items-start gap-2 sm:gap-3">
-                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     2
                   </span>
                   <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
@@ -160,7 +160,7 @@ export default function LiveQR() {
                 </li>
 
                 <li className="flex items-start gap-2 sm:gap-3">
-                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                  <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     3
                   </span>
                   <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
@@ -175,7 +175,7 @@ export default function LiveQR() {
             {/* Continue Button */}
             <button
               onClick={handleContinue}
-              className="w-full bg-gradient-to-r from-primary to-red-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 sm:gap-3"
+              className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:-translate-y-1 hover:scale-105 active:translate-y-0 active:scale-100 flex items-center justify-center gap-2 sm:gap-3"
             >
               Continuar
               <svg
@@ -196,7 +196,7 @@ export default function LiveQR() {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -217,12 +217,27 @@ export default function LiveQR() {
           }
         }
 
+        @keyframes pulseSlow {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px 10px rgba(168, 85, 247, 0);
+          }
+        }
+
         .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;
         }
 
         .animate-slideUp {
           animation: slideUp 0.4s ease-out;
+        }
+
+        .animate-pulse-slow {
+          animation: pulseSlow 2s ease-in-out infinite;
         }
       `}</style>
     </div>
