@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logoImage from "@/assets/logo.webp";
 
 export default function LiveQR() {
   const [step, setStep] = useState<"notification" | "qr">("notification");
@@ -12,12 +13,21 @@ export default function LiveQR() {
   };
 
   const handleDownloadQR = () => {
-    const link = document.createElement("a");
-    link.href = "https://importadoramiranda.com/images/QR.jpeg";
-    link.download = "QR-Miranda.jpeg";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Simple and direct download approach
+    fetch(logoImage.src)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'QR-Miranda.webp';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      })
+      .catch(() => alert('Error al descargar la imagen'));
   };
 
   if (step === "notification") {
@@ -178,7 +188,7 @@ export default function LiveQR() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 shadow-lg border-2 border-gray-200 dark:border-darkmode-border">
           <div className="aspect-square w-full max-w-md mx-auto rounded-xl overflow-hidden bg-white">
             <img
-              src="https://importadoramiranda.com/images/QR.jpeg"
+              src={logoImage.src}
               alt="Código QR para pago"
               className="w-full h-full object-contain"
             />
