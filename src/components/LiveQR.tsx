@@ -3,10 +3,10 @@ import logoImage from "@/assets/qr.png";
 
 export default function LiveQR() {
   const [showModal, setShowModal] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(90);
+  const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
-    if (!showModal || timeLeft <= 0) return;
+    if (timeLeft <= 0) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -19,7 +19,7 @@ export default function LiveQR() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [showModal, timeLeft]);
+  }, [timeLeft]);
 
   const handleContinue = () => {
     setShowModal(false);
@@ -204,7 +204,7 @@ export default function LiveQR() {
                     <strong className="text-gray-900 dark:text-white">
                       Escanea el código QR
                     </strong>{" "}
-                    que verás al cerrar este mensaje
+                    
                   </p>
                 </li>
 
@@ -216,7 +216,7 @@ export default function LiveQR() {
                     <strong className="text-gray-900 dark:text-white">
                       Realiza tu pago
                     </strong>{" "}
-                    utilizando el método de tu preferencia
+                    
                   </p>
                 </li>
 
@@ -228,7 +228,7 @@ export default function LiveQR() {
                     <strong className="text-gray-900 dark:text-white">
                       Llena el formulario
                     </strong>{" "}
-                    con tus datos y sube las capturas de tus productos y el comprobante de pago
+                    
                   </p>
                 </li>
 
@@ -238,9 +238,9 @@ export default function LiveQR() {
                   </span>
                   <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
                     <strong className="text-gray-900 dark:text-white">
-                      Sube tus capturas y realiza tu pedido
+                      Sube las capturas de tus productos y el comprobante de pago
                     </strong>{" "}
-                    para recibir la confirmación en tu WhatsApp
+
                   </p>
                 </li>
               </ol>
