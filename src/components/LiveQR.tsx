@@ -3,7 +3,7 @@ import logoImage from "@/assets/qr.png";
 
 export default function LiveQR() {
   const [showModal, setShowModal] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(120);
+  const [timeLeft, setTimeLeft] = useState(600);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
