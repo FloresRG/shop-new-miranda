@@ -214,7 +214,7 @@ if (aboutIndex.data.draft) {
   </section>
 
   <!-- Map Section -->
-  <section class="section py-24 relative overflow-hidden">
+  <section id="map-section" class="section py-24 relative overflow-hidden">
     <div class="absolute inset-0 bg-primary/5 dark:bg-primary/10 -z-10"></div>
     <div class="container relative z-10">
       <div class="row justify-center">
@@ -249,37 +249,8 @@ if (aboutIndex.data.draft) {
                   width="100%"
                   height="100%"
                   src="https://maps.google.com/maps?q=-16.49311355914987,-68.14514980491366&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                  class="grayscale contrast-125 dark:invert dark:hue-rotate-180 dark:opacity-80 dark:contrast-150 transition-all duration-700 hover:grayscale-0 dark:hover:invert-0 dark:hover:hue-rotate-0 dark:hover:opacity-100"
-                ></iframe>
+                  class="w-full h-full"></iframe>
               </div>
-            </div>
-
-            <div class="mt-12">
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=-16.49311355914987,-68.14514980491366"
-                target="_blank"
-                class="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-[#FF0040] text-white rounded-full font-black text-lg shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 active:scale-95 transition-all uppercase tracking-widest"
-              >
-                <svg
-                  class="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  ></path>
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                ¿Cómo llegar?
-              </a>
             </div>
           </div>
         </div>
@@ -358,6 +329,25 @@ if (aboutIndex.data.draft) {
         yoyo: true,
         ease: "sine.inOut",
       });
+
+      // Scroll to map section on load or hash change
+      const scrollToMap = () => {
+        if (window.location.hash === "#map-section") {
+          const mapSection = document.getElementById("map-section");
+          if (mapSection) {
+            setTimeout(() => {
+              mapSection.scrollIntoView({ behavior: "smooth" });
+            }, 800);
+          }
+        }
+      };
+
+      // Initial check
+      scrollToMap();
+
+      // Listen for view transitions or hash changes
+      window.addEventListener("hashchange", scrollToMap);
+      document.addEventListener("astro:after-swap", scrollToMap);
 
       // Scroll animations for sections
       gsap.from(".section:last-of-type", {

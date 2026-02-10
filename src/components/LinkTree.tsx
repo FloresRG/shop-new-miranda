@@ -55,7 +55,7 @@ const mainLinks = [
   },
   {
     title: "UBICACIÓN",
-    url: "/about",
+    url: "/about#map-section",
     subtitle: "Visítanos en nuestra sucursal",
   },
 ];
@@ -141,8 +141,7 @@ export default function LinkTree() {
             Importadora Miranda
           </h1>
           <p className="text-white text-lg text-center max-w-xs sm:max-w-md font-semibold drop-shadow-lg opacity-90">
-            Todo lo que necesitas en un solo lugar. Canal oficial de ventas y
-            atención.
+            A un click del producto que necesitas.
           </p>
         </div>
 
@@ -203,7 +202,7 @@ export default function LinkTree() {
 
         {/* Footer */}
         <div className="mt-20 text-white/70 text-sm font-bold tracking-widest uppercase drop-shadow-md animate-fadeIn">
-          © {new Date().getFullYear()} Importadora Miranda • Premium
+          © {new Date().getFullYear()} Importadora Miranda
         </div>
       </div>
 
