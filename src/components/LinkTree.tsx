@@ -1,5 +1,7 @@
 import React from "react";
 import logoImage from "@/assets/logo.webp";
+import bannerMobil from "@/assets/banner/Banner_mobil.webp";
+import bannerPc from "@/assets/banner/Banner_pc.webp";
 
 const socialLinks = [
   {
@@ -79,101 +81,139 @@ export default function LinkTree() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF7F0] flex flex-col items-center px-4 py-8 font-primary">
-      {/* Top Header Controls */}
-      <div className="w-full max-w-xl flex justify-between items-center mb-8">
-        <div className="bg-white/80 p-2 rounded-full shadow-sm">
-          <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-          </svg>
-        </div>
-        <button 
-          onClick={handleShare}
-          className="bg-white/80 p-2 rounded-full shadow-sm hover:bg-white transition-colors"
-        >
-          <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-          </svg>
-        </button>
+    <div className="min-h-screen relative flex flex-col items-center px-4 py-8 font-primary overflow-x-hidden">
+      {/* Sharp Background Images */}
+      <div className="fixed inset-0 z-0">
+        <picture>
+          <source media="(max-width: 640px)" srcSet={bannerMobil.src} />
+          <img 
+            src={bannerPc.src} 
+            alt="Background" 
+            className="w-full h-full object-cover"
+          />
+        </picture>
+        {/* Subtle gradient to ensure readability without blurring the image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40"></div>
       </div>
 
-      {/* Profile Section */}
-      <div className="flex flex-col items-center mb-8">
-        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-xl mb-6 bg-white flex items-center justify-center">
-            <img 
-                src={logoImage.src} 
-                alt="Importadora Miranda Logo" 
-                className="w-full h-full object-contain p-2"
-            />
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#C81E1E] mb-2 text-center" style={{ fontFamily: 'Georgia, serif' }}>
-          Importadora Miranda
-        </h1>
-        <p className="text-[#C81E1E]/80 text-center max-w-xs sm:max-w-md font-medium">
-          Todo lo que necesitas en un solo lugar. Canal oficial de ventas y atención.
-        </p>
-      </div>
-
-      {/* Social Icons */}
-      <div className="flex justify-center gap-6 mb-10">
-        {socialLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#C81E1E] hover:scale-110 transition-transform duration-200"
-            aria-label={link.name}
+      <div className="relative z-10 w-full max-w-xl flex flex-col items-center">
+        {/* Top Header Controls */}
+        <div className="w-full flex justify-between items-center mb-10">
+          <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-white/40 group hover:bg-white/30 transition-all cursor-pointer">
+            <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </div>
+          <button 
+            onClick={handleShare}
+            className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-white/40 hover:scale-110 active:scale-95 transition-all group"
           >
-            {link.icon}
-          </a>
-        ))}
-      </div>
+            <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+          </button>
+        </div>
 
-      {/* Main Links Container */}
-      <div className="w-full max-w-xl flex flex-col gap-4">
-        {mainLinks.map((link) => (
-          <a
-            key={link.title}
-            href={link.url}
-            className="group block w-full bg-white border-2 border-[#C81E1E] rounded-3xl p-5 sm:p-6 transition-all duration-300 hover:bg-[#C81E1E] hover:shadow-lg relative overflow-hidden"
-          >
-            <div className="flex justify-between items-center relative z-10">
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-bold text-[#C81E1E] group-hover:text-white transition-colors uppercase tracking-wider">
-                  {link.title}
-                </span>
-                <span className="text-xs sm:text-sm text-[#C81E1E]/60 group-hover:text-white/80 transition-colors">
-                  {link.subtitle}
-                </span>
-              </div>
-              <div className="text-[#C81E1E]/40 group-hover:text-white/60">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
-            {/* Hover subtle background effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-          </a>
-        ))}
-      </div>
+        {/* Profile Section */}
+        <div className="flex flex-col items-center mb-10 animate-slideUp">
+          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl mb-6 bg-white flex items-center justify-center p-3 animate-pulse-slow">
+              <img 
+                  src={logoImage.src} 
+                  alt="Importadora Miranda Logo" 
+                  className="w-full h-full object-contain"
+              />
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black text-white text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-3" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            Importadora Miranda
+          </h1>
+          <p className="text-white text-lg text-center max-w-xs sm:max-w-md font-semibold drop-shadow-lg opacity-90">
+            Todo lo que necesitas en un solo lugar. Canal oficial de ventas y atención.
+          </p>
+        </div>
 
-      {/* Footer / Powered By */}
-      <div className="mt-16 text-[#C81E1E]/40 text-sm font-medium">
-        © 2024 Importadora Miranda
+        {/* Social Icons Container */}
+        <div className="flex justify-center gap-5 mb-12 animate-slideUp delay-100">
+          {socialLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-4 bg-white/10 backdrop-blur-md rounded-2xl text-white shadow-xl hover:scale-125 hover:-translate-y-2 hover:bg-white hover:text-purple-600 transition-all duration-300 border-2 border-white/30"
+              aria-label={link.name}
+            >
+              {link.icon}
+            </a>
+          ))}
+        </div>
+
+        {/* Main Links Container */}
+        <div className="w-full flex flex-col gap-6 animate-slideUp delay-200">
+          {mainLinks.map((link) => (
+            <a
+              key={link.title}
+              href={link.url}
+              className="group block w-full bg-white/10 backdrop-blur-lg border-2 border-white/40 rounded-3xl p-6 transition-all duration-500 hover:scale-[1.02] hover:bg-white hover:border-white shadow-2xl relative overflow-hidden"
+            >
+              <div className="flex justify-between items-center relative z-10">
+                <div className="flex flex-col">
+                  <span className="text-xl sm:text-2xl font-black text-white group-hover:text-purple-900 transition-colors uppercase tracking-tighter">
+                    {link.title}
+                  </span>
+                  <span className="text-sm sm:text-base font-medium text-white/80 group-hover:text-purple-600 transition-colors">
+                    {link.subtitle}
+                  </span>
+                </div>
+                <div className="bg-white/20 p-3 rounded-2xl text-white group-hover:bg-purple-600 group-hover:text-white transition-all transform group-hover:rotate-12 shadow-inner">
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </div>
+              </div>
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            </a>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-20 text-white/70 text-sm font-bold tracking-widest uppercase drop-shadow-md animate-fadeIn">
+          © {new Date().getFullYear()} Importadora Miranda • Premium
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&display=swap');
         
         body {
           font-family: 'Outfit', sans-serif;
+          background: #000;
         }
 
         .shadow-premium {
-          box-shadow: 0 10px 30px -5px rgba(200, 30, 30, 0.1);
+          box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
         }
+
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseSlow {
+          0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+          50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,255,255,0.6)); }
+        }
+
+        .animate-slideUp {
+          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .animate-pulse-slow {
+          animation: pulseSlow 4s ease-in-out infinite;
+        }
+
+        .delay-100 { animation-delay: 0.15s; }
+        .delay-200 { animation-delay: 0.3s; }
       ` }} />
     </div>
   );
