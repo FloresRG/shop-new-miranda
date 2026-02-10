@@ -24,7 +24,7 @@ const socialLinks = [
   },
   {
     name: "Instagram",
-    url: "https://www.instagram.com/importadora_miranda_ventas/",
+    url: "#",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.981 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -32,17 +32,8 @@ const socialLinks = [
     ),
   },
   {
-    name: "YouTube",
-    url: "https://www.youtube.com/@importadoramiranda", 
-    icon: (
-      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-      </svg>
-    ),
-  },
-  {
     name: "Facebook",
-    url: "https://www.facebook.com/importadoramiranda.bo", 
+    url: "https://www.facebook.com/profile.php?id=100063558189871",
     icon: (
       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -53,14 +44,14 @@ const socialLinks = [
 
 const mainLinks = [
   {
-    title: "TIENDA DE PRODUCTOS",
-    url: "/tienda?page=1",
-    subtitle: "Explora nuestro catálogo completo",
-  },
-  {
     title: "PAGO CON QR (LIVE)",
     url: "/liveqr",
     subtitle: "Realiza tu pago de forma segura",
+  },
+  {
+    title: "TIENDA DE PRODUCTOS",
+    url: "/tienda?page=1",
+    subtitle: "Explora nuestro catálogo completo",
   },
   {
     title: "UBICACIÓN",
@@ -86,9 +77,9 @@ export default function LinkTree() {
       <div className="fixed inset-0 z-0">
         <picture>
           <source media="(max-width: 640px)" srcSet={bannerMobil.src} />
-          <img 
-            src={bannerPc.src} 
-            alt="Background" 
+          <img
+            src={bannerPc.src}
+            alt="Background"
             className="w-full h-full object-cover"
           />
         </picture>
@@ -100,34 +91,58 @@ export default function LinkTree() {
         {/* Top Header Controls */}
         <div className="w-full flex justify-between items-center mb-10">
           <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-white/40 group hover:bg-white/30 transition-all cursor-pointer">
-            <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            <svg
+              className="w-6 h-6 text-white drop-shadow-md"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
+              />
             </svg>
           </div>
-          <button 
+          <button
             onClick={handleShare}
             className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-white/40 hover:scale-110 active:scale-95 transition-all group"
           >
-            <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            <svg
+              className="w-6 h-6 text-white drop-shadow-md"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+              />
             </svg>
           </button>
         </div>
 
         {/* Profile Section */}
         <div className="flex flex-col items-center mb-10 animate-slideUp">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl mb-6 bg-white flex items-center justify-center p-3 animate-pulse-slow">
-              <img 
-                  src={logoImage.src} 
-                  alt="Importadora Miranda Logo" 
-                  className="w-full h-full object-contain"
-              />
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[1.5rem] overflow-hidden shadow-xl mb-6 flex items-center justify-center">
+            <img
+              src={logoImage.src}
+              alt="Importadora Miranda Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black text-white text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-3" style={{ fontFamily: 'Outfit, sans-serif' }}>
+          <h1
+            className="text-4xl sm:text-5xl font-black text-white text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-3"
+            style={{ fontFamily: "Outfit, sans-serif" }}
+          >
             Importadora Miranda
           </h1>
           <p className="text-white text-lg text-center max-w-xs sm:max-w-md font-semibold drop-shadow-lg opacity-90">
-            Todo lo que necesitas en un solo lugar. Canal oficial de ventas y atención.
+            Todo lo que necesitas en un solo lugar. Canal oficial de ventas y
+            atención.
           </p>
         </div>
 
@@ -165,8 +180,18 @@ export default function LinkTree() {
                   </span>
                 </div>
                 <div className="bg-white/20 p-3 rounded-2xl text-white group-hover:bg-purple-600 group-hover:text-white transition-all transform group-hover:rotate-12 shadow-inner">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <svg
+                    className="w-7 h-7"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
                   </svg>
                 </div>
               </div>
@@ -182,7 +207,9 @@ export default function LinkTree() {
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&display=swap');
         
         body {
@@ -214,7 +241,9 @@ export default function LinkTree() {
 
         .delay-100 { animation-delay: 0.15s; }
         .delay-200 { animation-delay: 0.3s; }
-      ` }} />
+      `,
+        }}
+      />
     </div>
   );
 }
