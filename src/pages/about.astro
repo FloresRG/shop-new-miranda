@@ -135,7 +135,8 @@ if (aboutIndex.data.draft) {
               class="h2 mb-6 font-black leading-tight text-gray-900 dark:text-white"
             >
               Nos interesa mucho <br /><span class="text-primary italic"
-                >tu experiencia</span>
+                >tu experiencia</span
+              >
             </h2>
             <p
               class="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed"
@@ -205,6 +206,80 @@ if (aboutIndex.data.draft) {
                   >Equipo Miranda</span
                 >
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="section py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-primary/5 dark:bg-primary/10 -z-10"></div>
+    <div class="container relative z-10">
+      <div class="row justify-center">
+        <div class="lg:col-10 text-center">
+          <h2
+            class="h2 mb-4 font-black text-gray-900 dark:text-white uppercase tracking-tight"
+          >
+            Nuestra Ubicación <br /><span class="text-primary italic"
+              >Tienda Física</span
+            >
+          </h2>
+          <p
+            class="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto"
+          >
+            Visítanos en nuestra sucursal y descubre todos nuestros productos en
+            persona.
+          </p>
+
+          <div class="relative group">
+            <div
+              class="absolute -inset-4 bg-gradient-to-r from-primary via-[#FF0040] to-primary rounded-[50px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000 animate-gradient-x"
+            >
+            </div>
+
+            <div
+              class="relative bg-white dark:bg-darkmode-light p-2 rounded-[42px] shadow-2xl overflow-hidden border border-white/20"
+            >
+              <div
+                class="aspect-video w-full rounded-[38px] overflow-hidden shadow-inner bg-gray-100"
+              >
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://maps.google.com/maps?q=-16.49311355914987,-68.14514980491366&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                  class="grayscale contrast-125 dark:invert dark:hue-rotate-180 dark:opacity-80 dark:contrast-150 transition-all duration-700 hover:grayscale-0 dark:hover:invert-0 dark:hover:hue-rotate-0 dark:hover:opacity-100"
+                ></iframe>
+              </div>
+            </div>
+
+            <div class="mt-12">
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=-16.49311355914987,-68.14514980491366"
+                target="_blank"
+                class="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-[#FF0040] text-white rounded-full font-black text-lg shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 active:scale-95 transition-all uppercase tracking-widest"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                ¿Cómo llegar?
+              </a>
             </div>
           </div>
         </div>
@@ -282,6 +357,18 @@ if (aboutIndex.data.draft) {
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
+      });
+
+      // Scroll animations for sections
+      gsap.from(".section:last-of-type", {
+        scrollTrigger: {
+          trigger: ".section:last-of-type",
+          start: "top 80%",
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power4.out",
       });
     });
   </script>
