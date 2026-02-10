@@ -283,7 +283,28 @@ export default function LiveQR() {
                   </p>
                 </li>
               </ol>
+              
             </div>
+            {/* Continue Button */}
+            <button
+              onClick={handleContinue}
+              className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:-translate-y-1 hover:scale-105 active:translate-y-0 active:scale-100 flex items-center justify-center gap-2 sm:gap-3"
+            >
+              Click para Cerrar
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       )}
