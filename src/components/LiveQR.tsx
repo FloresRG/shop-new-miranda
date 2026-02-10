@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logoImage from "@/assets/qr.png";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 export default function LiveQR() {
   const [showModal, setShowModal] = useState(true);
@@ -58,11 +59,16 @@ export default function LiveQR() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-darkmode-body dark:via-darkmode-light dark:to-darkmode-body flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-darkmode-body dark:via-darkmode-light dark:to-darkmode-body flex items-center justify-center p-4 relative transition-colors duration-500">
+      {/* Theme Switcher - Fixed top left */}
+      <div className="fixed top-4 left-4 sm:top-6 sm:left-6 z-50">
+        <ThemeSwitcher className="!w-14 !h-8 p-1.5" />
+      </div>
+
       {/* Timer - Fixed top right */}
       <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
         <div
-          className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-mono text-lg sm:text-xl md:text-2xl font-bold shadow-xl ${
+          className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-mono text-lg sm:text-xl md:text-2xl font-bold shadow-xl transition-all duration-300 ${
             timeLeft <= 10
               ? "bg-red-500 text-white animate-pulse shadow-red-500/50"
               : "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-purple-500/50"
@@ -77,15 +83,15 @@ export default function LiveQR() {
         className={`max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border border-gray-100 dark:border-darkmode-border transition-all duration-500 ${showModal ? "blur-sm scale-95" : "blur-0 scale-100"}`}
       >
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-2 transition-colors">
           Escanea el Código QR
         </h1>
-        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8">
+        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 transition-colors">
           Realiza tu pago escaneando el siguiente código
         </p>
 
         {/* QR Code */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg border-2 border-gray-200 dark:border-darkmode-border">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg border-2 border-gray-200 dark:border-darkmode-border transition-colors">
           <div className="aspect-square w-full max-w-md mx-auto rounded-xl overflow-hidden bg-white">
             <img
               src={logoImage.src}
@@ -99,7 +105,7 @@ export default function LiveQR() {
         <button
           onClick={handleDownloadQR}
           disabled={showModal}
-          className="w-full bg-white dark:bg-darkmode-body text-primary border-2 border-primary py-3 px-4 sm:px-6 rounded-xl font-semibold text-base sm:text-lg hover:bg-primary hover:text-white transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-white dark:bg-darkmode-body text-purple-600 dark:text-purple-400 border-2 border-purple-600 dark:border-purple-400 py-3 px-4 sm:px-6 rounded-xl font-semibold text-base sm:text-lg hover:bg-purple-600 hover:text-white dark:hover:bg-purple-400 dark:hover:text-white transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             className="w-5 h-5 sm:w-6 sm:h-6"
@@ -118,7 +124,7 @@ export default function LiveQR() {
         </button>
 
         {/* Info */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+        <div className="bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 transition-colors">
           <div className="flex gap-2 sm:gap-3">
             <svg
               className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 flex-shrink-0"
@@ -131,7 +137,7 @@ export default function LiveQR() {
                 clipRule="evenodd"
               />
             </svg>
-            <div className="text-xs sm:text-sm text-blue-800 dark:text-blue-200">
+            <div className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 transition-colors text-left">
               <p className="font-semibold mb-1">¿Ya realizaste tu pago?</p>
               <p>
                 Una vez completado el pago, haz clic en "Pago Realizado" para
@@ -166,14 +172,14 @@ export default function LiveQR() {
 
       {/* Modal Overlay - Instructions */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="relative max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border-2 border-purple-200 dark:border-purple-500/30 max-h-[90vh] overflow-y-auto animate-slideUp animate-pulse-slow">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn transition-all">
+          <div className="relative max-w-2xl w-full bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 border-2 border-purple-200 dark:border-purple-900/50 max-h-[90vh] overflow-y-auto animate-slideUp animate-pulse-slow transition-colors duration-500">
             {/* Close Button */}
             <button
               onClick={handleCloseModal}
               className="absolute top-4 right-4 sm:top-6 sm:right-6 
              w-10 h-10 sm:w-12 sm:h-12 
-             bg-red-100 dark:bg-red-900/30 
+             bg-red-100 dark:bg-red-900/40 
              text-red-600 dark:text-red-400 
              hover:bg-red-600 hover:text-white 
              rounded-full 
@@ -200,19 +206,19 @@ export default function LiveQR() {
             </button>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-4 sm:mb-6 transition-colors">
               ¡IMPORTANTE!
             </h1>
 
             {/* Instructions */}
-            <div className="  bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-purple-200 dark:border-purple-500/30">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-purple-200 dark:border-purple-800 transition-all">
               <ol className="space-y-3 sm:space-y-4">
                 {/* Paso 1 */}
-                <li className="flex items-start gap-2 sm:gap-3">
+                <li className="flex items-start gap-2 sm:gap-3 text-left">
                   <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     1
                   </span>
-                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
+                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-200 pt-0.5 sm:pt-1">
                     <strong className="text-gray-900 dark:text-white">
                       Escanea el{" "}
                       <span className="text-purple-600 dark:text-purple-400 font-semibold">
@@ -223,11 +229,11 @@ export default function LiveQR() {
                 </li>
 
                 {/* Paso 2 */}
-                <li className="flex items-start gap-2 sm:gap-3">
+                <li className="flex items-start gap-2 sm:gap-3 text-left">
                   <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     2
                   </span>
-                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
+                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-200 pt-0.5 sm:pt-1">
                     <strong className="text-gray-900 dark:text-white">
                       Realiza tu{" "}
                       <span className="text-pink-600 dark:text-pink-400 font-semibold">
@@ -242,11 +248,11 @@ export default function LiveQR() {
                 </li>
 
                 {/* Paso 3 */}
-                <li className="flex items-start gap-2 sm:gap-3">
+                <li className="flex items-start gap-2 sm:gap-3 text-left">
                   <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     3
                   </span>
-                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
+                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-200 pt-0.5 sm:pt-1">
                     <strong className="text-gray-900 dark:text-white">
                       Ten listas tus{" "}
                       <span className="text-purple-600 dark:text-purple-400 font-semibold">
@@ -261,11 +267,11 @@ export default function LiveQR() {
                 </li>
 
                 {/* Paso 4 */}
-                <li className="flex items-start gap-2 sm:gap-3">
+                <li className="flex items-start gap-2 sm:gap-3 text-left">
                   <span className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shadow-lg">
                     4
                   </span>
-                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-300 pt-0.5 sm:pt-1">
+                  <p className="text-lg sm:text-base text-gray-700 dark:text-gray-200 pt-0.5 sm:pt-1">
                     <strong className="text-gray-900 dark:text-white">
                       Sube tus{" "}
                       <span className="text-purple-600 dark:text-purple-400 font-semibold">
@@ -283,7 +289,6 @@ export default function LiveQR() {
                   </p>
                 </li>
               </ol>
-              
             </div>
             {/* Continue Button */}
             <button
@@ -311,47 +316,23 @@ export default function LiveQR() {
 
       <style>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
         @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulseSlow {
-          0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
-          }
-          50% {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px 10px rgba(168, 85, 247, 0);
-          }
+          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+          50% { transform: scale(1.02); box-shadow: 0 0 20px 10px rgba(168, 85, 247, 0); }
         }
 
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-
-        .animate-slideUp {
-          animation: slideUp 0.4s ease-out;
-        }
-
-        .animate-pulse-slow {
-          animation: pulseSlow 2s ease-in-out infinite;
-        }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        .animate-slideUp { animation: slideUp 0.4s ease-out; }
+        .animate-pulse-slow { animation: pulseSlow 2s ease-in-out infinite; }
       `}</style>
     </div>
   );
