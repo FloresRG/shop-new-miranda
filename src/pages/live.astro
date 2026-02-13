@@ -23,10 +23,32 @@ if (contactIndex.data.draft) {
     <div class="container">
       <div class="row">
         <div class="mx-auto md:col-10 lg:col-6">
-          <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-dark dark:text-white">
+          <div
+            class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 px-4"
+          >
+            <h2
+              class="text-2xl md:text-3xl font-black text-dark dark:text-white uppercase tracking-tight"
+            >
               PEDIDOS MIRANDA
             </h2>
+            <a
+              href="/liveqr"
+              class="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary border-2 border-primary/50 px-6 py-3 rounded-xl font-black text-lg transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-primary/25"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              VOLVER
+            </a>
           </div>
 
           <Toaster client:only="react" />
