@@ -103,18 +103,18 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   key={link.title}
                   href={link.url}
                   style={{ animationDelay: `${i * 150 + 900}ms` }}
-                  className="group block w-full bg-white/10 hover:bg-white/15 backdrop-blur-2xl border border-white/20 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
+                  className="group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
-                      <span className="text-lg md:text-xl font-bold text-accent group-hover:text-white transition-colors uppercase tracking-tight leading-none mb-1">
+                      <span className="text-lg md:text-xl font-bold text-secondary dark:text-white group-hover:text-white transition-colors uppercase tracking-tight leading-none mb-1">
                         {link.title}
                       </span>
-                      <span className="text-xs md:text-sm font-medium text-white/80 group-hover:text-white transition-colors">
+                      <span className="text-xs md:text-sm font-medium text-secondary/90 dark:text-white/80 group-hover:text-white transition-colors">
                         {link.subtitle}
                       </span>
                     </div>
-                    <div className="bg-accent/10 p-3 rounded-xl text-accent group-hover:bg-secondary group-hover:text-white transition-all shadow-lg">
+                    <div className="bg-secondary/10 dark:bg-white/10 p-3 rounded-xl text-secondary dark:text-white group-hover:bg-secondary group-hover:text-white transition-all shadow-lg">
                       <FaArrowRight className="w-5 h-5 group-hover:rotate-0 -rotate-45 transition-transform" />
                     </div>
                   </div>
