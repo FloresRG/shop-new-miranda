@@ -59,90 +59,133 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
       </div>
 
       <div className="container relative z-10">
-        <div className="flex flex-col lg:flex-row items-center ">
-          {/* Contenido Principal - Lado Izquierdo */}
-          <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
-            {/* Logo */}
-            {logo && (
-              <div className="relative group perspective-1000">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#F2275D] to-[#451773] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                <img
-                  src={logo}
-                  alt="Importadora Miranda"
-                  className="relative w-64 md:w-60 lg:w-60 h-auto object-contain drop-shadow-2xl transform transition duration-500 hover:scale-105 hover:rotate-1"
-                />
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
+          <div className="flex-1 text-white space-y-6 py-12 lg:py-0 flex flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-700 w-full px-4 sm:px-0">
+            {/* Perfil / Logo */}
+            <div className="flex flex-col items-start space-y-4 animate-in fade-in slide-in-from-left-8 duration-700">
+              <div className="space-y-2">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-gray-400">
+                    IMPORTADORA MIRANDA
+                  </span>
+                </h1>
+                <p className="text-lg">
+                  A un click del producto que necesitas.
+                </p>
               </div>
-            )}
-
-            {/* Título Principal / Slogan */}
-            <div className="space-y-4">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight drop-shadow-lg">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-gray-300">
-                  A un Click del Producto que Necesita!!
-                </span>
-              </h1>
             </div>
 
-            {/* Botones de acción */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full justify-center">
-              <a
-                href="/tienda"
-                className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#F2275D] to-[#F20505] rounded-full font-bold text-white shadow-[0_0_40px_rgba(242,39,93,0.4)] hover:shadow-[0_0_60px_rgba(242,39,93,0.6)] transition-all duration-300 hover:scale-[1.02] overflow-hidden w-full sm:w-auto"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Explorar Tienda
-                  <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#d91648] to-[#c70404] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </a>
-
-              <a
-                href="/about"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-full font-semibold text-white transition-all duration-300 w-full sm:w-auto"
-              >
-                Conócenos
-                <svg
-                  className="w-5 h-5 group-hover:rotate-45 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            {/* Iconos Sociales */}
+            <div className="flex gap-3 animate-in fade-in slide-in-from-left-8 duration-700 delay-100">
+              {[
+                {
+                  name: "TikTok",
+                  url: "https://www.tiktok.com/@importadoramirandalives",
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.9-.39-2.81-.12-.9.24-1.72.76-2.29 1.53-.74 1-1 2.22-.71 3.4.26 1.15 1 2.16 2 2.76.99.63 2.21.75 3.32.31 1.09-.39 1.96-1.3 2.34-2.39.11-.26.16-.54.2-.82.02-2.99.01-5.97.01-8.96z" />
+                    </svg>
+                  ),
+                },
+                {
+                  name: "WhatsApp",
+                  url: "https://wa.me/59170621016",
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                  ),
+                },
+                {
+                  name: "Instagram",
+                  url: "#",
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.981 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                    </svg>
+                  ),
+                },
+                {
+                  name: "Facebook",
+                  url: "https://www.facebook.com/profile.php?id=100063558189871",
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                  ),
+                },
+              ].map((link) => (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 rounded-xl text-white transition-all transform hover:-translate-y-1"
+                  aria-label={link.name}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </a>
+                  {link.icon}
+                </a>
+              ))}
             </div>
 
-            {/* Stats o badges informativos */}
-            <div className="flex flex-wrap gap-6 pt-4 text-sm justify-center">
-              <div className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="w-5 h-5 text-[#17BFBF]"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+            {/* Links Principales (Adaptado de LinkTree) */}
+            <div className="w-full max-w-lg space-y-3 animate-in fade-in slide-in-from-left-8 duration-700 delay-200">
+              {[
+                {
+                  title: "PAGO CON QR (LIVE)",
+                  url: "/liveqr",
+                  subtitle: "Realiza tu pago de forma segura",
+                },
+                {
+                  title: "TIENDA DE PRODUCTOS",
+                  url: "/tienda?page=1",
+                  subtitle: "Explora nuestro catálogo completo",
+                },
+                {
+                  title: "UBICACIÓN",
+                  url: "/about#map-section",
+                  subtitle: "Visítanos en nuestra sucursal",
+                },
+              ].map((link) => (
+                <a
+                  key={link.title}
+                  href={link.url}
+                  className="group block w-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01] hover:border-white/20 shadow-lg relative overflow-hidden"
                 >
-                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
-                </svg>
-                <span>
-                  <strong className="text-white">+10,000</strong> Clientes
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-300">
-                <svg
-                  className="w-5 h-5 text-[#F2275D]"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-                <span>
-                  <strong className="text-white">4.9/5</strong> Valoración
-                </span>
-              </div>
+                  <div className="flex justify-between items-center relative z-10">
+                    <div className="flex flex-col text-left">
+                      <span className="text-lg md:text-xl font-bold text-white group-hover:text-primary transition-colors uppercase tracking-tight leading-none mb-1">
+                        {link.title}
+                      </span>
+                      <span className="text-xs md:text-sm font-medium text-white/50 group-hover:text-white/80 transition-colors">
+                        {link.subtitle}
+                      </span>
+                    </div>
+                    <div className="bg-white/10 p-2 rounded-lg text-white group-hover:bg-[#F2275D] transition-colors">
+                      <FaArrowRight className="w-4 h-4 group-hover:rotate-0 -rotate-45 transition-transform" />
+                    </div>
+                  </div>
+                  {/* Efecto de brillo al pasar el mouse */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                </a>
+              ))}
             </div>
           </div>
 
