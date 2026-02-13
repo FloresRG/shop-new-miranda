@@ -67,12 +67,11 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
       </div>
 
       <div className="container relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="flex flex-col lg:flex-row items-center">
           {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
-          <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
-
+          <div className="flex-1 text-white space-y-8 pt-24 pb-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
             {/* Links Principales (Adaptado de LinkTree) */}
-            <div className="w-full max-w-lg space-y-3">
+            <div className="w-full max-w-lg space-y-4">
               {[
                 {
                   title: "PAGO CON QR (LIVE)",
@@ -80,7 +79,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   subtitle: "Realiza tu pago de forma segura",
                 },
                 {
-                  title: "LIQUIDACIONES 🔥",
+                  title: "LIQUIDACIONES",
                   url: "/liquidaciones",
                   subtitle: "Ofertazos de locura disponibles ya",
                 },
@@ -104,31 +103,30 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   key={link.title}
                   href={link.url}
                   style={{ animationDelay: `${i * 150 + 900}ms` }}
-                  className="group block w-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01] hover:border-white/20 shadow-lg relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
+                  className="group block w-full bg-white/10 hover:bg-white/15 backdrop-blur-2xl border border-white/20 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
-                      <span className="text-lg md:text-xl font-bold text-white group-hover:text-primary transition-colors uppercase tracking-tight leading-none mb-1">
+                      <span className="text-lg md:text-xl font-bold text-accent group-hover:text-primary transition-colors uppercase tracking-tight leading-none mb-1">
                         {link.title}
                       </span>
-                      <span className="text-xs md:text-sm font-medium text-white/50 group-hover:text-white/80 transition-colors">
+                      <span className="text-xs md:text-sm font-medium text-white/80 group-hover:text-white transition-colors">
                         {link.subtitle}
                       </span>
                     </div>
-                    <div className="bg-white/10 p-2 rounded-lg text-white group-hover:bg-[#F2275D] transition-colors">
-                      <FaArrowRight className="w-4 h-4 group-hover:rotate-0 -rotate-45 transition-transform" />
+                    <div className="bg-accent/10 p-3 rounded-xl text-accent group-hover:bg-primary group-hover:text-white transition-all shadow-lg">
+                      <FaArrowRight className="w-5 h-5 group-hover:rotate-0 -rotate-45 transition-transform" />
                     </div>
                   </div>
                   {/* Efecto de brillo al pasar el mouse */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </a>
               ))}
             </div>
           </div>
 
           {/* Carrusel de Productos en Liquidación - Ahora mejorado para móvil */}
-          <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-8 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
-
+          <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-12 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
             {/* Contenedor del Carrusel */}
             <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
               <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
