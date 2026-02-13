@@ -6,119 +6,66 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
+const badgeColors = [
+  "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700",
+  "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700",
+  "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
+  "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700",
+  "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700",
+  "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-700",
+  "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-700",
+  "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700",
+  "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-300 dark:border-fuchsia-700",
+  "bg-lime-50 text-lime-700 border-lime-200 dark:bg-lime-900/30 dark:text-lime-300 dark:border-lime-700",
+];
+
 const departments = [
   {
-    name: "La Paz",
-    provinces: [
-      "Murillo",
-      "Omasuyos",
-      "Pacajes",
-      "Larecaja",
-      "Ingavi",
-      "Sud Yungas",
-      "Nor Yungas",
-      "Inquisivi",
-    ],
-    color: "from-green-500 to-green-700",
-  },
-  {
     name: "Santa Cruz",
-    provinces: [
-      "Andrés Ibáñez",
-      "Warnes",
-      "Velasco",
-      "Ichilo",
-      "Chiquitos",
-      "Sara",
-      "Cordillera",
-      "Vallegrande",
-    ],
+    provinces: ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
     color: "from-green-400 to-green-600",
   },
   {
     name: "Cochabamba",
-    provinces: [
-      "Cercado",
-      "Campero",
-      "Ayopaya",
-      "Esteban Arce",
-      "Arani",
-      "Arque",
-      "Capinota",
-      "Germán Jordán",
-    ],
+    provinces: ["Cochabamba", "Quillacollo", "Sacaba", "Zona Norte"],
     color: "from-red-500 to-red-700",
   },
   {
-    name: "Oruro",
-    provinces: [
-      "Cercado",
-      "Abaroa",
-      "Carangas",
-      "Sajama",
-      "Litoral",
-      "Poopó",
-      "Pantaleón Dalence",
-    ],
-    color: "from-yellow-500 to-yellow-700",
-  },
-  {
     name: "Potosí",
-    provinces: [
-      "Tomás Frías",
-      "Rafael Bustillo",
-      "Cornelio Saavedra",
-      "Chayanta",
-      "Linares",
-      "Quijarro",
-    ],
+    provinces: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
     color: "from-red-600 to-red-800",
   },
   {
+    name: "Oruro",
+    provinces: ["Oruro"],
+    color: "from-yellow-500 to-yellow-700",
+  },
+  {
     name: "Chuquisaca",
-    provinces: [
-      "Oropeza",
-      "Azurduy",
-      "Zudáñez",
-      "Tomina",
-      "Hernando Siles",
-      "Yamparáez",
-    ],
+    provinces: ["Sucre"],
     color: "from-red-400 to-red-600",
   },
   {
     name: "Tarija",
-    provinces: [
-      "Cercado",
-      "Arce",
-      "Gran Chaco",
-      "Avilés",
-      "Méndez",
-      "Burnet O'Connor",
-    ],
+    provinces: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo"],
     color: "from-red-500 to-red-700",
   },
   {
     name: "Beni",
     provinces: [
-      "Cercado",
-      "Vaca Díez",
-      "General José Ballivián",
-      "Yacuma",
-      "Moxos",
-      "Marbán",
+      "Trinidad",
+      "Riberalta",
+      "Guayaramerín",
+      "San Borja",
+      "Santa Rosa",
+      "Santa Ana del Yacuma",
+      "Rurrenabaque",
     ],
     color: "from-green-500 to-green-700",
   },
   {
     name: "Pando",
-    provinces: [
-      "Nicolás Suárez",
-      "Abuná",
-      "Federico Román",
-      "Madre de Dios",
-      "Manuripi",
-    ],
+    provinces: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
     color: "from-green-400 to-green-600",
   },
 ];
@@ -135,9 +82,6 @@ const Departments = () => {
             <FaGlobeAmericas className="animate-spin-slow" />
             Envíos a todo el país
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-dark dark:text-white uppercase tracking-tight">
-            Nuestra <span className="text-primary italic">Cobertura</span>
-          </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-medium">
             Llegamos a cada rincón de Bolivia. Realizamos envíos garantizados a
             todos los departamentos y sus provincias principales.
@@ -171,17 +115,14 @@ const Departments = () => {
                     Provincias & Destinos
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {dept.provinces.map((prov) => (
+                    {dept.provinces.map((prov, i) => (
                       <span
                         key={prov}
-                        className="px-3 py-1 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-white/70 text-xs font-semibold group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20 transition-all"
+                        className={`px-3 py-1 rounded-full border text-xs font-semibold transition-all ${badgeColors[i % badgeColors.length]}`}
                       >
                         {prov}
                       </span>
                     ))}
-                    <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold scale-95">
-                      + Más ciudades
-                    </span>
                   </div>
                 </div>
 
