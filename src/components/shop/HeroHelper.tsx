@@ -128,16 +128,6 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
 
           {/* Carrusel de Productos en Liquidación - Ahora mejorado para móvil */}
           <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-8 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
-            {/* Título de Liquidaciones */}
-            <div className="px-4 lg:px-0 flex items-center gap-3">
-              <span className="flex h-3 w-3 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#17BFBF] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#17BFBF]"></span>
-              </span>
-              <h2 className="text-xl lg:text-3xl font-black text-white italic uppercase tracking-wider drop-shadow-lg">
-                🔥 Productos en Liquidación
-              </h2>
-            </div>
 
             {/* Contenedor del Carrusel */}
             <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
