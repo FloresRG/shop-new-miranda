@@ -1,6 +1,6 @@
 
 .container {
-  @apply mx-auto xl:!max-w-[1320px] px-4;
+  @apply mx-auto xl:!max-w-[1440px] px-4;
 }
 
 /* --- Iconos Sociales --- */

@@ -77,6 +77,20 @@
     animation: float-product linear infinite;
   }
 
+  @keyframes carousel-x {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-carousel-x {
+    display: flex;
+    animation: carousel-x 30s linear infinite;
+  }
+
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;

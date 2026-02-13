@@ -61,23 +61,32 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
       <div className="container relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
-          <div className="flex-1 text-white space-y-6 py-12 lg:py-0 flex flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-700 w-full px-4 sm:px-0">
+          <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
             {/* Perfil / Logo */}
-            <div className="flex flex-col items-start space-y-4 animate-in fade-in slide-in-from-left-8 duration-700">
+            <div className="flex flex-col items-start space-y-4 animate-in fade-in slide-in-from-left-full duration-1000 ease-out">
+              {logo && (
+                <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl mb-2 flex items-center justify-center p-2 bg-white/10 backdrop-blur-xl border border-white/20 ring-4 ring-white/10 group hover:scale-105 transition-transform">
+                  <img
+                    src={logo}
+                    alt="Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
               <div className="space-y-2">
-                <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight uppercase">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-gray-400">
                     IMPORTADORA MIRANDA
                   </span>
                 </h1>
-                <p className="text-lg">
+                <p className="text-white/70 text-sm md:text-base font-medium max-w-md bg-white/5 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10">
                   A un click del producto que necesitas.
                 </p>
               </div>
             </div>
 
             {/* Iconos Sociales */}
-            <div className="flex gap-3 animate-in fade-in slide-in-from-left-8 duration-700 delay-100">
+            <div className="flex gap-3">
               {[
                 {
                   name: "TikTok",
@@ -131,13 +140,14 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                     </svg>
                   ),
                 },
-              ].map((link) => (
+              ].map((link, i) => (
                 <a
                   key={link.name}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 rounded-xl text-white transition-all transform hover:-translate-y-1"
+                  style={{ animationDelay: `${i * 100 + 500}ms` }}
+                  className="p-3 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 rounded-xl text-white transition-all transform hover:-translate-y-1 animate-in fade-in slide-in-from-left-full duration-700 ease-out fill-mode-backwards"
                   aria-label={link.name}
                 >
                   {link.icon}
@@ -146,7 +156,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
             </div>
 
             {/* Links Principales (Adaptado de LinkTree) */}
-            <div className="w-full max-w-lg space-y-3 animate-in fade-in slide-in-from-left-8 duration-700 delay-200">
+            <div className="w-full max-w-lg space-y-3">
               {[
                 {
                   title: "PAGO CON QR (LIVE)",
@@ -163,11 +173,12 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   url: "/about#map-section",
                   subtitle: "Visítanos en nuestra sucursal",
                 },
-              ].map((link) => (
+              ].map((link, i) => (
                 <a
                   key={link.title}
                   href={link.url}
-                  className="group block w-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01] hover:border-white/20 shadow-lg relative overflow-hidden"
+                  style={{ animationDelay: `${i * 150 + 900}ms` }}
+                  className="group block w-full bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01] hover:border-white/20 shadow-lg relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
@@ -189,74 +200,50 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
             </div>
           </div>
 
-          {/* Productos Flotantes - Lado Derecho */}
-          <div className="flex-1 relative hidden lg:block h-[600px] w-full">
-            {floatingProducts.map((product, idx) => {
-              const positions = [
-                { top: "5%", right: "10%", delay: "0s", duration: "20s" },
-                { top: "25%", right: "25%", delay: "2s", duration: "25s" },
-                { top: "45%", right: "5%", delay: "4s", duration: "22s" },
-                { top: "15%", right: "40%", delay: "1s", duration: "24s" },
-                { top: "60%", right: "30%", delay: "3s", duration: "23s" },
-                { top: "70%", right: "15%", delay: "5s", duration: "21s" },
-              ];
-              const pos = positions[idx % positions.length];
-
-              return (
+          {/* Carrusel de Productos - Lado Derecho (Ahora visible en celular) */}
+          <div className="flex-1 relative flex items-center h-[400px] lg:h-[500px] overflow-hidden w-full animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards">
+            <div className="absolute left-0 flex gap-4 lg:gap-8 animate-carousel-x hover:[animation-play-state:paused] transition-all">
+              {[
+                ...floatingProducts,
+                ...floatingProducts,
+                ...floatingProducts,
+              ].map((product, idx) => (
                 <div
-                  key={product.id}
-                  className="absolute w-32 h-32 animate-float-product opacity-0"
-                  style={{
-                    top: pos.top,
-                    right: pos.right,
-                    animationDelay: pos.delay,
-                    animationDuration: pos.duration,
-                  }}
+                  key={`${product.id}-${idx}`}
+                  className="relative w-40 h-56 lg:w-48 lg:h-64 flex-shrink-0 group overflow-hidden rounded-2xl shadow-2xl border border-white/10"
                 >
-                  <div className="relative w-full h-full group">
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                    {/* Card del producto */}
-                    <div className="relative w-full h-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2 shadow-2xl hover:scale-110 transition-transform duration-500">
-                      <img
-                        src={
-                          product.fotos[0]?.foto
-                            ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
-                            : "https://placehold.co/200x200?text=Product"
-                        }
-                        alt={product.nombre}
-                        className="w-full h-full object-cover rounded-xl"
-                        loading="lazy"
-                      />
+                  {/* Card del producto */}
+                  <div className="relative w-full h-full bg-white/5 backdrop-blur-md transition-all duration-500 group-hover:scale-110">
+                    <img
+                      src={
+                        product.fotos[0]?.foto
+                          ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
+                          : "https://placehold.co/200x200?text=Product"
+                      }
+                      alt={product.nombre}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
 
-                      {/* Overlay con info */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-end p-3">
-                        <div className="text-white">
-                          <p className="text-xs text-gray-300">
-                            Bs.{" "}
-                            {parseFloat(product.precio).toLocaleString(
-                              "es-BO",
-                              { minimumFractionDigits: 2 },
-                            )}
-                          </p>
-                        </div>
-                      </div>
+                    {/* Overlay con info al hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-4">
+                      <p className="text-sm font-bold text-white mb-1 line-clamp-2">
+                        {product.nombre}
+                      </p>
+                      <p className="text-[#17BFBF] font-black">
+                        Bs.{" "}
+                        {parseFloat(product.precio).toLocaleString("es-BO", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </p>
                     </div>
                   </div>
                 </div>
-              );
-            })}
-            {/* Elementos decorativos adicionales */}
-            <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-white rounded-full animate-ping opacity-50"></div>
-            <div
-              className="absolute top-2/3 right-1/3 w-1 h-1 bg-[#17BFBF] rounded-full animate-ping opacity-40"
-              style={{ animationDelay: "1s" }}
-            ></div>
-            <div
-              className="absolute top-1/2 right-1/2 w-3 h-3 bg-[#F2275D] rounded-full animate-ping opacity-30"
-              style={{ animationDelay: "2s" }}
-            ></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
