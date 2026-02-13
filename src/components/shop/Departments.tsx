@@ -188,7 +188,7 @@ const Departments = () => {
                 <div className="mt-8 pt-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center">
                   <div className="flex items-center gap-2 text-gray-500 dark:text-white/50 text-xs font-bold">
                     <FaTruck className="text-primary" />
-                    Entrega en 24-48h
+                    Entrega en 72h+
                   </div>
                   <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary group-hover:bg-primary/10 transition-all">
                     <FaArrowRight className="w-3 h-3" />

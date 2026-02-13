@@ -70,19 +70,6 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
           <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
-            {/* Perfil / Logo */}
-            <div className="flex flex-col items-start space-y-4 animate-in fade-in slide-in-from-left-full duration-1000 ease-out">
-              <div className="space-y-2 p-4">
-                <h1 className="text-2xl md:text-4xl font-black tracking-tight leading-tight uppercase">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-gray-400">
-                    IMPORTADORA MIRANDA
-                  </span>
-                </h1>
-                <p className="text-lg">
-                  A un click del producto que necesitas.
-                </p>
-              </div>
-            </div>
 
             {/* Links Principales (Adaptado de LinkTree) */}
             <div className="w-full max-w-lg space-y-3">
@@ -140,21 +127,21 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           </div>
 
           {/* Carrusel de Productos en Liquidación - Ahora mejorado para móvil */}
-          <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-8 lg:mt-0 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
+          <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-8 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
             {/* Título de Liquidaciones */}
             <div className="px-4 lg:px-0 flex items-center gap-3">
               <span className="flex h-3 w-3 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#17BFBF] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-[#17BFBF]"></span>
               </span>
-              <h2 className="text-xl lg:text-2xl font-black text-white italic uppercase tracking-wider drop-shadow-lg">
-                🔥 Ofertazos Liquidación
+              <h2 className="text-xl lg:text-3xl font-black text-white italic uppercase tracking-wider drop-shadow-lg">
+                🔥 Productos en Liquidación
               </h2>
             </div>
 
             {/* Contenedor del Carrusel */}
-            <div className="relative w-full h-[320px] lg:h-[450px] overflow-hidden">
-              <div className="absolute left-0 flex gap-4 lg:gap-8 animate-carousel-x hover:[animation-play-state:paused] transition-all">
+            <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
+              <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
                 {[
                   ...floatingProducts,
                   ...floatingProducts,
@@ -162,7 +149,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                 ].map((product, idx) => (
                   <div
                     key={`${product.id}-${idx}`}
-                    className="relative w-40 h-56 lg:w-48 lg:h-64 flex-shrink-0 group overflow-hidden rounded-2xl shadow-2xl border border-white/10"
+                    className="relative w-40 h-56 lg:w-64 lg:h-80 flex-shrink-0 group overflow-hidden rounded-3xl shadow-2xl border border-white/10"
                   >
                     <div className="absolute top-2 left-2 z-20">
                       <span className="bg-[#F2275D] text-[9px] lg:text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse text-white">
