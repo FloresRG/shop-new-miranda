@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import gsap from "gsap";
 import type { Product, ApiResponse } from "../../interfaces/product";
 
 interface HeroHelperProps {
@@ -12,6 +13,26 @@ interface HeroHelperProps {
 
 const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
   const [floatingProducts, setFloatingProducts] = useState<Product[]>([]);
+  const linksContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".hero-link-item",
+        { x: -50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          delay: 0.2,
+        },
+      );
+    }, linksContainerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
     const fetchFloating = async () => {
@@ -71,7 +92,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
           <div className="flex-1 text-white space-y-8 pt-24 pb-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
             {/* Links Principales (Adaptado de LinkTree) */}
-            <div className="w-full max-w-lg space-y-4">
+            <div className="w-full max-w-lg space-y-4" ref={linksContainerRef}>
               {[
                 {
                   title: "PAGO CON QR (LIVE)",
@@ -102,8 +123,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                 <a
                   key={link.title}
                   href={link.url}
-                  style={{ animationDelay: `${i * 150 + 900}ms` }}
-                  className="group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden animate-in fade-in slide-in-from-left-full duration-1000 ease-out fill-mode-backwards"
+                  className="hero-link-item group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden opacity-0"
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
