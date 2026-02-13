@@ -16,14 +16,22 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
   useEffect(() => {
     const fetchFloating = async () => {
       try {
-        const res = await fetch("/api/productos?page=1");
+        const res = await fetch(
+          "https://importadoramiranda.com/api/liquidaciones?page=1",
+        );
         if (res.ok) {
-          const data: ApiResponse = await res.json();
-          // Tomar 6 productos aleatorios o los primeros 6
-          setFloatingProducts(data.productos.slice(0, 6));
+          const data = await res.json();
+          // Mapeamos para obtener la estructura de Product que espera el componente
+          const products = data.data.map((item: any) => ({
+            ...item.producto,
+            precio: item.precio_venta,
+            // Mapeamos la foto_captura de la liquidación al array de fotos del producto
+            fotos: [{ id: item.id, foto: item.foto_captura }],
+          }));
+          setFloatingProducts(products.slice(0, 10));
         }
       } catch (error) {
-        console.error("Failed to fetch floating products", error);
+        console.error("Failed to fetch clearance products", error);
       }
     };
     fetchFloating();
@@ -212,6 +220,11 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   key={`${product.id}-${idx}`}
                   className="relative w-40 h-56 lg:w-48 lg:h-64 flex-shrink-0 group overflow-hidden rounded-2xl shadow-2xl border border-white/10"
                 >
+                  <div className="absolute top-2 left-2 z-20">
+                    <span className="bg-[#F2275D] text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse">
+                      Liquidación
+                    </span>
+                  </div>
                   {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
