@@ -72,7 +72,6 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           <div className="flex-1 text-white space-y-8 py-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
             {/* Perfil / Logo */}
             <div className="flex flex-col items-start space-y-4 animate-in fade-in slide-in-from-left-full duration-1000 ease-out">
-             
               <div className="space-y-2 p-4">
                 <h1 className="text-2xl md:text-4xl font-black tracking-tight leading-tight uppercase">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-gray-400">
@@ -94,9 +93,19 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   subtitle: "Realiza tu pago de forma segura",
                 },
                 {
+                  title: "LIQUIDACIONES 🔥",
+                  url: "/liquidaciones",
+                  subtitle: "Ofertazos de locura disponibles ya",
+                },
+                {
                   title: "TIENDA DE PRODUCTOS",
                   url: "/tienda?page=1",
                   subtitle: "Explora nuestro catálogo completo",
+                },
+                {
+                  title: "ENVÍOS A TODO EL PAÍS",
+                  url: "/departamentos",
+                  subtitle: "Mira nuestra cobertura nacional",
                 },
                 {
                   title: "UBICACIÓN",
