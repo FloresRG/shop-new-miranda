@@ -107,14 +107,14 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
-                      <span className="text-lg md:text-xl font-bold text-accent group-hover:text-primary transition-colors uppercase tracking-tight leading-none mb-1">
+                      <span className="text-lg md:text-xl font-bold text-accent group-hover:text-white transition-colors uppercase tracking-tight leading-none mb-1">
                         {link.title}
                       </span>
                       <span className="text-xs md:text-sm font-medium text-white/80 group-hover:text-white transition-colors">
                         {link.subtitle}
                       </span>
                     </div>
-                    <div className="bg-accent/10 p-3 rounded-xl text-accent group-hover:bg-primary group-hover:text-white transition-all shadow-lg">
+                    <div className="bg-accent/10 p-3 rounded-xl text-accent group-hover:bg-secondary group-hover:text-white transition-all shadow-lg">
                       <FaArrowRight className="w-5 h-5 group-hover:rotate-0 -rotate-45 transition-transform" />
                     </div>
                   </div>
