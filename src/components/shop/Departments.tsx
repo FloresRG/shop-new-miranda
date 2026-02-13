@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaTruck,
   FaMapMarkerAlt,
   FaGlobeAmericas,
   FaArrowRight,
+  FaSearch,
 } from "react-icons/fa";
 
 const badgeColors = [
@@ -20,6 +21,21 @@ const badgeColors = [
 ];
 
 const departments = [
+  {
+    name: "La Paz",
+    provinces: [
+      "Caranavi",
+      "Recojo en tienda",
+      "Palos blancos",
+      "Mapiri",
+      "Guanay",
+      "Riveralta",
+      "Coripata",
+      "Asunta",
+      "Coroico",
+    ],
+    color: "from-green-500 to-green-700",
+  },
   {
     name: "Santa Cruz",
     provinces: ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
@@ -71,74 +87,109 @@ const departments = [
 ];
 
 const Departments = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredDepartments = departments.filter((dept) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      dept.name.toLowerCase().includes(term) ||
+      dept.provinces.some((prov) => prov.toLowerCase().includes(term))
+    );
+  });
+
   return (
     <section
       id="departments-section"
-      className="section py-20 bg-body dark:bg-darkmode-body relative overflow-hidden"
+      className="section py-10 bg-body dark:bg-darkmode-body relative overflow-hidden"
     >
       <div className="container relative z-10">
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-12 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold uppercase tracking-wider">
             <FaGlobeAmericas className="animate-spin-slow" />
             Envíos a todo el país
           </div>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-medium">
-            Llegamos a cada rincón de Bolivia. Realizamos envíos garantizados a
+            Llegamos a toda Bolivia. Realizamos envíos garantizados a
             todos los departamentos y sus provincias principales.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {departments.map((dept, idx) => (
-            <div
-              key={dept.name}
-              className="group relative bg-white dark:bg-darkmode-light border border-gray-100 dark:border-darkmode-border rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 shadow-xl shadow-gray-200/50 dark:shadow-none overflow-hidden"
-            >
+        {/* Buscador */}
+        <div className="max-w-xl mx-auto mb-16 relative">
+          <div className="relative group">
+            <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors" />
+            <input
+              type="text"
+              placeholder="Buscar departamento o provincia..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-6 py-4 rounded-2xl border-2 border-gray-100 dark:border-darkmode-border bg-white dark:bg-darkmode-light text-gray-900 dark:text-white placeholder-gray-400 font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none shadow-lg shadow-gray-200/50 dark:shadow-none"
+            />
+          </div>
+        </div>
+
+        {filteredDepartments.length === 0 ? (
+          <div className="text-center py-20 animate-in fade-in">
+            <div className="inline-flex justify-center items-center w-20 h-20 rounded-full bg-gray-100 dark:bg-white/5 mb-4">
+              <FaSearch className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="text-xl font-bold text-gray-500 dark:text-gray-400">
+              No encontramos resultados para "{searchTerm}"
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
+            {filteredDepartments.map((dept, idx) => (
               <div
-                className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${dept.color} opacity-5 group-hover:opacity-10 transition-opacity blur-2xl -mr-10 -mt-10 rounded-full`}
-              ></div>
+                key={dept.name}
+                className="group relative bg-white dark:bg-darkmode-light border border-gray-100 dark:border-darkmode-border rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 shadow-xl shadow-gray-200/50 dark:shadow-none overflow-hidden"
+              >
+                <div
+                  className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${dept.color} opacity-5 group-hover:opacity-10 transition-opacity blur-2xl -mr-10 -mt-10 rounded-full`}
+                ></div>
 
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center p-3 text-white shadow-lg shadow-gray-300 dark:shadow-none`}
-                  >
-                    <FaMapMarkerAlt className="w-full h-full" />
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div
+                      className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center p-3 text-white shadow-lg shadow-gray-300 dark:shadow-none`}
+                    >
+                      <FaMapMarkerAlt className="w-full h-full" />
+                    </div>
+                    <h3 className="text-2xl font-black text-dark dark:text-white uppercase tracking-tight">
+                      {dept.name}
+                    </h3>
                   </div>
-                  <h3 className="text-2xl font-black text-dark dark:text-white uppercase tracking-tight">
-                    {dept.name}
-                  </h3>
-                </div>
 
-                <div className="flex-1">
-                  <p className="text-gray-400 dark:text-white/40 text-xs font-bold uppercase tracking-widest mb-4">
-                    Provincias & Destinos
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {dept.provinces.map((prov, i) => (
-                      <span
-                        key={prov}
-                        className={`px-3 py-1 rounded-full border text-xs font-semibold transition-all ${badgeColors[i % badgeColors.length]}`}
-                      >
-                        {prov}
-                      </span>
-                    ))}
+                  <div className="flex-1">
+                    <p className="text-gray-400 dark:text-white/40 text-xs font-bold uppercase tracking-widest mb-4">
+                      Provincias & Destinos
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {dept.provinces.map((prov, i) => (
+                        <span
+                          key={prov}
+                          className={`px-3 py-1 rounded-full border text-xs font-semibold transition-all ${badgeColors[i % badgeColors.length]}`}
+                        >
+                          {prov}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-8 pt-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-white/50 text-xs font-bold">
-                    <FaTruck className="text-primary" />
-                    Entrega en 72h+
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary group-hover:bg-primary/10 transition-all">
-                    <FaArrowRight className="w-3 h-3" />
+                  <div className="mt-8 pt-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-gray-500 dark:text-white/50 text-xs font-bold">
+                      <FaTruck className="text-primary" />
+                      Entrega en 72h+
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary group-hover:bg-primary/10 transition-all">
+                      <FaArrowRight className="w-3 h-3" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Call to action */}
         <div className="mt-20 bg-white dark:bg-darkmode-light border border-gray-100 dark:border-darkmode-border shadow-2xl shadow-gray-200/50 dark:shadow-none rounded-[40px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
