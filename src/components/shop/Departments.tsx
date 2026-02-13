@@ -127,24 +127,18 @@ const Departments = () => {
   return (
     <section
       id="departments-section"
-      className="py-20 bg-[#0a0a0a] relative overflow-hidden"
+      className="section py-20 bg-body dark:bg-darkmode-body relative overflow-hidden"
     >
-      {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-[#17BFBF]/20 rounded-full blur-[120px]"></div>
-      </div>
-
       <div className="container relative z-10">
         <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-primary text-sm font-bold uppercase tracking-wider backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold uppercase tracking-wider">
             <FaGlobeAmericas className="animate-spin-slow" />
             Envíos a todo el país
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+          <h2 className="text-4xl md:text-6xl font-black text-dark dark:text-white uppercase tracking-tight">
             Nuestra <span className="text-primary italic">Cobertura</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-medium">
             Llegamos a cada rincón de Bolivia. Realizamos envíos garantizados a
             todos los departamentos y sus provincias principales.
           </p>
@@ -154,49 +148,49 @@ const Departments = () => {
           {departments.map((dept, idx) => (
             <div
               key={dept.name}
-              className="group relative bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 overflow-hidden"
+              className="group relative bg-white dark:bg-darkmode-light border border-gray-100 dark:border-darkmode-border rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 shadow-xl shadow-gray-200/50 dark:shadow-none overflow-hidden"
             >
               <div
-                className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${dept.color} opacity-10 group-hover:opacity-20 transition-opacity blur-2xl -mr-10 -mt-10 rounded-full`}
+                className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${dept.color} opacity-5 group-hover:opacity-10 transition-opacity blur-2xl -mr-10 -mt-10 rounded-full`}
               ></div>
 
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-4 mb-6">
                   <div
-                    className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center p-3 text-white shadow-lg`}
+                    className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center p-3 text-white shadow-lg shadow-gray-300 dark:shadow-none`}
                   >
                     <FaMapMarkerAlt className="w-full h-full" />
                   </div>
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tight">
+                  <h3 className="text-2xl font-black text-dark dark:text-white uppercase tracking-tight">
                     {dept.name}
                   </h3>
                 </div>
 
                 <div className="flex-1">
-                  <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">
+                  <p className="text-gray-400 dark:text-white/40 text-xs font-bold uppercase tracking-widest mb-4">
                     Provincias & Destinos
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {dept.provinces.map((prov) => (
                       <span
                         key={prov}
-                        className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70 text-xs font-medium group-hover:bg-white/10 group-hover:text-white transition-colors"
+                        className="px-3 py-1 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 text-gray-600 dark:text-white/70 text-xs font-semibold group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20 transition-all"
                       >
                         {prov}
                       </span>
                     ))}
-                    <span className="px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold">
+                    <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold scale-95">
                       + Más ciudades
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-white/50 text-xs font-medium">
+                <div className="mt-8 pt-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-gray-500 dark:text-white/50 text-xs font-bold">
                     <FaTruck className="text-primary" />
                     Entrega en 24-48h
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/30 group-hover:text-primary group-hover:bg-primary/10 transition-all">
+                  <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary group-hover:bg-primary/10 transition-all">
                     <FaArrowRight className="w-3 h-3" />
                   </div>
                 </div>
@@ -206,13 +200,14 @@ const Departments = () => {
         </div>
 
         {/* Call to action */}
-        <div className="mt-20 bg-gradient-to-r from-primary/10 via-[#F2275D]/5 to-transparent backdrop-blur-md border border-white/10 rounded-[40px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 text-center md:text-left">
-            <h3 className="text-3xl font-black text-white uppercase tracking-tight">
+        <div className="mt-20 bg-white dark:bg-darkmode-light border border-gray-100 dark:border-darkmode-border shadow-2xl shadow-gray-200/50 dark:shadow-none rounded-[40px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl -mr-32 -mt-32 rounded-full"></div>
+          <div className="space-y-4 text-center md:text-left relative z-10">
+            <h3 className="text-3xl font-black text-dark dark:text-white uppercase tracking-tight leading-none">
               ¿No encuentras tu{" "}
               <span className="text-primary italic">ubicación</span>?
             </h3>
-            <p className="text-white/60">
+            <p className="text-gray-500 dark:text-gray-400 font-medium">
               Contáctanos directamente para coordinar envíos especiales a zonas
               rurales o fronterizas.
             </p>
@@ -221,7 +216,7 @@ const Departments = () => {
             href="https://wa.me/59170621016"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/25 flex items-center gap-3 whitespace-nowrap"
+            className="relative z-10 px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/25 flex items-center gap-3 whitespace-nowrap"
           >
             Consultar Destino
             <FaArrowRight />
