@@ -1,0 +1,69 @@
+---
+import Base from "@/layouts/Base.astro";
+import SolicitudTrabajo from "@/components/SolicitudTrabajo";
+
+const title = "Trabaja con Nosotros - Importadora Miranda";
+const meta_title = "Trabaja con Nosotros";
+const description = "Únete a nuestro equipo. Envía tu solicitud de trabajo.";
+---
+
+<Base title={title} meta_title={meta_title} description={description}>
+  <section class="relative overflow-hidden py-10 lg:py-12">
+    <!-- Animated background elements -->
+    <div
+      class="absolute top-0 left-0 w-full h-full -z-10 opacity-30 dark:opacity-20 pointer-events-none"
+    >
+      <div
+        class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary rounded-full blur-[120px] animate-pulse"
+      >
+      </div>
+      <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#FF0040] rounded-full blur-[120px] animate-pulse"
+        style="animation-delay: 2s"
+      >
+      </div>
+    </div>
+
+    <div class="container relative z-10">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+
+
+          <!-- Form Component -->
+          <SolicitudTrabajo client:load />
+
+          <!-- Additional Info -->
+          <div class="mt-12 grid md:grid-cols-3 gap-6">
+            <div class="text-center p-6 bg-white dark:bg-darkmode-light rounded-2xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+              <div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary mx-auto mb-4">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <h3 class="font-bold text-gray-900 dark:text-white mb-2">Respuesta Rápida</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Te contactaremos en breve tras enviar tu solicitud</p>
+            </div>
+            <div class="text-center p-6 bg-white dark:bg-darkmode-light rounded-2xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+              <div class="w-12 h-12 bg-[#FF0040]/20 rounded-xl flex items-center justify-center text-[#FF0040] mx-auto mb-4">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+              </div>
+              <h3 class="font-bold text-gray-900 dark:text-white mb-2">Contacto Directo</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Te llamaremos al número que proporciones</p>
+            </div>
+            <div class="text-center p-6 bg-white dark:bg-darkmode-light rounded-2xl shadow-lg border border-gray-100 dark:border-darkmode-border">
+              <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center text-green-500 mx-auto mb-4">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <h3 class="font-bold text-gray-900 dark:text-white mb-2">Confidencial</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Tu información está segura con nosotros</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

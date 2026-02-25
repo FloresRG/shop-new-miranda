@@ -24,9 +24,10 @@
       "name": "Liquidaciones",
       "url": "/liquidaciones"
     },
+    
     {
-      "name": "Mis Deseos",
-      "url": "/deseos"
+      "name": "Trabaja con nosotros",
+      "url": "/solicitudes"
     }
   ],
   "footer": [
