@@ -113,6 +113,7 @@ export default function CheckoutForm() {
         celular: formData.celular,
         departamento: formData.departamento,
         provincia: formData.provincia,
+        estado: "liquidacion",
         tipo: "Cliente Web",
         productos: items.map(i => ({
           producto_id: i.id,
