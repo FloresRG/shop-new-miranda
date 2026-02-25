@@ -110,7 +110,7 @@ export default function SolicitudTrabajo() {
       }
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/solicitudes",
+        "https://importadoramiranda.com/api/solicitudes",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
