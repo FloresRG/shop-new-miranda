@@ -23,10 +23,10 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
         {
           x: 0,
           opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
+          duration: 0.4,
+          stagger: 0.08,
           ease: "power3.out",
-          delay: 0.2,
+          delay: 0.1,
         },
       );
     }, linksContainerRef);
@@ -42,11 +42,9 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
         );
         if (res.ok) {
           const data = await res.json();
-          // Mapeamos para obtener la estructura de Product que espera el componente
           const products = data.data.map((item: any) => ({
             ...item.producto,
             precio: item.precio_venta,
-            // Mapeamos la foto_captura de la liquidación al array de fotos del producto
             fotos: [{ id: item.id, foto: item.foto_captura }],
           }));
           setFloatingProducts(products.slice(0, 10));
@@ -89,9 +87,8 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
 
       <div className="container relative z-10">
         <div className="flex flex-col lg:flex-row items-center">
-          {/* Contenido Principal - Lado Izquierdo (Adaptado de LinkTree) */}
+          {/* Contenido Principal - Lado Izquierdo */}
           <div className="flex-1 text-white space-y-8 pt-24 pb-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
-            {/* Links Principales (Adaptado de LinkTree) */}
             <div className="w-full max-w-lg space-y-4" ref={linksContainerRef}>
               {[
                 {
@@ -138,16 +135,14 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                       <FaArrowRight className="w-5 h-5 group-hover:rotate-0 -rotate-45 transition-transform" />
                     </div>
                   </div>
-                  {/* Efecto de brillo al pasar el mouse */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Carrusel de Productos en Liquidación - Ahora mejorado para móvil */}
+          {/* Carrusel de Productos en Liquidación */}
           <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-12 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
-            {/* Contenedor del Carrusel */}
             <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
               <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
                 {[
@@ -155,9 +150,10 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   ...floatingProducts,
                   ...floatingProducts,
                 ].map((product, idx) => (
-                  <div
+                  <a
+                    href="/liquidaciones"
                     key={`${product.id}-${idx}`}
-                    className="relative w-40 h-56 lg:w-64 lg:h-80 flex-shrink-0 group overflow-hidden rounded-3xl shadow-2xl border border-white/10"
+                    className="relative w-40 h-56 lg:w-64 lg:h-80 flex-shrink-0 group overflow-hidden rounded-3xl shadow-2xl border border-white/10 block"
                   >
                     <div className="absolute top-2 left-2 z-20">
                       <span className="bg-[#F2275D] text-[9px] lg:text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse text-white">
@@ -165,10 +161,8 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                       </span>
                     </div>
 
-                    {/* Glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                    {/* Card del producto */}
                     <div className="relative w-full h-full bg-white/5 backdrop-blur-md transition-all duration-500 group-hover:scale-110">
                       <img
                         src={
@@ -181,7 +175,6 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                         loading="lazy"
                       />
 
-                      {/* Overlay con info al hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-4">
                         <p className="text-xs lg:text-sm font-bold text-white mb-1 line-clamp-2">
                           {product.nombre}
@@ -194,7 +187,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
