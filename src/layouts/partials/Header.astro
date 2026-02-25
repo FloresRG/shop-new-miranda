@@ -198,39 +198,44 @@ const { transparent } = Astro.props;
 </header>
 
 <script is:inline>
-  const toggleBtn = document.getElementById('mobile-search-toggle');
-  const searchBar = document.getElementById('mobile-search-bar');
-  
-  if (toggleBtn && searchBar) {
-    toggleBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const isHidden = searchBar.classList.contains('max-h-0');
-      
-      if (isHidden) {
-          // Open
-          searchBar.classList.remove('max-h-0', 'opacity-0', 'py-0');
-          searchBar.classList.add('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
-          
-          // Wait for transition to finish then remove overflow hidden
-          setTimeout(() => {
-              if (searchBar.classList.contains('opacity-100')) {
-                  searchBar.classList.remove('overflow-hidden');
-                  searchBar.classList.add('overflow-visible');
-              }
-          }, 300);
-      } else {
-          // Close
-          searchBar.classList.remove('overflow-visible');
-          searchBar.classList.add('overflow-hidden');
-          
-          searchBar.classList.remove('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
-          searchBar.classList.add('max-h-0', 'opacity-0', 'py-0');
-      }
-      
-      const input = searchBar.querySelector('input');
-      if (isHidden && input) {
-          setTimeout(() => input.focus(), 300);
-      }
-    });
+  function initMobileSearch() {
+    const toggleBtn = document.getElementById('mobile-search-toggle');
+    const searchBar = document.getElementById('mobile-search-bar');
+    
+    if (toggleBtn && searchBar) {
+      toggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isHidden = searchBar.classList.contains('max-h-0');
+        
+        if (isHidden) {
+            searchBar.classList.remove('max-h-0', 'opacity-0', 'py-0');
+            searchBar.classList.add('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
+            
+            setTimeout(() => {
+                if (searchBar.classList.contains('opacity-100')) {
+                    searchBar.classList.remove('overflow-hidden');
+                    searchBar.classList.add('overflow-visible');
+                }
+            }, 300);
+        } else {
+            searchBar.classList.remove('overflow-visible');
+            searchBar.classList.add('overflow-hidden');
+            
+            searchBar.classList.remove('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
+            searchBar.classList.add('max-h-0', 'opacity-0', 'py-0');
+        }
+        
+        const input = searchBar.querySelector('input');
+        if (isHidden && input) {
+            setTimeout(() => input.focus(), 300);
+        }
+      });
+    }
   }
+
+  // Run on initial page load
+  initMobileSearch();
+
+  // Run after each view transition
+  document.addEventListener('astro:page-load', initMobileSearch);
 </script>

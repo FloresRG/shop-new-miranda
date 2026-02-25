@@ -9,6 +9,25 @@ export default function ProductSearch() {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Handle View Transitions - reinitialize on page change
+  useEffect(() => {
+    const handlePageLoad = () => {
+      // Reset state on page navigation
+      setQuery("");
+      setResults([]);
+      setIsOpen(false);
+      setLoading(false);
+    };
+
+    // Listen for Astro view transition events
+    document.addEventListener("astro:page-load", handlePageLoad);
+    
+    return () => {
+      document.removeEventListener("astro:page-load", handlePageLoad);
+    };
+  }, []);
 
   // Debounce logic
   useEffect(() => {
@@ -48,16 +67,26 @@ export default function ProductSearch() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [wrapperRef]);
 
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setIsOpen(false);
+      inputRef.current?.blur();
+    }
+  };
+
   return (
     <div ref={wrapperRef} className="relative w-full max-w-xs lg:max-w-md z-50">
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
           placeholder="Buscar productos..."
           className="w-full bg-gray-100 dark:bg-darkmode-theme-light border border-transparent focus:border-primary focus:bg-white dark:focus:bg-darkmode-body rounded-full py-2 pl-4 pr-10 outline-none transition-all text-sm text-dark dark:text-white dark:placeholder-gray-400"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query.length > 2 && setIsOpen(true)}
+          onKeyDown={handleKeyDown}
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
           {loading ? (

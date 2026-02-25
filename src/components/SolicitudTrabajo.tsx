@@ -260,7 +260,7 @@ export default function SolicitudTrabajo() {
             Curriculum Vitae (PDF) <span className="text-red-500">*</span>
           </label>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Adjunta tu CV en formato PDF (máximo 2MB)
+            Adjunta tu CV en formato PDF
           </p>
 
           {cvFile ? (
@@ -308,7 +308,7 @@ export default function SolicitudTrabajo() {
                   Arrastre su CV aquí o haga clic para seleccionar
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                  Solo archivos PDF (máximo 2MB)
+                  Solo archivos PDF 
                 </p>
               </div>
             </div>
