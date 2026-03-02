@@ -85,7 +85,7 @@ const PedidoView: React.FC = () => {
     setViewMode("result");
 
     try {
-      const API_BASE = 'http://localhost:8000/api'; // ✅ Sin espacios
+      const API_BASE = 'https://importadoramiranda.com/api'; // ✅ Sin espacios
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
@@ -416,13 +416,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.producto.map((img, idx) => (
                           <a
                             key={`prod-${idx}`}
-                            href={`http://localhost:8000/storage/${img}`}
+                            href={`https://importadoramiranda.com/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`http://localhost:8000/storage/${img}`}
+                              src={`https://importadoramiranda.com/storage/${img}`}
                               alt={`Producto ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -443,13 +443,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.comprobante.map((img, idx) => (
                           <a
                             key={`comp-${idx}`}
-                            href={`http://localhost:8000/storage/${img}`}
+                            href={`https://importadoramiranda.com/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`http://localhost:8000/storage/${img}`}
+                              src={`https://importadoramiranda.com/storage/${img}`}
                               alt={`Comprobante ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"

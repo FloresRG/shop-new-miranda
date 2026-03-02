@@ -33,7 +33,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
                     }
 
                     // Strategy 2: Fetch directly from backend prices endpoint
-                    const pricesRes = await fetch(`http://localhost:8000/api/productos-con-precios?search=${productId}&sucursal_id=1`);
+                    const pricesRes = await fetch(`https://importadoramiranda.com/api/productos-con-precios?search=${productId}&sucursal_id=1`);
                     if (pricesRes.ok) {
                         const pricesData = await pricesRes.json();
                         const found = pricesData?.productos?.find((p: any) => p.id === productId || p.id === Number(productId));
@@ -44,7 +44,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
                     }
 
                     // Strategy 3: Fallback to basic product endpoint
-                    const basicRes = await fetch(`http://localhost:8000/api/producto/${productId}?sucursal_id=1`);
+                    const basicRes = await fetch(`https://importadoramiranda.com/api/producto/${productId}?sucursal_id=1`);
                     if (basicRes.ok) {
                         const basicData = await basicRes.json();
                         const prod = basicData?.producto || basicData;

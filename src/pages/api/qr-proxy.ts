@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async () => {
   try {
-    const response = await fetch('http://localhost:8000/images/QR.jpeg', {
+    const response = await fetch('https://importadoramiranda.com/images/QR.jpeg', {
       headers: {
         'User-Agent': 'Mozilla/5.0',
       },

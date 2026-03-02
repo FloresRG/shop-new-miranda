@@ -131,8 +131,8 @@ export default function ContactFormold() {
       };
 
       const response = await axios.post(
-        //"http://localhost:8000/api/shoppedidos",
-        "http://localhost:8000/api/shoppedidos",
+        //"https://importadoramiranda.com/api/shoppedidos",
+        "https://importadoramiranda.com/api/shoppedidos",
         payload,
         {
           headers: {
@@ -433,8 +433,8 @@ export default function ContactFormold() {
                       setFormData({ ...formData, provincia: prov })
                     }
                     className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
-                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                      : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
                       }`}
                   >
                     {prov}

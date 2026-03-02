@@ -38,7 +38,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
     const fetchFloating = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/liquidaciones?page=1",
+          "https://importadoramiranda.com/api/liquidaciones?page=1",
         );
         if (res.ok) {
           const data = await res.json();
@@ -59,8 +59,8 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
   return (
     <section
       className={`relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${bannerImages
-          ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
-          : "bg-[#0a0a0a]"
+        ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
+        : "bg-[#0a0a0a]"
         }`}
       style={
         bannerImages
@@ -166,7 +166,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                       <img
                         src={
                           product.fotos[0]?.foto
-                            ? `http://localhost:8000/storage/${product.fotos[0].foto}`
+                            ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
                             : "https://placehold.co/200x200?text=Product"
                         }
                         alt={product.nombre}

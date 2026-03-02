@@ -7,7 +7,7 @@ export const GET: APIRoute = async ({ url }) => {
     const marcaId = url.searchParams.get("marca_id");
 
     // El backend real está en :8000
-    const backendUrl = new URL("http://localhost:8000/api/productos-con-precios");
+    const backendUrl = new URL("https://importadoramiranda.com/api/productos-con-precios");
     backendUrl.searchParams.append("page", page);
     backendUrl.searchParams.append("sucursal_id", "1");
     if (search) backendUrl.searchParams.append("search", search);

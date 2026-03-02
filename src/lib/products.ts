@@ -1,6 +1,6 @@
 import type { ApiResponse, Product } from "../interfaces/product";
 
-const API_URL = "http://localhost:8000/api/productos";
+const API_URL = "https://importadoramiranda.com/api/productos";
 
 export const getProducts = async (params: {
     page?: number;
@@ -56,7 +56,7 @@ export const getProductById = async (id: number, includePrices: boolean = false)
     try {
         if (includePrices) {
             // Buscamos en el endpoint de precios usando el search por ID
-            const res = await fetch(`http://localhost:8000/api/productos-con-precios?search=${id}&sucursal_id=1`);
+            const res = await fetch(`https://importadoramiranda.com/api/productos-con-precios?search=${id}&sucursal_id=1`);
             if (res.ok) {
                 const data = await res.json();
                 return data.productos.find((p: any) => p.id === id) || null;

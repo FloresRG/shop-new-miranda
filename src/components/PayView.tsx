@@ -97,7 +97,7 @@ const PayView: React.FC = () => {
     setError(null);
 
     try {
-      const url = `http://localhost:8000/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
+      const url = `https://importadoramiranda.com/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
       const res = await fetch(url);
 
       if (!res.ok) {
@@ -162,7 +162,7 @@ const PayView: React.FC = () => {
     setUploading(true);
     try {
       const res = await fetch(
-        "http://localhost:8000/api/pay/comprobante",
+        "https://importadoramiranda.com/api/pay/comprobante",
         {
           method: "POST",
           body: formData,
@@ -370,8 +370,8 @@ const PayView: React.FC = () => {
             onDragOver={handleDragOver}
             onClick={handleClick}
             className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${previewUrl
-                ? "border-[#F2275D] bg-pink-50 dark:bg-pink-900/10"
-                : "border-gray-300 dark:border-gray-600 hover:border-[#F2275D]"
+              ? "border-[#F2275D] bg-pink-50 dark:bg-pink-900/10"
+              : "border-gray-300 dark:border-gray-600 hover:border-[#F2275D]"
               }`}
           >
             <input
@@ -418,10 +418,10 @@ const PayView: React.FC = () => {
               onClick={handleUploadReceipt}
               disabled={uploading || uploadSuccess}
               className={`mt-6 w-full py-3 rounded-xl font-semibold text-white shadow-md transition-all ${uploadSuccess
-                  ? "bg-green-500"
-                  : uploading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-[#F2275D] to-[#F20505] hover:opacity-90"
+                ? "bg-green-500"
+                : uploading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-[#F2275D] to-[#F20505] hover:opacity-90"
                 }`}
             >
               {uploading ? (

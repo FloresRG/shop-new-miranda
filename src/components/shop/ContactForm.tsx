@@ -160,7 +160,7 @@ export default function ContactForm() {
       }
 
       const response = await axios.post(
-        "http://localhost:8000/api/shoppedidos",
+        "https://importadoramiranda.com/api/shoppedidos",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -378,8 +378,8 @@ export default function ContactForm() {
                     type="button"
                     onClick={() => setFormData({ ...formData, provincia: prov })}
                     className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
-                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                      : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
                       }`}
                   >
                     {prov}
@@ -468,8 +468,8 @@ export default function ContactForm() {
                         onClick={() => updateQuantity(index, prod.quantity - 1)}
                         disabled={prod.quantity <= 1}
                         className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full transition-colors ${prod.quantity <= 1
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900/30"
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900/30"
                           }`}
                       >
                         −

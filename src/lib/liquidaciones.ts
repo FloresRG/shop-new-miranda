@@ -1,6 +1,6 @@
 import type { ApiResponse, Product } from "../interfaces/product";
 
-const API_URL = "http://localhost:8000/api/liquidaciones";
+const API_URL = "https://importadoramiranda.com/api/liquidaciones";
 
 interface LiquidationApiResponse {
     success: boolean;
@@ -59,7 +59,7 @@ export const getLiquidaciones = async (params: {
             categoria: { id: item.producto.id_categoria, categoria: "" }, // Placeholder
             marca: { id: item.producto.id_marca, marca: "" }, // Placeholder
             tipo: { id: item.producto.id_tipo, tipo: "" }, // Placeholder
-            fotos: [{ id: item.id, foto: `http://localhost:8000/storage/${item.foto_captura}` }],
+            fotos: [{ id: item.id, foto: `https://importadoramiranda.com/storage/${item.foto_captura}` }],
             inventario: { id_sucursal: 1, cantidad: item.stock, transfer_date: null }
         }));
 
