@@ -13,6 +13,7 @@ interface HeroHelperProps {
 
 const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
   const [floatingProducts, setFloatingProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const linksContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,15 +43,19 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
         );
         if (res.ok) {
           const data = await res.json();
-          const products = data.data.map((item: any) => ({
-            ...item.producto,
-            precio: item.precio_venta,
-            fotos: [{ id: item.id, foto: item.foto_captura }],
-          }));
-          setFloatingProducts(products.slice(0, 10));
+          if (data && data.data && Array.isArray(data.data)) {
+            const products = data.data.map((item: any) => ({
+              ...item.producto,
+              precio: item.precio_venta,
+              fotos: [{ id: item.id, foto: item.foto_captura }],
+            }));
+            setFloatingProducts(products.slice(0, 10));
+          }
         }
       } catch (error) {
         console.error("Failed to fetch clearance products", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchFloating();
@@ -58,16 +63,17 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
 
   return (
     <section
-      className={`relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${bannerImages
-        ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
-        : "bg-[#0a0a0a]"
-        }`}
+      className={`relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${
+        bannerImages
+          ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
+          : "bg-[#0a0a0a]"
+      }`}
       style={
         bannerImages
           ? ({
-            "--hero-bg-mobile": `url('${bannerImages.mobile}')`,
-            "--hero-bg-desktop": `url('${bannerImages.pc}')`,
-          } as React.CSSProperties)
+              "--hero-bg-mobile": `url('${bannerImages.mobile}')`,
+              "--hero-bg-desktop": `url('${bannerImages.pc}')`,
+            } as React.CSSProperties)
           : undefined
       }
     >
@@ -140,56 +146,71 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
             </div>
           </div>
 
-          {/* Carrusel de Productos en Liquidación */}
-          <div className="w-full lg:flex-1 flex flex-col items-start gap-4 mt-12 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
-            <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
-              <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
-                {[
-                  ...floatingProducts,
-                  ...floatingProducts,
-                  ...floatingProducts,
-                ].map((product, idx) => (
-                  <a
-                    href="/liquidaciones"
-                    key={`${product.id}-${idx}`}
-                    className="relative w-40 h-56 lg:w-64 lg:h-80 flex-shrink-0 group overflow-hidden rounded-3xl shadow-2xl border border-white/10 block"
-                  >
-                    <div className="absolute top-2 left-2 z-20">
-                      <span className="bg-[#F2275D] text-[9px] lg:text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse text-white">
-                        Liquidación
-                      </span>
-                    </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                    <div className="relative w-full h-full bg-white/5 backdrop-blur-md transition-all duration-500 group-hover:scale-110">
-                      <img
-                        src={
-                          product.fotos[0]?.foto
-                            ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
-                            : "https://placehold.co/200x200?text=Product"
-                        }
-                        alt={product.nombre}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-4">
-                        <p className="text-xs lg:text-sm font-bold text-white mb-1 line-clamp-2">
-                          {product.nombre}
-                        </p>
-                        <p className="text-[#17BFBF] font-black text-sm lg:text-base">
-                          Bs.{" "}
-                          {parseFloat(product.precio).toLocaleString("es-BO", {
-                            minimumFractionDigits: 2,
-                          })}
-                        </p>
+          {/* Carrusel de Productos en Liquidación o Logo */}
+          <div className="w-full lg:flex-1 flex flex-col items-center justify-center gap-4 mt-12 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
+            {!isLoading && floatingProducts.length > 0 ? (
+              <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
+                <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
+                  {[
+                    ...floatingProducts,
+                    ...floatingProducts,
+                    ...floatingProducts,
+                  ].map((product, idx) => (
+                    <a
+                      href="/liquidaciones"
+                      key={`${product.id}-${idx}`}
+                      className="relative w-40 h-56 lg:w-64 lg:h-80 flex-shrink-0 group overflow-hidden rounded-3xl shadow-2xl border border-white/10 block"
+                    >
+                      <div className="absolute top-2 left-2 z-20">
+                        <span className="bg-[#F2275D] text-[9px] lg:text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider animate-pulse text-white">
+                          Liquidación
+                        </span>
                       </div>
-                    </div>
-                  </a>
-                ))}
+
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#F2275D]/20 to-[#451773]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                      <div className="relative w-full h-full bg-white/5 backdrop-blur-md transition-all duration-500 group-hover:scale-110">
+                        <img
+                          src={
+                            product.fotos[0]?.foto
+                              ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
+                              : "https://placehold.co/200x200?text=Product"
+                          }
+                          alt={product.nombre}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-4">
+                          <p className="text-xs lg:text-sm font-bold text-white mb-1 line-clamp-2">
+                            {product.nombre}
+                          </p>
+                          <p className="text-[#17BFBF] font-black text-sm lg:text-base">
+                            Bs.{" "}
+                            {parseFloat(product.precio).toLocaleString(
+                              "es-BO",
+                              {
+                                minimumFractionDigits: 2,
+                              },
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : !isLoading && floatingProducts.length === 0 ? (
+              <div className="relative w-full h-[320px] lg:h-[550px] flex items-center justify-center">
+                {logo && (
+                  <img
+                    src={logo}
+                    alt="Importadora Miranda"
+                    className="w-64 lg:w-96 h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                  />
+                )}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
