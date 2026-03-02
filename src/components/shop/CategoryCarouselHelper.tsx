@@ -15,7 +15,9 @@ const CategoryCarouselHelper = () => {
   const [items, setItems] = useState<CategoryWithProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const isWholesale = typeof window !== 'undefined' && localStorage.getItem('wholesale_authenticated') === 'true';
+  const isWholesale = typeof window !== 'undefined' &&
+    localStorage.getItem('wholesale_authenticated') === 'true' &&
+    window.location.pathname.startsWith('/mayorista');
 
   useEffect(() => {
     const fetchData = async () => {

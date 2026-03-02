@@ -83,7 +83,7 @@ const {
     <title>{title || config.site.title}</title>
   </head>
 
-  <body class="theme-gold bg-[#0c0c0c] text-white overflow-x-hidden">
+  <body class="theme-gold bg-white dark:bg-[#0c0c0c] text-dark dark:text-white overflow-x-hidden transition-colors duration-300">
     <TwSizeIndicator />
     <Toaster client:load />
     <CartModal client:load />
@@ -98,15 +98,16 @@ const {
     <WhatsAppButton />
 
     <script is:inline>
-      // Auth Check
-      if (localStorage.getItem('wholesale_authenticated') !== 'true') {
-        window.location.href = '/mayorista/login';
-      }
+      // Auth Check - Run immediately
+      (function() {
+        if (localStorage.getItem('wholesale_authenticated') !== 'true') {
+          window.location.replace('/mayorista/login');
+        }
+      })();
       
       // Force Golden Theme Body Class
       function applyTheme() {
         document.body.classList.add('theme-gold');
-        document.body.classList.remove('theme-light'); // Just in case
       }
       
       applyTheme();

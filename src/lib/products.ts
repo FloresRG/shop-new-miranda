@@ -51,14 +51,23 @@ export const getProducts = async (params: {
 };
 
 // Obtener un solo producto por ID
-export const getProductById = async (id: number): Promise<Product | null> => {
+export const getProductById = async (id: number, includePrices: boolean = false): Promise<Product | null> => {
     // 1. Intenta Endpoint Especifico (Standard REST)
     try {
-        // La API usa 'producto' (singular) para obtener un solo item
-        const res = await fetch(`${API_URL.replace("productos", "producto")}/${id}?sucursal_id=1`);
-        if (res.ok) {
-            const data = await res.json();
-            return data.producto || data;
+        if (includePrices) {
+            // Buscamos en el endpoint de precios usando el search por ID
+            const res = await fetch(`http://localhost:8000/api/productos-con-precios?search=${id}&sucursal_id=1`);
+            if (res.ok) {
+                const data = await res.json();
+                return data.productos.find((p: any) => p.id === id) || null;
+            }
+        } else {
+            // La API usa 'producto' (singular) para obtener un solo item
+            const res = await fetch(`${API_URL.replace("productos", "producto")}/${id}?sucursal_id=1`);
+            if (res.ok) {
+                const data = await res.json();
+                return data.producto || data;
+            }
         }
     } catch (e) {
         // Ignorar falla de endpoint especifico

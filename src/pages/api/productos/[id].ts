@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro";
 import { getProductById } from "../../../lib/products";
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, url }) => {
     const { id } = params;
+    const includePrices = url.searchParams.get("includePrices") === "true";
 
     if (!id) {
         return new Response(JSON.stringify({ error: "Product ID is required" }), {
@@ -12,7 +13,7 @@ export const GET: APIRoute = async ({ params }) => {
     }
 
     try {
-        const product = await getProductById(parseInt(id));
+        const product = await getProductById(parseInt(id), includePrices);
 
         if (!product) {
             return new Response(JSON.stringify({ error: "Product not found" }), {

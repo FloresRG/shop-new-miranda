@@ -50,7 +50,7 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
         : "https://placehold.co/400x300?text=No+Image";
 
     return (
-        <div className="group relative bg-[#1a1a1a] rounded-3xl overflow-hidden transition-all duration-500 border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[#D4AF37]/10 flex flex-col h-full">
+        <div className="group relative bg-white dark:bg-[#1a1a1a] rounded-3xl overflow-hidden transition-all duration-500 border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 shadow-lg hover:shadow-[#D4AF37]/10 flex flex-col h-full transition-colors">
 
             {/* Badge Mayorista */}
             <div className="absolute top-4 left-4 z-30 pointer-events-none">
@@ -60,7 +60,7 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
             </div>
 
             {/* Imagen */}
-            <a href={`/mayorista/tienda/${product.id}`} className="block relative aspect-square overflow-hidden bg-[#0c0c0c]">
+            <a href={`/mayorista/tienda/${product.id}`} className="block relative aspect-square overflow-hidden bg-gray-100 dark:bg-[#0c0c0c]">
                 {!imageLoaded && (
                     <div className="absolute inset-0 bg-gray-800 animate-pulse"></div>
                 )}
@@ -71,15 +71,15 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
                     className={`w-full h-full object-cover transition-transform duration-700 ${imageLoaded ? "opacity-100 group-hover:scale-110" : "opacity-0"}`}
                     loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent opacity-60"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-[#0c0c0c] via-transparent to-transparent opacity-60"></div>
             </a>
 
             {/* Contenido */}
             <div className="p-5 flex flex-col flex-grow">
                 <div className="mb-4">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">{product.marca.marca}</span>
+                    <span className="text-[10px] font-bold text-[#C5A021] dark:text-[#D4AF37] uppercase tracking-widest">{product.marca.marca}</span>
                     <a href={`/mayorista/tienda/${product.id}`} className="block">
-                        <h3 className="text-lg font-bold text-white line-clamp-2 mt-1 leading-tight group-hover:text-[#D4AF37] transition-colors">
+                        <h3 className="text-lg font-bold text-dark dark:text-white line-clamp-2 mt-1 leading-tight group-hover:text-[#D4AF37] transition-colors">
                             {product.nombre}
                         </h3>
                     </a>
@@ -87,20 +87,20 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
 
                 {/* Precios */}
                 <div className="mt-auto space-y-3">
-                    <div className="bg-[#222] p-3 rounded-2xl border border-[#D4AF37]/10">
+                    <div className="bg-gray-50 dark:bg-[#222] p-3 rounded-2xl border border-gray-100 dark:border-[#D4AF37]/10">
                         <div className="flex justify-between items-center mb-1">
-                            <span className="text-gray-400 text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
-                                <FaTags className="text-[#D4AF37]" /> Por Unidad
+                            <span className="text-gray-500 dark:text-gray-400 text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
+                                <FaTags className="text-[#C5A021] dark:text-[#D4AF37]" /> Por Unidad
                             </span>
-                            <span className="text-white font-bold">
+                            <span className="text-dark dark:text-white font-bold">
                                 {priceUnidad > 0 ? `Bs ${priceUnidad.toFixed(2)}` : "Precio aún no agregado"}
                             </span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
+                            <span className="text-[#C5A021] dark:text-[#D4AF37] text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
                                 <FaLayerGroup /> Por Docena
                             </span>
-                            <span className="text-[#D4AF37] font-black text-xl">
+                            <span className="text-[#C5A021] dark:text-[#D4AF37] font-black text-xl">
                                 {priceDocena > 0 ? `Bs ${priceDocena.toFixed(2)}` : "Precio aún no agregado"}
                             </span>
                         </div>

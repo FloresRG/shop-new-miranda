@@ -14,12 +14,32 @@ export const cartItems = persistentMap<CartStore>('cart', {}, {
     decode: JSON.parse
 });
 
+// NUEVO: Store específico para mayoristas
+export const wholesaleCartItems = persistentMap<CartStore>('wholesale-cart', {}, {
+    encode: JSON.stringify,
+    decode: JSON.parse
+});
+
+/**
+ * Obtener el store adecuado según la ruta
+ */
+export const getActiveCartStore = () => {
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/mayorista')) {
+        return wholesaleCartItems;
+    }
+    return cartItems;
+};
+
 export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWholesale: boolean = false) => {
-    const currentStore = cartItems.get();
+    // Si forceWholesale es true O estamos en una ruta de mayorista, usamos el store de mayorista
+    const isWholesaleRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/mayorista');
+    const targetStore = (forceWholesale || isWholesaleRoute) ? wholesaleCartItems : cartItems;
+
+    const currentStore = targetStore.get();
     const existingItem = currentStore[product.id];
 
     // Si estamos en modo mayorista o el producto viene con precios de mayorista
-    const isWholesale = forceWholesale || localStorage.getItem('wholesale_authenticated') === 'true';
+    const isWholesale = forceWholesale || isWholesaleRoute;
 
     const getStock = (p: any) => {
         if (!p) return 0;
@@ -43,7 +63,7 @@ export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWh
     if (existingItem) {
         const newQuantity = existingItem.quantity + quantityToAdd;
         if ((product as any).ignoreStock || newQuantity <= maxStock) {
-            cartItems.setKey(product.id.toString(), {
+            targetStore.setKey(product.id.toString(), {
                 ...existingItem,
                 quantity: newQuantity,
                 isWholesale: isWholesale
@@ -51,7 +71,7 @@ export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWh
         }
     } else {
         if ((product as any).ignoreStock || maxStock >= quantityToAdd) {
-            cartItems.setKey(product.id.toString(), {
+            targetStore.setKey(product.id.toString(), {
                 ...product,
                 quantity: quantityToAdd,
                 isWholesale: isWholesale
@@ -61,12 +81,14 @@ export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWh
 };
 
 export const removeCartItem = (productId: number) => {
-    cartItems.setKey(productId.toString(), undefined);
+    getActiveCartStore().setKey(productId.toString(), undefined);
 };
 
 export const updateQuantity = (productId: number, quantity: number) => {
-    const currentStore = cartItems.get();
+    const targetStore = getActiveCartStore();
+    const currentStore = targetStore.get();
     const item = currentStore[productId];
+
     const getStock = (p: any) => {
         if (!p) return 0;
         const inv = p.inventario || p.inventarios;
@@ -84,17 +106,17 @@ export const updateQuantity = (productId: number, quantity: number) => {
         }
         return p.stock ?? p.cantidad ?? 0;
     };
-    const maxStock = getStock(item);
 
     if (item) {
+        const maxStock = getStock(item);
         if (quantity <= 0) {
-            cartItems.setKey(productId.toString(), undefined);
+            targetStore.setKey(productId.toString(), undefined);
         } else if (quantity <= maxStock) {
-            cartItems.setKey(productId.toString(), { ...item, quantity });
+            targetStore.setKey(productId.toString(), { ...item, quantity });
         }
     }
 };
 
 export const clearCart = () => {
-    cartItems.set({});
+    getActiveCartStore().set({});
 };

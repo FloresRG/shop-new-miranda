@@ -45,17 +45,31 @@ import Base from "@/layouts/Base.astro";
   <script is:inline>
     const form = document.querySelector('#wholesale-login-form');
     const errorMsg = document.querySelector('#error-message');
+    const submitBtn = form.querySelector('button');
+    const originalBtnText = submitBtn.innerText;
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const code = document.querySelector('#code').value;
+      
+      // Feedback visual
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Verificando...';
 
       if (code === 'Miranda2026') {
         localStorage.setItem('wholesale_authenticated', 'true');
-        // Redirigir al catálogo mayorista
-        window.location.href = '/mayorista';
+        console.log('Wholesale authentication successful');
+        
+        // Pequeña pausa para asegurar el guardado en localStorage
+        setTimeout(() => {
+          window.location.replace('/mayorista');
+        }, 500);
       } else {
+        console.error('Wholesale authentication failed');
         errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+        
         setTimeout(() => {
           errorMsg.classList.add('hidden');
         }, 3000);

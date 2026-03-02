@@ -1,6 +1,6 @@
 // components/shop/CartIcon.tsx
 import { useStore } from '@nanostores/react';
-import { cartItems } from '../../store/cartStore';
+import { cartItems, wholesaleCartItems } from '../../store/cartStore';
 import type { CartStore, CartItem } from '../../store/cartStore';
 import { FaShoppingCart } from 'react-icons/fa';
 import React from 'react';
@@ -8,14 +8,18 @@ import React from 'react';
 export default function CartIcon() {
   const [mounted, setMounted] = React.useState(false);
   const $cartItems = useStore(cartItems) as CartStore | undefined;
+  const $wholesaleCartItems = useStore(wholesaleCartItems) as CartStore | undefined;
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
+  const isWholesale = typeof window !== 'undefined' && window.location.pathname.startsWith('/mayorista');
+  const activeItems = isWholesale ? $wholesaleCartItems : $cartItems;
+
   // Calcular el contador solo si el store está disponible
-  const count = $cartItems
-    ? Object.values($cartItems).reduce((acc: number, item: CartItem) => acc + item.quantity, 0)
+  const count = activeItems
+    ? Object.values(activeItems).reduce((acc: number, item: CartItem) => acc + item.quantity, 0)
     : 0;
 
   return (

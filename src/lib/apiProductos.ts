@@ -45,7 +45,7 @@ export interface ApiProductosParams {
 
 export interface ApiProductos {
   fetchProductos(params?: ApiProductosParams): Promise<ApiResponse>;
-  fetchProductoById(id: number): Promise<Producto>;
+  fetchProductoById(id: number, includePrices?: boolean): Promise<Producto>;
   searchProductos(searchTerm: string, params?: Omit<ApiProductosParams, 'search'>): Promise<ApiResponse>;
   fetchProductosByCategoria(categoriaId: number, params?: Omit<ApiProductosParams, 'categoria_id'>): Promise<ApiResponse>;
   fetchProductosByMarca(marcaId: number, params?: Omit<ApiProductosParams, 'marca_id'>): Promise<ApiResponse>;
@@ -56,21 +56,10 @@ export const apiProductos: ApiProductos = {
    * Obtener todos los productos con parámetros opcionales
    */
   async fetchProductos(params?: ApiProductosParams): Promise<ApiResponse> {
-    const finalParams = { sucursal_id: 1, ...params };
-    let baseUrl = API_BASE_URL;
+    const finalParams = { ...params };
+    const baseUrl = params?.includePrices ? "/api/productos-con-precios" : "/api/productos";
 
-    if (params?.includePrices) {
-      baseUrl = baseUrl.replace('/productos', '/productos-con-precios');
-      if (!baseUrl.endsWith('/productos-con-precios')) {
-        baseUrl += '/api/productos-con-precios';
-      }
-    } else {
-      if (!baseUrl.endsWith('/productos') && !baseUrl.includes('/api/')) {
-        baseUrl += '/api/productos';
-      }
-    }
-
-    const url = new URL(baseUrl);
+    const url = new URL(baseUrl, window.location.origin);
     if (finalParams) {
       Object.entries(finalParams).forEach(([key, value]) => {
         if (value !== undefined && value !== null && key !== 'includePrices') {
@@ -94,9 +83,12 @@ export const apiProductos: ApiProductos = {
   /**
    * Obtener un producto por ID
    */
-  async fetchProductoById(id: number): Promise<Producto> {
-    const url = `${API_BASE_URL}/${id}`;
-    const response: Response = await fetch(url);
+  async fetchProductoById(id: number, includePrices: boolean = false): Promise<Producto> {
+    const url = new URL(`/api/productos/${id}`, window.location.origin);
+    if (includePrices) {
+      url.searchParams.append("includePrices", "true");
+    }
+    const response: Response = await fetch(url.toString());
     if (!response.ok) {
       throw new ApiProductosError(
         `Failed to fetch product ${id}: ${response.status} ${response.statusText}`,

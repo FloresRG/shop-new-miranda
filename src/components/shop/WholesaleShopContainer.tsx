@@ -53,7 +53,7 @@ const WholesaleShopContainer = () => {
                 const newUrl = `${window.location.pathname}?${params.toString()}`;
                 window.history.replaceState(null, "", newUrl);
 
-                const res = await fetch(`/api/productos?${params.toString()}`);
+                const res = await fetch(`/api/productos-con-precios?${params.toString()}`);
                 if (!res.ok) throw new Error("Failed to fetch");
                 const jsonData: ApiResponse = await res.json();
 
@@ -115,7 +115,7 @@ const WholesaleShopContainer = () => {
     const displayedProducts = getSortedProducts();
 
     return (
-        <section className="section py-8 bg-[#0c0c0c]">
+        <section className="section py-8 bg-white dark:bg-[#0c0c0c] transition-colors">
             <div className="container">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar Filters */}
@@ -138,10 +138,10 @@ const WholesaleShopContainer = () => {
                         <div className="mb-8 space-y-4">
                             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-[#D4AF37] p-2 rounded-lg text-black">
+                                    <div className="bg-[#C5A021] dark:bg-[#D4AF37] p-2 rounded-lg text-black">
                                         <FaCrown size={20} />
                                     </div>
-                                    <h1 className="h3 font-black text-white">
+                                    <h1 className="h3 font-black text-dark dark:text-white">
                                         Catálogo de Distribución
                                     </h1>
                                 </div>
@@ -154,14 +154,14 @@ const WholesaleShopContainer = () => {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => setShowMobileFilters(!showMobileFilters)}
-                                            className="lg:hidden px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white font-bold flex items-center justify-center gap-2 hover:bg-[#D4AF37] hover:text-black transition-all"
+                                            className="lg:hidden px-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-dark dark:text-white font-bold flex items-center justify-center gap-2 hover:bg-[#D4AF37] hover:text-black transition-all"
                                         >
                                             <FaFilter />
                                             {showMobileFilters ? "Ocultar" : "Filtrar"}
                                         </button>
 
                                         <select
-                                            className="select select-bordered flex-1 sm:flex-none bg-[#1a1a1a] text-white border-white/10 focus:border-[#D4AF37] focus:ring-[#D4AF37] rounded-xl font-bold"
+                                            className="select select-bordered flex-1 sm:flex-none bg-gray-50 dark:bg-[#1a1a1a] text-dark dark:text-white border-gray-200 dark:border-white/10 focus:border-[#D4AF37] focus:ring-[#D4AF37] rounded-xl font-bold"
                                             value={sort}
                                             onChange={(e) => setSort(e.target.value as SortOption)}
                                         >

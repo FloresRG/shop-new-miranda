@@ -13,6 +13,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
     const [product, setProduct] = useState<Product | null>(initialProduct || null);
     const [loading, setLoading] = useState(!initialProduct);
     const [error, setError] = useState(false);
+    const isWholesaleMode = typeof window !== 'undefined' && window.location.pathname.startsWith('/mayorista');
 
     useEffect(() => {
         if (!product && productId) {
@@ -86,7 +87,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
     };
 
     return (
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 animate-in fade-in slide-in-from-bottom-5 duration-700 bg-[#0c0c0c] text-white">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 animate-in fade-in slide-in-from-bottom-5 duration-700 bg-white dark:bg-[#0c0c0c] text-dark dark:text-white transition-colors">
             {/* Galería de Imágenes */}
             <div className="space-y-4">
                 <div className="aspect-square bg-white/5 rounded-3xl overflow-hidden border border-[#D4AF37]/20 shadow-2xl relative group">
@@ -128,7 +129,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
                     <div className="flex items-center gap-2 text-[#D4AF37] font-black uppercase tracking-[0.2em] text-[10px] mb-3">
                         <FaGem size={12} /> {product.categoria.categoria} / {product.marca.marca}
                     </div>
-                    <h1 className="text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
+                    <h1 className="text-4xl lg:text-5xl font-black text-dark dark:text-white mb-4 leading-tight">
                         {product.nombre}
                     </h1>
                     <div className="flex items-center gap-4">
@@ -145,19 +146,19 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
 
                 {/* Panel de Precios Mayoristas */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="bg-[#1a1a1a] p-5 rounded-3xl border border-white/5">
-                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1">Precio x Unidad</p>
-                        <p className="text-3xl font-black text-white">
+                    <div className="bg-gray-50 dark:bg-[#1a1a1a] p-5 rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm">
+                        <p className="text-gray-500 dark:text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1">Precio x Unidad</p>
+                        <p className="text-3xl font-black text-dark dark:text-white">
                             {priceUnidad > 0 ? `Bs ${priceUnidad.toFixed(2)}` : "No disponible"}
                         </p>
-                        <p className="text-[#D4AF37] text-[10px] font-black mt-2">MARGEN MINORISTA SUGERIDO</p>
+                        <p className="text-[#C5A021] dark:text-[#D4AF37] text-[10px] font-black mt-2 uppercase">Margen Minorista Sugerido</p>
                     </div>
-                    <div className="bg-gradient-to-br from-[#1a1a1a] to-[#222] p-5 rounded-3xl border border-[#D4AF37]/30">
-                        <p className="text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest mb-1">Precio x Docena ($)</p>
-                        <p className="text-4xl font-black text-[#D4AF37]">
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#1a1a1a] dark:to-[#222] p-5 rounded-3xl border border-[#D4AF37]/30 shadow-md">
+                        <p className="text-[#C5A021] dark:text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest mb-1">Precio x Docena ($)</p>
+                        <p className="text-4xl font-black text-[#C5A021] dark:text-[#D4AF37]">
                             {priceDocena > 0 ? `Bs ${priceDocena.toFixed(2)}` : "No disponible"}
                         </p>
-                        <p className="text-gray-400 text-[10px] font-bold mt-2 uppercase">Ahorro máximo por volumen</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-[10px] font-bold mt-2 uppercase">Ahorro máximo por volumen</p>
                     </div>
                 </div>
 
@@ -171,7 +172,10 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
                         <button
                             onClick={handleAddUnit}
                             disabled={!hasStock || priceUnidad === 0}
-                            className="flex items-center justify-center gap-3 py-5 px-6 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed transform active:scale-95"
+                            className={`flex items-center justify-center gap-3 py-5 px-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed transform active:scale-95 ${isWholesaleMode
+                                ? 'bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-dark dark:text-white hover:bg-gray-200 dark:hover:bg-white/10'
+                                : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                                }`}
                         >
                             <FaCartPlus size={20} /> Añadir x Unidad
                         </button>
