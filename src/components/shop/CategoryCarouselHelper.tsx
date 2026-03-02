@@ -117,7 +117,7 @@ const CategoryCarouselHelper = () => {
                 <img
                   src={
                     product.fotos[0]?.foto
-                      ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
+                      ? `http://localhost:8000/storage/${product.fotos[0].foto}`
                       : "https://placehold.co/400x600?text=Category"
                   }
                   alt={category.categoria}

@@ -3,6 +3,7 @@ import type { Product } from '../interfaces/product';
 
 export interface CartItem extends Product {
     quantity: number;
+    isWholesale?: boolean;
 }
 
 export type CartStore = Record<string, CartItem>;
@@ -13,9 +14,13 @@ export const cartItems = persistentMap<CartStore>('cart', {}, {
     decode: JSON.parse
 });
 
-export const addCartItem = (product: Product) => {
+export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWholesale: boolean = false) => {
     const currentStore = cartItems.get();
     const existingItem = currentStore[product.id];
+
+    // Si estamos en modo mayorista o el producto viene con precios de mayorista
+    const isWholesale = forceWholesale || localStorage.getItem('wholesale_authenticated') === 'true';
+
     const getStock = (p: any) => {
         if (!p) return 0;
         const inv = p.inventario || p.inventarios;
@@ -36,17 +41,21 @@ export const addCartItem = (product: Product) => {
     const maxStock = getStock(product);
 
     if (existingItem) {
-        const newQuantity = existingItem.quantity + 1;
-        // Si no tiene stock (0) no debería agregar, pero si tiene inventario limitado se valida
-        // SE AGREGA LA VALIDACIÓN DE ignoreStock
+        const newQuantity = existingItem.quantity + quantityToAdd;
         if ((product as any).ignoreStock || newQuantity <= maxStock) {
-            cartItems.setKey(product.id.toString(), { ...existingItem, quantity: newQuantity });
+            cartItems.setKey(product.id.toString(), {
+                ...existingItem,
+                quantity: newQuantity,
+                isWholesale: isWholesale
+            });
         }
     } else {
-        // Validar que haya al menos 1
-        // SE AGREGA LA VALIDACIÓN DE ignoreStock
-        if ((product as any).ignoreStock || maxStock > 0) {
-            cartItems.setKey(product.id.toString(), { ...product, quantity: 1 });
+        if ((product as any).ignoreStock || maxStock >= quantityToAdd) {
+            cartItems.setKey(product.id.toString(), {
+                ...product,
+                quantity: quantityToAdd,
+                isWholesale: isWholesale
+            });
         }
     }
 };

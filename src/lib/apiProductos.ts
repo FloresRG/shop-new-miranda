@@ -5,8 +5,8 @@ import type { ApiResponse, Producto } from '@/types/api.d.ts';
  * - PUBLIC_API_URL: URL base de la API (opcional, fallback a test.importadoramiranda.com)
  * - PUBLIC_STORAGE_URL: URL base del storage de imágenes (opcional, fallback a test.importadoramiranda.com/storage)
  */
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://importadoramiranda.com/storage';
-const STORAGE_BASE_URL = import.meta.env.PUBLIC_STORAGE_URL || 'https://importadoramiranda.com/storage';
+const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000/storage';
+const STORAGE_BASE_URL = import.meta.env.PUBLIC_STORAGE_URL || 'http://localhost:8000/storage';
 
 /**
  * Clase de error personalizada para la API de productos
@@ -44,12 +44,28 @@ export const apiProductos = {
     estado?: number;
     estado_producto?: string;
     sucursal_id?: number;
+    includePrices?: boolean;
   }): Promise<ApiResponse> {
     const finalParams = { sucursal_id: 1, ...params };
-    const url = new URL(API_BASE_URL);
+    let baseUrl = API_BASE_URL;
+
+    if (params?.includePrices) {
+      baseUrl = baseUrl.replace('/productos', '/productos-con-precios');
+      // Si la URL base ya tiene /productos al final, la reemplazamos.
+      // Si no, la construimos. Pero en el .env.example es solo la base.
+      if (!baseUrl.endsWith('/productos-con-precios')) {
+        baseUrl += '/api/productos-con-precios';
+      }
+    } else {
+      if (!baseUrl.endsWith('/productos') && !baseUrl.includes('/api/')) {
+        baseUrl += '/api/productos';
+      }
+    }
+
+    const url = new URL(baseUrl);
     if (finalParams) {
       Object.entries(finalParams).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null && key !== 'includePrices') {
           url.searchParams.append(key, value.toString());
         }
       });

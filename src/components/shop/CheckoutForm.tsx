@@ -32,8 +32,17 @@ export default function CheckoutForm() {
   const $cartItems = useStore(cartItems) as CartStore | undefined;
   const items = $cartItems ? Object.values($cartItems) : [];
 
+  const calculateItemPrice = (item: any) => {
+    const q = item.quantity;
+    if (item.isWholesale) {
+      if (q >= 12 && item.precio_docena) return item.precio_docena;
+      if (item.precio_unidad) return item.precio_unidad;
+    }
+    return parseFloat(item.precio) || 0;
+  };
+
   const total = items.reduce((sum, item) => {
-    const price = parseFloat(item.precio) || 0;
+    const price = calculateItemPrice(item);
     return sum + price * item.quantity;
   }, 0);
 
@@ -107,23 +116,24 @@ export default function CheckoutForm() {
     try {
       setIsSubmitting(true);
 
+      const isWholesaleSession = localStorage.getItem('wholesale_authenticated') === 'true';
       const orderData = {
         nombre: formData.nombre,
         ci: formData.ci,
         celular: formData.celular,
         departamento: formData.departamento,
         provincia: formData.provincia,
-        estado: "liquidacion",
-        tipo: "Cliente Web",
+        estado: isWholesaleSession ? "mayorista" : "liquidacion",
+        tipo: isWholesaleSession ? "Mayorista" : "Cliente Web",
         productos: items.map(i => ({
           producto_id: i.id,
           cantidad: i.quantity,
-          precio_venta: parseFloat(i.precio) || 0
+          precio_venta: calculateItemPrice(i)
         }))
       };
 
       const apiResponse = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        "http://localhost:8000/api/shoppedidos",
         orderData,
         { headers: { "Content-Type": "application/json" } },
       );
@@ -132,7 +142,7 @@ export default function CheckoutForm() {
       setPedidoId(pedidoNumero);
 
       // WhatsApp
-      const mensaje = `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoNumero}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
+      const mensaje = `Hola, me pongo en contacto para informarles que mi pedido ${isWholesaleSession ? 'MAYORISTA ' : ''}es el número: #${pedidoNumero}.\n\nAgradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`;
       window.open(
         `https://wa.me/59170621016?text=${encodeURIComponent(mensaje)}`,
         "_blank",

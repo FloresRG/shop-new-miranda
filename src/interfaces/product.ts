@@ -38,6 +38,8 @@ export interface Product {
     tipo: Type;
     fotos: Photo[];
     inventario: Inventory | null; // Puede ser null
+    precio_docena?: number;
+    precio_unidad?: number;
 }
 
 export interface Pagination {

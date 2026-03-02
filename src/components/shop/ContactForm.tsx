@@ -160,7 +160,7 @@ export default function ContactForm() {
       }
 
       const response = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        "http://localhost:8000/api/shoppedidos",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -178,7 +178,7 @@ export default function ContactForm() {
       if (response.data.whatsapp_connected === false) {
         const mensaje = encodeURIComponent(
           `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\n` +
-            `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`
+          `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`
         );
         window.open(`https://wa.me/59170621016?text=${mensaje}`, "_blank");
 
@@ -218,7 +218,7 @@ export default function ContactForm() {
       setIsSubmitting(false);
       toast.error(
         error?.response?.data?.message ||
-          "Hubo un error al registrar tu pedido. Inténtalo nuevamente."
+        "Hubo un error al registrar tu pedido. Inténtalo nuevamente."
       );
     }
   };
@@ -377,11 +377,10 @@ export default function ContactForm() {
                     key={prov}
                     type="button"
                     onClick={() => setFormData({ ...formData, provincia: prov })}
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                      formData.provincia === prov
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
                         ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
                         : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                    }`}
+                      }`}
                   >
                     {prov}
                   </button>
@@ -468,11 +467,10 @@ export default function ContactForm() {
                         type="button"
                         onClick={() => updateQuantity(index, prod.quantity - 1)}
                         disabled={prod.quantity <= 1}
-                        className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full transition-colors ${
-                          prod.quantity <= 1
+                        className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full transition-colors ${prod.quantity <= 1
                             ? "text-gray-400 cursor-not-allowed"
                             : "text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900/30"
-                        }`}
+                          }`}
                       >
                         −
                       </button>

@@ -33,8 +33,17 @@ export default function CartModal({ bannerImages }: CartModalProps) {
 
   const items: CartItem[] = $cartItems ? Object.values($cartItems) : [];
 
+  const calculateItemPrice = (item: CartItem) => {
+    const q = item.quantity;
+    if (item.isWholesale) {
+      if (q >= 12 && item.precio_docena) return item.precio_docena;
+      if (item.precio_unidad) return item.precio_unidad;
+    }
+    return parseFloat(item.precio) || 0;
+  };
+
   const total = items.reduce((sum, item) => {
-    const price = parseFloat(item.precio) || 0;
+    const price = calculateItemPrice(item);
     return sum + price * item.quantity;
   }, 0);
 
@@ -162,7 +171,7 @@ export default function CartModal({ bannerImages }: CartModalProps) {
                         </button>
                       </div>
                       <p className="font-bold text-lg text-dark dark:text-white">
-                        Bs{(price * item.quantity).toFixed(2)}
+                        Bs{(calculateItemPrice(item) * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>

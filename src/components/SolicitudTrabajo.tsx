@@ -44,7 +44,7 @@ export default function SolicitudTrabajo() {
         toast.error("Solo se aceptan archivos PDF");
         return;
       }
-      
+
       setCvFile(file);
     }
   };
@@ -58,17 +58,17 @@ export default function SolicitudTrabajo() {
 
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
-    
+
     if (!formData.nombre.trim()) {
       errors.nombre = "Por favor, ingrese su nombre.";
     } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.nombre.trim())) {
       errors.nombre = "El nombre solo puede contener letras y espacios.";
     }
-    
+
     if (!formData.ci.trim()) {
       errors.ci = "Por favor, ingrese su cédula de identidad.";
     }
-    
+
     if (!formData.celular.trim()) {
       errors.celular = "Por favor, ingrese su número de celular.";
     } else if (formData.celular.length !== 8) {
@@ -76,7 +76,7 @@ export default function SolicitudTrabajo() {
     } else if (!/^[67]/.test(formData.celular)) {
       errors.celular = "El número debe comenzar con 6 o 7.";
     }
-    
+
     // CV PDF es obligatorio
     if (!cvFile) {
       errors.cv_pdf = "Por favor, suba su Curriculum Vitae en PDF.";
@@ -110,7 +110,7 @@ export default function SolicitudTrabajo() {
       }
 
       const response = await axios.post(
-        "https://importadoramiranda.com/api/solicitudes",
+        "http://localhost:8000/api/solicitudes",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -134,7 +134,7 @@ export default function SolicitudTrabajo() {
       setIsSubmitting(false);
       toast.error(
         error?.response?.data?.message ||
-          "Hubo un error al registrar tu solicitud. Inténtalo nuevamente."
+        "Hubo un error al registrar tu solicitud. Inténtalo nuevamente."
       );
     }
   };
@@ -308,7 +308,7 @@ export default function SolicitudTrabajo() {
                   Arrastre su CV aquí o haga clic para seleccionar
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                  Solo archivos PDF 
+                  Solo archivos PDF
                 </p>
               </div>
             </div>

@@ -132,7 +132,7 @@ export default function ContactFormold() {
 
       const response = await axios.post(
         //"http://localhost:8000/api/shoppedidos",
-        "https://importadoramiranda.com/api/shoppedidos",
+        "http://localhost:8000/api/shoppedidos",
         payload,
         {
           headers: {
@@ -152,7 +152,7 @@ export default function ContactFormold() {
       if (response.data.whatsapp_connected === false) {
         const mensaje = encodeURIComponent(
           `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\n` +
-            `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
+          `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
         );
         window.open(`https://wa.me/59170621016?text=  ${mensaje}`, "_blank");
 
@@ -199,7 +199,7 @@ export default function ContactFormold() {
       setIsSubmitting(false);
       toast.error(
         error?.response?.data?.message ||
-          "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+        "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
     }
   };
@@ -432,11 +432,10 @@ export default function ContactFormold() {
                     onClick={() =>
                       setFormData({ ...formData, provincia: prov })
                     }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                      formData.provincia === prov
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
                         ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
                         : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                    }`}
+                      }`}
                   >
                     {prov}
                   </button>

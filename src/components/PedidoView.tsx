@@ -85,7 +85,7 @@ const PedidoView: React.FC = () => {
     setViewMode("result");
 
     try {
-      const API_BASE = 'https://importadoramiranda.com/api'; // ✅ Sin espacios
+      const API_BASE = 'http://localhost:8000/api'; // ✅ Sin espacios
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
@@ -93,7 +93,7 @@ const PedidoView: React.FC = () => {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-            "Pedido no encontrado o credenciales incorrectas.",
+          "Pedido no encontrado o credenciales incorrectas.",
         );
       }
 
@@ -125,7 +125,7 @@ const PedidoView: React.FC = () => {
       try {
         const temp = new Html5Qrcode(elementId);
         await temp.clear();
-      } catch (e) {}
+      } catch (e) { }
       alert("No se pudo leer el código QR. Intenta con una imagen más clara.");
       setLoading(false);
     }
@@ -151,7 +151,7 @@ const PedidoView: React.FC = () => {
                 processScannedUrl(decodedText);
               }
             },
-            () => {},
+            () => { },
           );
         } catch (err) {
           console.error("Error starting camera", err);
@@ -168,7 +168,7 @@ const PedidoView: React.FC = () => {
         html5QrcodeScanner
           .stop()
           .then(() => html5QrcodeScanner?.clear())
-          .catch(() => {});
+          .catch(() => { });
       }
     };
   }, [viewMode]);
@@ -416,13 +416,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.producto.map((img, idx) => (
                           <a
                             key={`prod-${idx}`}
-                            href={`https://importadoramiranda.com/storage/${img}`}
+                            href={`http://localhost:8000/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`https://importadoramiranda.com/storage/${img}`}
+                              src={`http://localhost:8000/storage/${img}`}
                               alt={`Producto ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -443,13 +443,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.comprobante.map((img, idx) => (
                           <a
                             key={`comp-${idx}`}
-                            href={`https://importadoramiranda.com/storage/${img}`}
+                            href={`http://localhost:8000/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`https://importadoramiranda.com/storage/${img}`}
+                              src={`http://localhost:8000/storage/${img}`}
                               alt={`Comprobante ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"

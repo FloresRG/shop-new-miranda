@@ -1,0 +1,84 @@
+---
+import Base from "@/layouts/Base.astro";
+import WholesaleProductsHelper from "@/components/shop/WholesaleProductsHelper";
+import BrandList from "@/components/shop/BrandList.astro";
+import { FaGem, FaUserSecret, FaHandshake } from "react-icons/fa";
+
+// Redirección si no está autenticado (se hará en cliente pero por si acaso)
+---
+
+<Base title="Catálogo Mayorista Premium | Importadora Miranda">
+  <script is:inline>
+    if (localStorage.getItem('wholesale_authenticated') !== 'true') {
+      window.location.href = '/mayorista/login';
+    }
+  </script>
+
+  <!-- Hero Mayorista -->
+  <section class="relative pt-32 pb-20 overflow-hidden bg-[#0c0c0c]">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#D4AF37,transparent)]"></div>
+    </div>
+    
+    <div class="container relative z-10">
+      <div class="max-w-3xl">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="w-12 h-[2px] bg-[#D4AF37]"></span>
+            <span class="text-[#D4AF37] font-black uppercase tracking-[0.3em] text-sm">Sección Exclusiva para Mayoristas</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
+          Catálogo <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A021] to-[#D4AF37]">Premium</span> Miranda
+        </h1>
+        <p class="text-xl text-gray-400 mb-10 leading-relaxed border-l-4 border-[#D4AF37] pl-6">
+          Precios especiales por docena y stock garantizado para distribuidores. 
+          Su éxito es nuestro compromiso.
+        </p>
+        
+        <div class="flex flex-wrap gap-6">
+            <div class="flex items-center gap-3 bg-white/5 px-6 py-4 rounded-2xl border border-white/10 hover:border-[#D4AF37]/50 transition-colors">
+                <FaGem className="text-[#D4AF37] text-2xl" />
+                <span class="text-white font-bold">Precios VIP</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white/5 px-6 py-4 rounded-2xl border border-white/10 hover:border-[#D4AF37]/50 transition-colors">
+                <FaHandshake className="text-[#D4AF37] text-2xl" />
+                <span class="text-white font-bold">Trato Directo</span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section class="section bg-[#0c0c0c] border-t border-white/5">
+    <div class="container">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div>
+          <h2 class="text-4xl font-black text-white mb-4">Nuestros Productos</h2>
+          <p class="text-gray-500 max-w-xl font-medium uppercase tracking-wide text-xs">
+            Mostrando precios por unidad y por docena (compras mayores a 12 items).
+          </p>
+        </div>
+        
+        <button 
+          onclick="localStorage.removeItem('wholesale_authenticated'); window.location.href='/';"
+          class="flex items-center gap-2 text-gray-400 hover:text-red-500 font-bold transition-colors group"
+        >
+          <FaUserSecret /> Salir de Modo Mayorista
+        </button>
+      </div>
+
+      <WholesaleProductsHelper client:load />
+    </div>
+  </section>
+
+  <!-- Footer de Marcas -->
+  <div class="bg-[#111] py-10 border-t border-white/5">
+    <BrandList />
+  </div>
+</Base>
+
+<style is:global>
+  body.theme-gold {
+      background-color: #0c0c0c !important;
+  }
+</style>

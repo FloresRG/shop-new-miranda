@@ -1,0 +1,65 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base title="Ingreso Mayorista | Importadora Miranda">
+  <div class="container py-20">
+    <div class="max-w-md mx-auto bg-white dark:bg-darkmode-light p-8 rounded-3xl shadow-2xl border border-gray-100 dark:border-darkmode-border">
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 mx-auto bg-gradient-to-tr from-[#C5A021] to-[#D4AF37] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Sección Mayoristas</h2>
+        <p class="text-gray-500 dark:text-gray-400">Ingresa el código de acceso exclusivo</p>
+      </div>
+
+      <form id="wholesale-login-form" class="space-y-6">
+        <div>
+          <label for="code" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">Código de Acceso</label>
+          <input
+            type="password"
+            id="code"
+            name="code"
+            required
+            placeholder="••••••••"
+            class="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition-all bg-gray-50 dark:bg-darkmode-body text-lg text-center tracking-widest"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-4 bg-gradient-to-r from-[#C5A021] to-[#D4AF37] text-white font-black rounded-2xl shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all transform uppercase tracking-widest text-lg"
+        >
+          Acceder al Catálogo
+        </button>
+      </form>
+
+      <div id="error-message" class="hidden mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-center text-sm font-medium animate-pulse">
+        Código de acceso incorrecto. Intente de nuevo.
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const form = document.querySelector('#wholesale-login-form');
+    const errorMsg = document.querySelector('#error-message');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = document.querySelector('#code').value;
+
+      if (code === 'Miranda2026') {
+        localStorage.setItem('wholesale_authenticated', 'true');
+        // Redirigir al catálogo mayorista
+        window.location.href = '/mayorista';
+      } else {
+        errorMsg.classList.remove('hidden');
+        setTimeout(() => {
+          errorMsg.classList.add('hidden');
+        }, 3000);
+      }
+    });
+  </script>
+</Base>

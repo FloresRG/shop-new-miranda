@@ -9,6 +9,7 @@
 
 @import "./safe.css";
 @import "./utilities.css";
+@import "./wholesale.css";
 
 @layer base {
   @import "./base.css";

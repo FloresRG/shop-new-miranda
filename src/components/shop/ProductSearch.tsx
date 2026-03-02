@@ -23,7 +23,7 @@ export default function ProductSearch() {
 
     // Listen for Astro view transition events
     document.addEventListener("astro:page-load", handlePageLoad);
-    
+
     return () => {
       document.removeEventListener("astro:page-load", handlePageLoad);
     };
@@ -116,7 +116,7 @@ export default function ProductSearch() {
                   <img
                     src={
                       product.fotos[0]?.foto
-                        ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
+                        ? `http://localhost:8000/storage/${product.fotos[0].foto}`
                         : "https://placehold.co/50"
                     }
                     alt={product.nombre}

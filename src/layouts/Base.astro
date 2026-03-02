@@ -192,6 +192,22 @@ const {
       }`}
     />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      const checkWholesale = () => {
+        if (localStorage.getItem('wholesale_authenticated') === 'true') {
+          document.body.classList.add('theme-gold');
+        } else {
+          document.body.classList.remove('theme-gold');
+        }
+      };
+      
+      // Run on initial load
+      document.addEventListener('DOMContentLoaded', checkWholesale);
+      
+      // Run on view transitions
+      document.addEventListener('astro:after-swap', checkWholesale);
+    </script>
   </head>
   <body>
     {/* google tag manager noscript */}

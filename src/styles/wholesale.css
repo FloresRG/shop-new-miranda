@@ -1,0 +1,68 @@
+/* Golden Theme for Wholesale Section */
+:root {
+  --color-gold: #d4af37;
+  --color-gold-light: #f1d592;
+  --color-gold-dark: #996515;
+}
+
+body.theme-gold {
+  background-color: #0c0c0c;
+  color: #f5f5f5;
+}
+
+body.theme-gold .bg-white {
+  background-color: #1a1a1a !important;
+}
+
+body.theme-gold .text-gray-900,
+body.theme-gold .text-gray-800 {
+  color: #ffffff !important;
+}
+
+body.theme-gold .text-gray-600,
+body.theme-gold .text-gray-500 {
+  color: #cccccc !important;
+}
+
+body.theme-gold .border-gray-100,
+body.theme-gold .border-gray-200,
+body.theme-gold .border-gray-300 {
+  border-color: #333333 !important;
+}
+
+/* Accents and buttons */
+body.theme-gold .text-primary {
+  color: var(--color-gold) !important;
+}
+
+body.theme-gold .bg-primary {
+  background-color: var(--color-gold) !important;
+}
+
+body.theme-gold .border-primary {
+  border-color: var(--color-gold) !important;
+}
+
+body.theme-gold .from-primary {
+  --tw-gradient-from: var(--color-gold) !important;
+}
+
+body.theme-gold button[style*="background: linear-gradient"],
+body.theme-gold div[style*="background: linear-gradient"] {
+  background: linear-gradient(135deg, var(--color-gold-dark) 0%, var(--color-gold) 100%) !important;
+}
+
+body.theme-gold .shadow-primary\/30 {
+  --tw-shadow-color: rgba(212, 175, 55, 0.3) !important;
+}
+
+/* Card hover and effects */
+body.theme-gold .hover\:border-primary\/50:hover {
+  border-color: rgba(212, 175, 55, 0.5) !important;
+}
+
+/* Navigation highlights */
+body.theme-gold .nav-link:hover,
+body.theme-gold .nav-link.active {
+    color: var(--color-gold) !important;
+}
