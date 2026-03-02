@@ -33,11 +33,11 @@ export default function CheckoutForm() {
   const $cartItems = useStore(activeStore) as CartStore | undefined;
   const items = $cartItems ? Object.values($cartItems) : [];
 
-  const calculateItemPrice = (item: any) => {
+  const calculateItemPrice = (item: any): number => {
     const q = item.quantity;
     if (item.isWholesale) {
-      if (q >= 12 && item.precio_docena) return item.precio_docena;
-      if (item.precio_unidad) return item.precio_unidad;
+      if (q >= 12 && item.precio_docena) return parseFloat(item.precio_docena) || 0;
+      if (item.precio_unidad) return parseFloat(item.precio_unidad) || 0;
     }
     return parseFloat(item.precio) || 0;
   };
