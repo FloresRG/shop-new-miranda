@@ -117,7 +117,9 @@ export default function CheckoutForm() {
     try {
       setIsSubmitting(true);
 
-      const isWholesaleSession = localStorage.getItem('wholesale_authenticated') === 'true';
+      // Detect wholesale mode by URL (most reliable) or localStorage fallback
+      const isWholesalePath = window.location.pathname.startsWith('/mayorista');
+      const isWholesaleSession = isWholesalePath || localStorage.getItem('wholesale_authenticated') === 'true';
       const orderData = {
         nombre: formData.nombre,
         ci: formData.ci,

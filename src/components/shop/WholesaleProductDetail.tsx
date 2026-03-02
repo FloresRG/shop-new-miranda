@@ -20,13 +20,43 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
             const fetchProduct = async () => {
                 setLoading(true);
                 try {
-                    // Include prices for wholesale
+                    // Strategy 1: Try the local API route which fetches from backend with prices
                     const res = await fetch(`/api/productos/${productId}?includePrices=true`);
-                    if (!res.ok) throw new Error("Product not found");
-                    const data = await res.json();
-                    setProduct(data);
+                    if (res.ok) {
+                        const data = await res.json();
+                        // API may return the product directly or nested under a key
+                        const prod = data?.producto || data;
+                        if (prod && prod.id) {
+                            setProduct(prod);
+                            return;
+                        }
+                    }
+
+                    // Strategy 2: Fetch directly from backend prices endpoint
+                    const pricesRes = await fetch(`http://localhost:8000/api/productos-con-precios?search=${productId}&sucursal_id=1`);
+                    if (pricesRes.ok) {
+                        const pricesData = await pricesRes.json();
+                        const found = pricesData?.productos?.find((p: any) => p.id === productId || p.id === Number(productId));
+                        if (found) {
+                            setProduct(found);
+                            return;
+                        }
+                    }
+
+                    // Strategy 3: Fallback to basic product endpoint
+                    const basicRes = await fetch(`http://localhost:8000/api/producto/${productId}?sucursal_id=1`);
+                    if (basicRes.ok) {
+                        const basicData = await basicRes.json();
+                        const prod = basicData?.producto || basicData;
+                        if (prod && prod.id) {
+                            setProduct(prod);
+                            return;
+                        }
+                    }
+
+                    throw new Error("Product not found in any endpoint");
                 } catch (err) {
-                    console.error(err);
+                    console.error("Error fetching wholesale product:", err);
                     setError(true);
                 } finally {
                     setLoading(false);
@@ -34,7 +64,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
             };
             fetchProduct();
         }
-    }, [productId, product]);
+    }, [productId]);
 
     const defaultImage = "https://placehold.co/600x600?text=No+Image";
     const [mainImage, setMainImage] = useState("");
