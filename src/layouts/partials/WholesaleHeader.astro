@@ -1,8 +1,8 @@
 ---
-import Logo from "@/components/Logo.astro";
+import Logomayorista from "@/components/Logomayorista.astro";
 import CartIcon from "../../components/shop/CartIcon";
 import ProductSearch from "../../components/shop/ProductSearch";
-import { FaSignOutAlt, FaStore, FaHome } from "react-icons/fa";
+import { FaSignOutAlt, FaStore, FaHome, FaSearch } from "react-icons/fa";
 
 const { pathname } = Astro.url;
 ---
@@ -11,74 +11,114 @@ const { pathname } = Astro.url;
   id="wholesale-header"
   class="z-30 sticky top-0 w-full bg-[#0c0c0c] border-b border-[#D4AF37]/30 shadow-xl"
 >
-  {/* Row 1: Logo + Actions */}
+  <!-- Row 1: Logo + Actions + Mobile Search Trigger -->
   <div class="container flex items-center justify-between py-3 gap-3">
-    <!-- logo -->
-    <a href="/mayorista" class="flex items-center gap-2 shrink-0">
-      <Logo />
+    
+    <!-- Logo -->
+    
+      <Logomayorista />
       <div class="hidden sm:flex flex-col border-l border-[#D4AF37]/30 pl-3">
         <span class="text-[#D4AF37] font-black tracking-widest text-[9px] uppercase">Módulo Exclusivo</span>
         <span class="text-white font-bold text-[10px] tracking-tighter">MAYORISTAS</span>
       </div>
     </a>
 
-    <!-- Desktop Search (hidden on mobile) -->
+    <!-- Desktop Search (Solo Desktop) -->
     <div class="hidden md:block flex-1 max-w-xs lg:max-w-md mx-4">
       <ProductSearch client:load />
     </div>
 
-    <!-- Nav links (desktop) -->
-    <nav class="hidden lg:flex items-center gap-6">
-      <a
-        href="/mayorista"
-        class={`flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-colors ${pathname === '/mayorista' ? 'text-[#D4AF37]' : 'text-gray-400 hover:text-[#D4AF37]'}`}
-      >
-        <FaHome size={14} /> Inicio
-      </a>
-      <a
-        href="/mayorista/tienda"
-        class={`flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-colors ${pathname.startsWith('/mayorista/tienda') ? 'text-[#D4AF37]' : 'text-gray-400 hover:text-[#D4AF37]'}`}
-      >
-        <FaStore size={14} /> Tienda
-      </a>
-    </nav>
+    <!-- Right Actions (Nav Desktop + Cart + Logout + Mobile Search Icon) -->
+    <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+      
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-6 mr-2">
+        <a
+          href="/mayorista"
+          class={`flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-colors ${pathname === '/mayorista' ? 'text-[#D4AF37]' : 'text-gray-400 hover:text-[#D4AF37]'}`}
+        >
+          <FaHome size={14} /> Inicio
+        </a>
+        <a
+          href="/mayorista/tienda"
+          class={`flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-colors ${pathname.startsWith('/mayorista/tienda') ? 'text-[#D4AF37]' : 'text-gray-400 hover:text-[#D4AF37]'}`}
+        >
+          <FaStore size={14} /> Tienda
+        </a>
+      </nav>
 
-    <!-- Cart + Logout -->
-    <div class="flex items-center gap-2 shrink-0">
-      <CartIcon client:load />
-      <button
-        id="wholesale-logout-btn"
-        class="bg-gradient-to-r from-red-700 to-red-900 text-white px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-red-900/20"
+      <!-- Mobile Search Trigger Icon (Visible solo en móvil) -->
+      <button 
+        id="mobile-search-trigger"
+        class="md:hidden text-[#D4AF37] p-2 hover:bg-white/5 rounded-full transition-colors"
+        aria-label="Buscar"
       >
-        <FaSignOutAlt size={12} />
-        <span class="hidden sm:inline">Salir</span>
+        <FaSearch size={18} />
       </button>
+
+      <!-- Cart & Logout -->
+      <div class="flex items-center gap-2 border-l border-[#D4AF37]/20 pl-2 sm:pl-4">
+        <CartIcon client:load />
+        <button
+          id="wholesale-logout-btn"
+          class="bg-gradient-to-r from-red-700 to-red-900 text-white px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-red-900/20"
+        >
+          <FaSignOutAlt size={12} />
+          <span class="hidden sm:inline">Salir</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  {/* Row 2: Mobile Search (always visible on mobile) */}
-  <div class="md:hidden w-full px-4 pb-3">
+  <!-- Row 2: Expanded Mobile Search (Oculto por defecto en móvil) -->
+  <!-- Usamos absolute para que empuje el contenido o relative si quieres que baje el contenido -->
+  <div 
+  id="mobile-search-container" 
+  class="hidden md:hidden w-full bg-[#0c0c0c] border-b border-[#D4AF37]/20 px-4 py-3 animate-fade-in-down flex justify-center"
+>
+  <div class="w-full max-w-md">
     <ProductSearch client:load />
   </div>
+</div>
 
-  {/* Row 3: Mobile Nav Links */}
-  <div class="lg:hidden border-t border-[#D4AF37]/10 px-4 py-2 flex items-center gap-6 overflow-x-auto">
-    <a
-      href="/mayorista"
-      class={`flex items-center gap-1 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap transition-colors ${pathname === '/mayorista' ? 'text-[#D4AF37]' : 'text-gray-500 hover:text-[#D4AF37]'}`}
-    >
-      <FaHome size={12} /> Inicio
-    </a>
-    <a
-      href="/mayorista/tienda"
-      class={`flex items-center gap-1 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap transition-colors ${pathname.startsWith('/mayorista/tienda') ? 'text-[#D4AF37]' : 'text-gray-500 hover:text-[#D4AF37]'}`}
-    >
-      <FaStore size={12} /> Tienda
-    </a>
-  </div>
+  <!-- Row 3: Mobile Nav Links (Scroll horizontal) -->
+  <div class="lg:hidden border-t border-[#D4AF37]/10 px-4 py-2 flex justify-center items-center gap-6 bg-[#0c0c0c]">
+  <a
+    href="/mayorista"
+    class={`flex items-center gap-1 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap transition-colors ${pathname === '/mayorista' ? 'text-[#D4AF37]' : 'text-gray-500 hover:text-[#D4AF37]'}`}
+  >
+    <FaHome size={12} /> Inicio
+  </a>
+
+  <a
+    href="/mayorista/tienda"
+    class={`flex items-center gap-1 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap transition-colors ${pathname.startsWith('/mayorista/tienda') ? 'text-[#D4AF37]' : 'text-gray-500 hover:text-[#D4AF37]'}`}
+  >
+    <FaStore size={12} /> Tienda
+  </a>
+</div>
 </header>
 
 <script is:inline>
+  // Lógica para el Buscador Móvil
+  const searchTrigger = document.getElementById('mobile-search-trigger');
+  const searchContainer = document.getElementById('mobile-search-container');
+  let isSearchOpen = false;
+
+  if (searchTrigger && searchContainer) {
+    searchTrigger.addEventListener('click', () => {
+      isSearchOpen = !isSearchOpen;
+      if (isSearchOpen) {
+        searchContainer.classList.remove('hidden');
+        // Opcional: Enfocar el input automáticamente si ProductSearch lo permite
+        // setTimeout(() => searchContainer.querySelector('input')?.focus(), 100); 
+      } else {
+        searchContainer.classList.add('hidden');
+      }
+    });
+  }
+
+  // Lógica Logout (Tu código original)
   function setupWholesaleLogout() {
     const logoutBtn = document.getElementById('wholesale-logout-btn');
     if (logoutBtn && !logoutBtn.dataset.listenerAdded) {
@@ -91,5 +131,21 @@ const { pathname } = Astro.url;
   }
 
   setupWholesaleLogout();
-  document.addEventListener('astro:page-load', setupWholesaleLogout);
+  document.addEventListener('astro:page-load', () => {
+    setupWholesaleLogout();
+    // Reiniciar estado del buscador al cambiar de página
+    if(searchContainer) searchContainer.classList.add('hidden');
+    isSearchOpen = false;
+  });
 </script>
+
+<style>
+  /* Animación suave para cuando aparece el buscador */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-down {
+    animation: fadeInDown 0.3s ease-out forwards;
+  }
+</style>

@@ -55,6 +55,9 @@ const {
     <meta name="theme-color" content="#0c0c0c" />
     <meta name="generator" content={Astro.generator} />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <!-- Viewport meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
 
     <AstroFont
       config={[
@@ -80,24 +83,41 @@ const {
     />
 
     <ClientRouter />
-    <title>{title || config.site.title}</title>
+    <title>{meta_title || title || config.site.title}</title>
+    <meta name="description" content={description || config.site.description} />
+    {image && <meta property="og:image" content={image} />}
   </head>
 
-  <body class="theme-gold dark bg-[#0c0c0c] text-white overflow-x-hidden transition-colors duration-300">
+  <body class="theme-gold dark bg-[#0c0c0c] text-white overflow-x-hidden transition-colors duration-300 antialiased">
     <TwSizeIndicator />
     <Toaster client:load />
     <CartModal client:load />
     
-    <WholesaleHeader />
-    
-    <main id="main-content" class="min-h-screen">
-      <slot />
-    </main>
+    <!-- Contenedor principal con scroll nativo -->
+    <div class="relative min-h-screen flex flex-col">
+      <WholesaleHeader client:load />
+      
+      <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pb-8">
+        <slot />
+      </main>
 
-    <WholesaleFooter />
+      <WholesaleFooter />
+    </div>
+    
     <WhatsAppButton />
 
     <script is:inline>
+      // Función para detectar si es dispositivo táctil
+      const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      // Prevenir zoom en inputs en iOS (solo móvil)
+      function setupViewport() {
+        const viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport && window.innerWidth < 768) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+        }
+      }
+      
       function checkAuth() {
           if (typeof window !== 'undefined') {
               const isWholesalePage = window.location.pathname.startsWith('/mayorista');
@@ -112,9 +132,14 @@ const {
       
       // Check immediately
       checkAuth();
+      setupViewport();
       
       // Check on every navigation (View Transitions)
-      document.addEventListener('astro:page-load', checkAuth);
+      document.addEventListener('astro:page-load', () => {
+        checkAuth();
+        setupViewport();
+        applyTheme();
+      });
       
       // Force Golden Theme Body Class
       function applyTheme() {
@@ -122,7 +147,78 @@ const {
       }
       
       applyTheme();
-      document.addEventListener('astro:page-load', applyTheme);
+      
+      // Ajustar viewport en resize (solo móvil)
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (window.innerWidth < 768) {
+            document.body.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+            setupViewport();
+          }
+        }, 250);
+      });
+      
+      // Inicializar variable CSS para viewport height en móviles
+      if (window.innerWidth < 768) {
+        document.body.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }
     </script>
+    
+    <style is:global>
+      /* Prevenir scroll horizontal global */
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+        /* ✅ Scroll vertical habilitado por defecto */
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      /* ✅ Desktop: scroll nativo sin restricciones */
+      @media (min-width: 769px) {
+        body {
+          position: relative;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: auto;
+        }
+      }
+      
+      /* ✅ Mobile: ajustes específicos para iOS */
+      @media (max-width: 768px) {
+        * {
+          -webkit-tap-highlight-color: transparent;
+        }
+        
+        input, select, textarea {
+          font-size: 16px !important; /* Prevenir zoom en iOS */
+        }
+        
+        /* Ajustar altura en móviles con variable CSS */
+        body {
+          height: 100vh;
+          height: calc(var(--vh, 1vh) * 100);
+          position: relative; /* ✅ Cambiado de 'fixed' a 'relative' */
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Prevenir bounce scroll en iOS solo cuando sea necesario */
+        .ios-prevent-bounce {
+          overscroll-behavior-y: contain;
+        }
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Asegurar que el contenido principal sea scrollable */
+      #main-content {
+        min-height: 0;
+      }
+    </style>
   </body>
 </html>
