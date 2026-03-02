@@ -60,7 +60,7 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
             </div>
 
             {/* Imagen */}
-            <div className="relative aspect-square overflow-hidden bg-[#0c0c0c]">
+            <a href={`/mayorista/tienda/${product.id}`} className="block relative aspect-square overflow-hidden bg-[#0c0c0c]">
                 {!imageLoaded && (
                     <div className="absolute inset-0 bg-gray-800 animate-pulse"></div>
                 )}
@@ -72,15 +72,17 @@ export default function WholesaleProductCard({ product }: WholesaleProductCardPr
                     loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-transparent to-transparent opacity-60"></div>
-            </div>
+            </a>
 
             {/* Contenido */}
             <div className="p-5 flex flex-col flex-grow">
                 <div className="mb-4">
                     <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">{product.marca.marca}</span>
-                    <h3 className="text-lg font-bold text-white line-clamp-2 mt-1 leading-tight group-hover:text-[#D4AF37] transition-colors">
-                        {product.nombre}
-                    </h3>
+                    <a href={`/mayorista/tienda/${product.id}`} className="block">
+                        <h3 className="text-lg font-bold text-white line-clamp-2 mt-1 leading-tight group-hover:text-[#D4AF37] transition-colors">
+                            {product.nombre}
+                        </h3>
+                    </a>
                 </div>
 
                 {/* Precios */}

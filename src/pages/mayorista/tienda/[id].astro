@@ -1,0 +1,53 @@
+---
+import WholesaleBase from "../../../layouts/WholesaleBase.astro";
+import WholesaleProductDetail from "../../../components/shop/WholesaleProductDetail";
+import WholesaleProductsHelper from "../../../components/shop/WholesaleProductsHelper";
+import { FaArrowLeft } from "react-icons/fa";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+
+const productId = parseInt(id);
+const pageTitle = "Cargando Producto...";
+---
+
+<WholesaleBase title={pageTitle}>
+  <section class="py-12 bg-[#0c0c0c]">
+    <div class="container">
+      {/* Breadcrumb / Back Button */}
+      <div class="mb-10">
+        <a 
+          href="/mayorista/tienda" 
+          class="inline-flex items-center gap-2 text-[#D4AF37] font-black uppercase tracking-widest text-xs hover:gap-3 transition-all"
+        >
+          <FaArrowLeft /> Volver al Catálogo VIP
+        </a>
+      </div>
+
+      <WholesaleProductDetail client:load productId={productId} />
+      
+      {/* Sección de Más Productos */}
+      <div class="mt-24 pt-16 border-t border-white/5">
+         <div class="flex items-center justify-between mb-12">
+            <div>
+              <h2 class="text-3xl font-black text-white mb-2">Otros Productos VIP</h2>
+              <div class="w-12 h-1 bg-[#D4AF37]"></div>
+            </div>
+            <a href="/mayorista/tienda" class="text-[#D4AF37] text-xs font-bold uppercase tracking-widest hover:underline">Ver Todo</a>
+         </div>
+         <WholesaleProductsHelper client:load />
+      </div>
+    </div>
+  </section>
+</WholesaleBase>
+
+<style is:global>
+  body.theme-gold {
+      background-color: #0c0c0c !important;
+  }
+</style>

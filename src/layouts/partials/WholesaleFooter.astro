@@ -1,0 +1,33 @@
+---
+import Logo from "@/components/Logo.astro";
+import { FaWhatsapp, FaFacebook, FaInstagram, FaLock } from "react-icons/fa";
+---
+
+<footer class="bg-[#080808] border-t border-[#D4AF37]/20 py-16">
+  <div class="container">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center text-center md:text-left">
+      <div>
+        <Logo />
+        <p class="mt-6 text-gray-500 text-sm max-w-xs mx-auto md:mx-0">
+          Plataforma exclusiva para distribuidores autorizados de Importadora Miranda.
+        </p>
+      </div>
+      
+      <div class="flex justify-center gap-8">
+        <a href="#" class="text-gray-400 hover:text-[#D4AF37] transition-colors"><FaWhatsapp size={24} /></a>
+        <a href="#" class="text-gray-400 hover:text-[#D4AF37] transition-colors"><FaFacebook size={24} /></a>
+        <a href="#" class="text-gray-400 hover:text-[#D4AF37] transition-colors"><FaInstagram size={24} /></a>
+      </div>
+
+      <div class="text-center md:text-right">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 text-xs text-gray-400">
+          <FaLock className="text-[#D4AF37]" />
+          <span>Acceso Protegido Miranda 2026</span>
+        </div>
+        <p class="mt-4 text-gray-600 text-[10px] uppercase tracking-widest">
+          &copy; {new Date().getFullYear()} Importadora Miranda. Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

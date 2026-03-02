@@ -30,29 +30,37 @@ export const getImageUrl = (imagePath: string): string => {
   return `${STORAGE_BASE_URL}/fotos/${imagePath}`;
 };
 
-export const apiProductos = {
+export interface ApiProductosParams {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  categoria_id?: number;
+  marca_id?: number;
+  tipo_id?: number;
+  estado?: number;
+  estado_producto?: string;
+  sucursal_id?: number;
+  includePrices?: boolean;
+}
+
+export interface ApiProductos {
+  fetchProductos(params?: ApiProductosParams): Promise<ApiResponse>;
+  fetchProductoById(id: number): Promise<Producto>;
+  searchProductos(searchTerm: string, params?: Omit<ApiProductosParams, 'search'>): Promise<ApiResponse>;
+  fetchProductosByCategoria(categoriaId: number, params?: Omit<ApiProductosParams, 'categoria_id'>): Promise<ApiResponse>;
+  fetchProductosByMarca(marcaId: number, params?: Omit<ApiProductosParams, 'marca_id'>): Promise<ApiResponse>;
+}
+
+export const apiProductos: ApiProductos = {
   /**
    * Obtener todos los productos con parámetros opcionales
    */
-  async fetchProductos(params?: {
-    page?: number;
-    per_page?: number;
-    search?: string;
-    categoria_id?: number;
-    marca_id?: number;
-    tipo_id?: number;
-    estado?: number;
-    estado_producto?: string;
-    sucursal_id?: number;
-    includePrices?: boolean;
-  }): Promise<ApiResponse> {
+  async fetchProductos(params?: ApiProductosParams): Promise<ApiResponse> {
     const finalParams = { sucursal_id: 1, ...params };
     let baseUrl = API_BASE_URL;
 
     if (params?.includePrices) {
       baseUrl = baseUrl.replace('/productos', '/productos-con-precios');
-      // Si la URL base ya tiene /productos al final, la reemplazamos.
-      // Si no, la construimos. Pero en el .env.example es solo la base.
       if (!baseUrl.endsWith('/productos-con-precios')) {
         baseUrl += '/api/productos-con-precios';
       }
@@ -105,7 +113,7 @@ export const apiProductos = {
    */
   async searchProductos(
     searchTerm: string,
-    params?: Omit<Parameters<typeof apiProductos.fetchProductos>[0], 'search'>
+    params?: Omit<ApiProductosParams, 'search'>
   ): Promise<ApiResponse> {
     return this.fetchProductos({ ...params, search: searchTerm });
   },
@@ -115,7 +123,7 @@ export const apiProductos = {
    */
   async fetchProductosByCategoria(
     categoriaId: number,
-    params?: Omit<Parameters<typeof apiProductos.fetchProductos>[0], 'categoria_id'>
+    params?: Omit<ApiProductosParams, 'categoria_id'>
   ): Promise<ApiResponse> {
     return this.fetchProductos({ ...params, categoria_id: categoriaId });
   },
@@ -125,7 +133,7 @@ export const apiProductos = {
    */
   async fetchProductosByMarca(
     marcaId: number,
-    params?: Omit<Parameters<typeof apiProductos.fetchProductos>[0], 'marca_id'>
+    params?: Omit<ApiProductosParams, 'marca_id'>
   ): Promise<ApiResponse> {
     return this.fetchProductos({ ...params, marca_id: marcaId });
   },

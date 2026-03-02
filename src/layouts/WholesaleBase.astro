@@ -1,0 +1,116 @@
+---
+import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import config from "@/config/config.json";
+import theme from "@/config/theme.json";
+import WholesaleFooter from "./partials/WholesaleFooter.astro";
+import WholesaleHeader from "./partials/WholesaleHeader.astro";
+import "@/styles/main.css";
+import { AstroFont } from "astro-font";
+import { ClientRouter } from "astro:transitions";
+import WhatsAppButton from "@/components/WhatsAppButton.astro";
+import { Toaster } from "react-hot-toast";
+import CartModal from "../components/shop/CartModal";
+
+// font families
+const pf = theme.fonts.font_family.primary;
+const sf = theme.fonts.font_family.secondary;
+
+let fontPrimary, fontSecondary;
+if (theme.fonts.font_family.primary) {
+  fontPrimary = theme.fonts.font_family.primary
+    .replace(/\+/g, " ")
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+}
+if (theme.fonts.font_family.secondary) {
+  fontSecondary = theme.fonts.font_family.secondary
+    .replace(/\+/g, " ")
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+}
+
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+}
+
+const {
+  title,
+  meta_title,
+  description,
+  image,
+  noindex,
+  canonical,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <link rel="shortcut icon" href={config.site.favicon} />
+    <meta name="theme-name" content="astroplate" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" content="#0c0c0c" />
+    <meta name="generator" content={Astro.generator} />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <AstroFont
+      config={[
+        {
+          src: [],
+          preload: false,
+          display: "swap",
+          name: fontPrimary!,
+          fallback: "sans-serif",
+          cssVariable: "font-primary",
+          googleFontsURL: `https://fonts.googleapis.com/css2?family=${pf}&display=swap`,
+        },
+        {
+          src: [],
+          preload: false,
+          display: "swap",
+          name: fontSecondary!,
+          fallback: "sans-serif",
+          cssVariable: "font-secondary",
+          googleFontsURL: `https://fonts.googleapis.com/css2?family=${sf}&display=swap`,
+        },
+      ]}
+    />
+
+    <ClientRouter />
+    <title>{title || config.site.title}</title>
+  </head>
+
+  <body class="theme-gold bg-[#0c0c0c] text-white overflow-x-hidden">
+    <TwSizeIndicator />
+    <Toaster client:load />
+    <CartModal client:load />
+    
+    <WholesaleHeader />
+    
+    <main id="main-content" class="min-h-screen">
+      <slot />
+    </main>
+
+    <WholesaleFooter />
+    <WhatsAppButton />
+
+    <script is:inline>
+      // Auth Check
+      if (localStorage.getItem('wholesale_authenticated') !== 'true') {
+        window.location.href = '/mayorista/login';
+      }
+      
+      // Force Golden Theme Body Class
+      function applyTheme() {
+        document.body.classList.add('theme-gold');
+        document.body.classList.remove('theme-light'); // Just in case
+      }
+      
+      applyTheme();
+      document.addEventListener('astro:page-load', applyTheme);
+    </script>
+  </body>
+</html>
