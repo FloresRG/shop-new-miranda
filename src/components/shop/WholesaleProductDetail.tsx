@@ -48,10 +48,16 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
     }, [product]);
 
     if (loading) return <ProductDetailSkeleton />;
-    if (error || !product) return <div className="text-center py-20 text-gray-400 font-bold">Inicie sesión para ver este producto exclusivo</div>;
 
-    const priceUnidad = product.precio_unidad || parseFloat(product.precio) || 0;
-    const priceDocena = product.precio_docena || 0;
+    if (error || !product) {
+        if (!isWholesaleMode) {
+            return <div className="text-center py-20 text-gray-400 font-bold">Inicie sesión para ver este producto exclusivo</div>;
+        }
+        return <div className="text-center py-20 text-gray-400 font-bold">Producto no encontrado o error de conexión</div>;
+    }
+
+    const priceUnidad = Number(product.precio_unidad || parseFloat(product.precio) || 0);
+    const priceDocena = Number(product.precio_docena || (priceUnidad * 0.9));
 
     const getStock = (p: any) => {
         if (p.inventario) {
@@ -129,7 +135,7 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
                     <div className="flex items-center gap-2 text-[#D4AF37] font-black uppercase tracking-[0.2em] text-[10px] mb-3">
                         <FaGem size={12} /> {product.categoria.categoria} / {product.marca.marca}
                     </div>
-                    <h1 className="text-4xl lg:text-5xl font-black text-dark dark:text-white mb-4 leading-tight">
+                    <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-dark dark:text-white mb-4 leading-tight">
                         {product.nombre}
                     </h1>
                     <div className="flex items-center gap-4">

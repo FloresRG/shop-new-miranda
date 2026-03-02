@@ -83,7 +83,7 @@ const {
     <title>{title || config.site.title}</title>
   </head>
 
-  <body class="theme-gold bg-white dark:bg-[#0c0c0c] text-dark dark:text-white overflow-x-hidden transition-colors duration-300">
+  <body class="theme-gold dark bg-[#0c0c0c] text-white overflow-x-hidden transition-colors duration-300">
     <TwSizeIndicator />
     <Toaster client:load />
     <CartModal client:load />
@@ -98,12 +98,23 @@ const {
     <WhatsAppButton />
 
     <script is:inline>
-      // Auth Check - Run immediately
-      (function() {
-        if (localStorage.getItem('wholesale_authenticated') !== 'true') {
-          window.location.replace('/mayorista/login');
-        }
-      })();
+      function checkAuth() {
+          if (typeof window !== 'undefined') {
+              const isWholesalePage = window.location.pathname.startsWith('/mayorista');
+              const isLoginPage = window.location.pathname === '/mayorista/login';
+              const isAuthenticated = localStorage.getItem('wholesale_authenticated') === 'true';
+              
+              if (isWholesalePage && !isLoginPage && !isAuthenticated) {
+                  window.location.replace('/mayorista/login');
+              }
+          }
+      }
+      
+      // Check immediately
+      checkAuth();
+      
+      // Check on every navigation (View Transitions)
+      document.addEventListener('astro:page-load', checkAuth);
       
       // Force Golden Theme Body Class
       function applyTheme() {

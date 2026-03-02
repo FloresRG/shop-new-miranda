@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useStore } from "@nanostores/react";
-import { cartItems, clearCart, updateQuantity, removeCartItem } from "../../store/cartStore";
+import { getActiveCartStore, clearCart, updateQuantity, removeCartItem } from "../../store/cartStore";
 import type { CartStore } from "../../store/cartStore";
 import axios from "axios";
 import { jsPDF } from "jspdf";
@@ -29,7 +29,8 @@ const departamentos = {
 };
 
 export default function CheckoutForm() {
-  const $cartItems = useStore(cartItems) as CartStore | undefined;
+  const activeStore = getActiveCartStore();
+  const $cartItems = useStore(activeStore) as CartStore | undefined;
   const items = $cartItems ? Object.values($cartItems) : [];
 
   const calculateItemPrice = (item: any) => {
@@ -159,13 +160,13 @@ export default function CheckoutForm() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full max-w-full overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 w-full max-w-full overflow-hidden">
       {/* Resumen de Orden */}
-      <div className="w-full lg:w-5/12 order-1 flex flex-col">
-        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border-2 border-primary/10 dark:border-primary/5 overflow-hidden">
-          <div className="p-6 border-b-2 border-primary/20 bg-primary/5 dark:bg-primary/10">
-            <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-              <FaShoppingCart className="text-primary" />
+      <div className="w-full lg:w-5/12 order-1 lg:order-2 flex flex-col">
+        <div className="bg-[#1a1a1a] dark:bg-[#1a1a1a] rounded-2xl shadow-xl border border-[#D4AF37]/20 overflow-hidden">
+          <div className="p-5 border-b border-[#D4AF37]/20 bg-[#D4AF37]/5">
+            <h3 className="text-lg font-black text-white flex items-center gap-2">
+              <FaShoppingCart className="text-[#D4AF37]" />
               Resumen de Orden
             </h3>
           </div>
@@ -212,9 +213,12 @@ export default function CheckoutForm() {
                       </button>
                     </div>
 
-                    <div className="flex-1 w-full ml-4">
-                      <p className="font-black text-primary text-sm whitespace-nowrap">
-                        Bs {(parseFloat(item.precio) * item.quantity).toFixed(2)}
+                    <div className="flex-1 w-full ml-4 text-right">
+                      <p className="font-black text-[#D4AF37] text-sm whitespace-nowrap">
+                        Bs {(calculateItemPrice(item) * item.quantity).toFixed(2)}
+                      </p>
+                      <p className="text-[10px] text-gray-500">
+                        P.U. Bs {calculateItemPrice(item).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -232,12 +236,12 @@ export default function CheckoutForm() {
             ))}
           </div>
 
-          <div className="p-6 bg-gray-50 dark:bg-darkmode-body border-t border-gray-100 dark:border-darkmode-border space-y-3">
-            <div className="flex justify-between items-center text-gray-500 dark:text-gray-400">
+          <div className="p-6 bg-[#111] border-t border-[#D4AF37]/10 space-y-3">
+            <div className="flex justify-between items-center text-gray-400">
               <span className="text-sm font-medium">Subtotal</span>
               <span className="text-sm font-bold">Bs {total.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between items-center text-2xl font-black text-primary pt-2">
+            <div className="flex justify-between items-center text-2xl font-black text-[#D4AF37] pt-2">
               <span>Total</span>
               <span>Bs {total.toFixed(2)}</span>
             </div>
@@ -246,20 +250,20 @@ export default function CheckoutForm() {
       </div>
 
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="w-full lg:w-7/12 order-2 flex flex-col space-y-6">
-        <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-xl border-2 border-gray-100/80 dark:border-darkmode-border/30 p-5 md:p-8">
-          <div className="text-center mb-8 border-b-2 border-primary/10 pb-6">
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white flex items-center justify-center gap-3">
-              <FaCheckCircle className="text-primary" />
+      <form onSubmit={handleSubmit} className="w-full lg:w-7/12 order-2 lg:order-1 flex flex-col space-y-6">
+        <div className="bg-[#1a1a1a] rounded-2xl shadow-xl border border-[#D4AF37]/20 p-5 md:p-8">
+          <div className="text-center mb-8 border-b border-[#D4AF37]/10 pb-6">
+            <h3 className="text-2xl font-black text-white flex items-center justify-center gap-3">
+              <FaCheckCircle className="text-[#D4AF37]" />
               Datos de Envío
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Complete sus datos para procesar su orden de compra</p>
+            <p className="text-gray-400 mt-2 text-sm">Complete sus datos para procesar su orden mayorista</p>
           </div>
 
           <div className="flex flex-col space-y-6">
             <div className="w-full">
-              <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                <FaUser className="text-primary text-xs" />
+              <label className="text-xs font-black text-[#D4AF37] mb-2 flex items-center gap-2 uppercase tracking-widest">
+                <FaUser className="text-[#D4AF37] text-[10px]" />
                 NOMBRE COMPLETO
               </label>
               <input
@@ -269,7 +273,7 @@ export default function CheckoutForm() {
                 placeholder="EJ: JUAN PEREZ"
                 value={formData.nombre}
                 onChange={handleChange}
-                className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white placeholder-gray-400 font-medium"
+                className="w-full px-4 py-3 border border-[#D4AF37]/20 rounded-xl focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition-all bg-[#0c0c0c] text-sm text-white placeholder-gray-600 font-medium"
               />
               {formErrors.nombre && (
                 <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -281,8 +285,8 @@ export default function CheckoutForm() {
 
             <div className="flex flex-col gap-6">
               <div>
-                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <FaIdCard className="text-primary text-xs" />
+                <label className="text-xs font-black text-[#D4AF37] mb-2 flex items-center gap-2 uppercase tracking-widest">
+                  <FaIdCard className="text-[#D4AF37] text-[10px]" />
                   NRO. CARNET (C.I.)
                 </label>
                 <input
@@ -292,7 +296,7 @@ export default function CheckoutForm() {
                   placeholder="EJ: 1234567 LP"
                   value={formData.ci}
                   onChange={handleChange}
-                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white font-medium"
+                  className="w-full px-4 py-3 border border-[#D4AF37]/20 rounded-xl focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition-all bg-[#0c0c0c] text-sm text-white font-medium"
                 />
                 {formErrors.ci && (
                   <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -303,8 +307,8 @@ export default function CheckoutForm() {
               </div>
 
               <div>
-                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <FaPhone className="text-primary text-xs" />
+                <label className="text-xs font-black text-[#D4AF37] mb-2 flex items-center gap-2 uppercase tracking-widest">
+                  <FaPhone className="text-[#D4AF37] text-[10px]" />
                   CELULAR / WHATSAPP
                 </label>
                 <input
@@ -321,7 +325,7 @@ export default function CheckoutForm() {
                     }
                     setFormData((prev) => ({ ...prev, celular: value }));
                   }}
-                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white font-medium"
+                  className="w-full px-4 py-3 border border-[#D4AF37]/20 rounded-xl focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition-all bg-[#0c0c0c] text-sm text-white font-medium"
                 />
                 {formErrors.celular && (
                   <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
@@ -334,8 +338,8 @@ export default function CheckoutForm() {
 
             <div className="flex flex-col gap-6">
               <div>
-                <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-primary text-xs" />
+                <label className="text-xs font-black text-[#D4AF37] mb-2 flex items-center gap-2 uppercase tracking-widest">
+                  <FaMapMarkerAlt className="text-[#D4AF37] text-[10px]" />
                   DEPARTAMENTO
                 </label>
                 <select
@@ -343,7 +347,7 @@ export default function CheckoutForm() {
                   name="departamento"
                   value={formData.departamento}
                   onChange={handleChange}
-                  className="w-full px-4 py-4 md:py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all bg-white dark:bg-darkmode-body text-base md:text-sm text-gray-900 dark:text-white appearance-none cursor-pointer font-medium"
+                  className="w-full px-4 py-3 border border-[#D4AF37]/20 rounded-xl focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition-all bg-[#0c0c0c] text-sm text-white appearance-none cursor-pointer font-medium"
                 >
                   <option value="">Seleccione...</option>
                   {Object.keys(departamentos).map((dep) => (
@@ -362,8 +366,8 @@ export default function CheckoutForm() {
 
               {formData.departamento && (
                 <div className="flex-1 w-full">
-                  <label className="text-base md:text-sm font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <FaCity className="text-primary text-xs" />
+                  <label className="text-xs font-black text-[#D4AF37] mb-2 flex items-center gap-2 uppercase tracking-widest">
+                    <FaCity className="text-[#D4AF37] text-[10px]" />
                     PROVINCIA / CIUDAD
                   </label>
                   <div className="flex flex-wrap gap-3">
@@ -374,9 +378,9 @@ export default function CheckoutForm() {
                         onClick={() =>
                           setFormData({ ...formData, provincia: prov })
                         }
-                        className={`flex-1 min-w-[140px] px-4 py-4 border-2 rounded-xl text-xs md:text-[11px] font-black transition-all transform hover:scale-[1.03] active:scale-95 flex items-center justify-center text-center leading-tight ${formData.provincia === prov
-                          ? "bg-linear-to-r from-primary to-[#F20505] text-white border-transparent shadow-lg"
-                          : "bg-white dark:bg-darkmode-body border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary/50"
+                        className={`flex-1 min-w-[140px] px-4 py-3 border rounded-xl text-[10px] font-black transition-all transform hover:scale-[1.03] active:scale-95 flex items-center justify-center text-center leading-tight ${formData.provincia === prov
+                          ? "bg-linear-to-r from-[#C5A021] to-[#D4AF37] text-black border-transparent shadow-lg"
+                          : "bg-[#0c0c0c] border-[#D4AF37]/20 text-gray-400 hover:border-[#D4AF37]/50"
                           }`}
                       >
                         {prov.toUpperCase()}
@@ -397,9 +401,9 @@ export default function CheckoutForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-linear-to-r from-primary to-[#FF0040] text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all transform flex items-center justify-center gap-3 uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-linear-to-r from-[#C5A021] to-[#D4AF37] text-black py-4 rounded-xl font-black text-lg shadow-xl shadow-[#D4AF37]/20 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all transform flex items-center justify-center gap-3 uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Procesando Pedido..." : "Confirmar y Finalizar Pedido"}
+                {isSubmitting ? "Procesando Pedido VIP..." : "Confirmar Mi Pedido Mayorista"}
               </button>
               <p className="text-[10px] text-center text-gray-400 mt-4 px-4">
                 Al confirmar, nuestro encargado verificará la disponibilidad física de los productos y se contactará con usted.

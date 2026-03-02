@@ -11,7 +11,11 @@ export default function ProductSearch() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isWholesaleMode = typeof window !== 'undefined' && window.location.pathname.startsWith('/mayorista');
+  const [isWholesaleMode, setIsWholesaleMode] = useState(false);
+
+  useEffect(() => {
+    setIsWholesaleMode(window.location.pathname.startsWith('/mayorista'));
+  }, []);
 
   // Handle View Transitions - reinitialize on page change
   useEffect(() => {
@@ -151,7 +155,7 @@ export default function ProductSearch() {
                     <span className={`text-sm font-bold ${isWholesaleMode ? 'text-[#D4AF37]' : 'text-primary'}`}>
                       {price > 0
                         ? `Bs ${price.toLocaleString("es-BO", { minimumFractionDigits: 2 })}`
-                        : "Consultar"}
+                        : isWholesaleMode ? "Precio pendiente" : "Consultar"}
                     </span>
                   </a>
                 </li>

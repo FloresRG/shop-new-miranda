@@ -138,10 +138,10 @@ const WholesaleShopContainer = () => {
                         <div className="mb-8 space-y-4">
                             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-[#C5A021] dark:bg-[#D4AF37] p-2 rounded-lg text-black">
-                                        <FaCrown size={20} />
+                                    <div className="bg-[#C5A021] dark:bg-[#D4AF37] p-1.5 sm:p-2 rounded-lg text-black shrink-0">
+                                        <FaCrown size={16} className="sm:w-[20px] sm:h-[20px]" />
                                     </div>
-                                    <h1 className="h3 font-black text-dark dark:text-white">
+                                    <h1 className="text-xl sm:text-2xl md:h3 font-black text-dark dark:text-white leading-tight">
                                         Catálogo de Distribución
                                     </h1>
                                 </div>
