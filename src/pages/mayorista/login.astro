@@ -71,7 +71,13 @@ const description =
   </head>
   <body class="overflow-x-hidden antialiased transition-colors duration-300">
     <TwSizeIndicator />
-    <Toaster client:load />
+    <Toaster
+      client:load
+      position="top-center"
+      containerStyle={{
+        top: "100px",
+      }}
+    />
 
     <main
       id="main-content"

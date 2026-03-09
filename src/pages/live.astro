@@ -6,7 +6,6 @@ import ContactForm from "@/components/shop/ContactForm";
 
 const contactIndex = await getListPage("contact", "-index");
 const { title, description, meta_title, image } = contactIndex.data;
-import { Toaster } from "react-hot-toast";
 
 if (contactIndex.data.draft) {
   return Astro.redirect("/404");
@@ -51,7 +50,6 @@ if (contactIndex.data.draft) {
             </a>
           </div>
 
-          <Toaster client:only="react" />
           <ContactForm client:load />
         </div>
       </div>

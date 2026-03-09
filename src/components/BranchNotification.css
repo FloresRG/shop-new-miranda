@@ -1,0 +1,265 @@
+/* Animación de entrada de arriba hacia abajo (estilo shadcn sonner top-right) */
+@keyframes sonnerSlideInTop {
+  from {
+    transform: translateY(-80%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animación de salida */
+@keyframes sonnerSlideOutTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* Clase para el toast root nativo */
+.branch-notification-toast-sonner-custom {
+  position: fixed;
+  top: 100px;
+  /* Igual que el Toaster para no solapar si hay otros */
+  right: 16px;
+  z-index: 9999;
+  animation: sonnerSlideInTop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.branch-notification-toast-sonner-custom.exit {
+  animation: sonnerSlideOutTop 0.4s ease-in forwards;
+}
+
+/* Contenedor principal estilo Sonner */
+.branch-notification-sonner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 356px;
+  max-width: 100%;
+  padding: 16px;
+  background-color: var(--color-body);
+  color: var(--color-text-dark);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-secondary), sans-serif;
+}
+
+/* Tema oscuro */
+.dark .branch-notification-sonner,
+[data-theme="dark"] .branch-notification-sonner {
+  background-color: var(--color-darkmode-body);
+  color: var(--color-darkmode-text-dark);
+  border-color: var(--color-darkmode-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Icono */
+.sonner-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Cuerpo del contenido */
+.sonner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.sonner-title {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.sonner-description {
+  font-size: 13px;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.dark .sonner-description,
+[data-theme="dark"] .sonner-description {
+  color: var(--color-darkmode-text);
+}
+
+/* Acciones */
+.sonner-actions {
+  display: flex;
+  margin-top: 6px;
+}
+
+.sonner-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-text-dark);
+  color: var(--color-body) !important;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.dark .sonner-button-primary,
+[data-theme="dark"] .sonner-button-primary {
+  background-color: var(--color-darkmode-text-dark);
+  color: var(--color-darkmode-body) !important;
+}
+
+.sonner-button-primary:hover {
+  opacity: 0.9;
+}
+
+/* Botón de cerrar */
+.sonner-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 8px;
+  /* Mayor área de click */
+  margin-left: auto;
+  margin-top: -4px;
+  margin-right: -6px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+  z-index: 10;
+  /* Aseguramos que esté por encima de todo */
+}
+
+.sonner-close svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+  /* Lo hacemos más visible */
+}
+
+.dark .sonner-close,
+[data-theme="dark"] .sonner-close {
+  color: var(--color-darkmode-text-light);
+}
+
+.sonner-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-dark);
+}
+
+.dark .sonner-close:hover,
+[data-theme="dark"] .sonner-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-darkmode-text-dark);
+}
+
+/* Barra de progreso sutil */
+@keyframes sonnerProgress {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
+.sonner-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background-color: var(--color-primary);
+  opacity: 0.6;
+  animation: sonnerProgress 10s linear forwards;
+}
+
+.dark .sonner-progress,
+[data-theme="dark"] .sonner-progress {
+  background-color: var(--color-darkmode-primary);
+}
+
+/* Responsive - Móviles */
+@media (max-width: 768px) {
+  .branch-notification-toast-sonner-custom {
+    position: fixed;
+    top: 2px;
+    right: 2px;
+    left: auto;
+    margin: 0;
+    width: calc(100vw - 4px);
+    max-width: calc(100vw - 4px);
+    z-index: 9999;
+    animation: sonnerSlideInTop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .branch-notification-sonner {
+    width: 100%;
+    padding: 8px 10px;
+    gap: 8px;
+    flex-shrink: 0;
+    border-radius: 6px;
+  }
+
+  .sonner-icon-wrapper {
+    font-size: 16px;
+    min-width: 18px;
+    margin-top: 1px;
+  }
+
+  .sonner-body {
+    gap: 4px;
+  }
+
+  .sonner-title {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .sonner-description {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .sonner-actions {
+    margin-top: 4px;
+  }
+
+  .sonner-button-primary {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .sonner-close {
+    padding: 4px;
+    margin-right: -4px;
+    margin-top: -2px;
+  }
+
+  .sonner-close svg {
+    width: 12px;
+    height: 12px;
+  }
+}

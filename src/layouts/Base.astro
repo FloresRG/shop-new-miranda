@@ -17,6 +17,7 @@ import SearchModal from "./helpers/SearchModal";
 import WhatsAppButton from "@/components/WhatsAppButton.astro";
 import { Toaster } from "react-hot-toast";
 import CartModal from "../components/shop/CartModal";
+import BranchNotification from "../components/BranchNotification";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -211,6 +212,7 @@ const {
         top: "100px",
       }}
     />
+    <BranchNotification client:load />
     <SearchModal client:load />
     <CartModal client:load />
     <main id="main-content">

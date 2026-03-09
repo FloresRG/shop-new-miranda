@@ -11,6 +11,8 @@ import {
 import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
 import LinkTree from "../components/LinkTree";
+import BranchNotification from "../components/BranchNotification";
+import { Toaster } from "react-hot-toast";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -187,6 +189,14 @@ const image = "/images/logo.png";
       )
     }
 
+    <Toaster
+      client:load
+      position="top-center"
+      containerStyle={{
+        top: "100px",
+      }}
+    />
+    <BranchNotification client:load />
     <TwSizeIndicator />
 
     <!-- Main content without Header and Footer -->
