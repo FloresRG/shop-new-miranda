@@ -86,7 +86,7 @@ const BranchNotification = () => {
         <div className="sonner-body">
           <div className="sonner-title">Sucursal en La Paz únicamente</div>
           <div className="sonner-description">
-            El <strong>70621016</strong> está bloqueado. Para pedidos y envíos a toda Bolivia comunícate al nuevo número.
+            El <strong>70621016</strong> no esta disponible. Para pedidos y envíos a toda Bolivia comunícate al nuevo número.
           </div>
           <div className="sonner-actions">
             <a
