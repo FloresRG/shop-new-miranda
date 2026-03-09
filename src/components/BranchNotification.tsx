@@ -13,7 +13,7 @@ const BranchNotification = () => {
     hasCheckedRef.current = true;
 
     const lastTimeKey = 'branch-notification-last-time';
-    const TEN_MINUTES = 10 * 60 * 1000;
+    const TEN_MINUTES = 5 * 60 * 1000;
 
     const shouldShowNotification = () => {
       const lastTime = localStorage.getItem(lastTimeKey);
