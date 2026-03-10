@@ -42,6 +42,8 @@ interface CuadernoData {
 interface ImagenesData {
   producto: string[];
   comprobante: string[];
+  guia: string[];
+  guia_base64?: string[]; // ← Añadido para descarga directa
 }
 
 interface PedidoData {
@@ -207,10 +209,53 @@ const PedidoView: React.FC = () => {
     setManualCelular("");
   };
 
+  const downloadImage = async (
+    data: string,
+    fileName: string,
+    isBase64: boolean = false,
+  ) => {
+    try {
+      let downloadUrl = data;
+
+      if (isBase64) {
+        // Lógica similar al PDF: procesar Base64 directamente
+        const byteString = atob(data);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const uint8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+          uint8Array[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([uint8Array], { type: "image/png" });
+        downloadUrl = URL.createObjectURL(blob);
+      } else {
+        // Intento de fetch convencional
+        const response = await fetch(data);
+        const blob = await response.blob();
+        downloadUrl = URL.createObjectURL(blob);
+      }
+
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      // Fallback: abrir en nueva pestaña
+      const fallbackUrl = data.startsWith("http")
+        ? data
+        : `http://127.0.0.1:8000/storage/${data}`;
+      window.open(fallbackUrl, "_blank");
+    }
+  };
+
   const renderMainContent = () => {
     if (error && viewMode === "result") {
       return (
-        <div className="text-center animate-fade-in-up pt-8">
+        <div className="text-center animate-fade-in-up pt-2">
           <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-sm inline-block max-w-sm w-full mx-auto">
             <FaTimesCircle
               className="text-5xl mx-auto mb-4"
@@ -247,7 +292,7 @@ const PedidoView: React.FC = () => {
         : "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400";
 
       return (
-        <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
+        <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-2">
           {/* Encabezado de verificación */}
           <div
             className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden"
@@ -409,15 +454,16 @@ const PedidoView: React.FC = () => {
           {pedido.imagenes && (
             <>
               {(pedido.imagenes.producto.length > 0 ||
-                pedido.imagenes.comprobante.length > 0) && (
+                pedido.imagenes.comprobante.length > 0 ||
+                (pedido.imagenes.guia && pedido.imagenes.guia.length > 0)) && (
                 <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
                   <div className="flex items-center gap-3 mb-6">
-                    <FaImage
-                      style={{ color: COLORS.accent }}
+                    <FaTruck
+                      style={{ color: COLORS.primary }}
                       className="text-xl"
                     />
                     <h3 className="font-bold text-gray-800 dark:text-white text-lg">
-                      Imágenes del Pedido
+                      Seguimiento del Envío
                     </h3>
                   </div>
 
@@ -425,7 +471,7 @@ const PedidoView: React.FC = () => {
                     <div className="mb-6">
                       <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                        Productos
+                        Fotos de tus Productos
                       </h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                         {pedido.imagenes.producto.map((img, idx) => (
@@ -449,10 +495,10 @@ const PedidoView: React.FC = () => {
                   )}
 
                   {pedido.imagenes.comprobante.length > 0 && (
-                    <div>
+                    <div className="mb-8">
                       <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                        Comprobantes
+                        Tus Comprobantes
                       </h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                         {pedido.imagenes.comprobante.map((img, idx) => (
@@ -474,6 +520,83 @@ const PedidoView: React.FC = () => {
                       </div>
                     </div>
                   )}
+
+                  {/* Sección de Guía - Ahora debajo de Comprobantes */}
+                  <div className="mt-8 p-6 rounded-3xl bg-gray-50 dark:bg-darkmode-body border-2 border-dashed border-gray-200 dark:border-darkmode-border">
+                    {pedido.imagenes.guia && pedido.imagenes.guia.length > 0 ? (
+                      <div className="text-center flex flex-col items-center">
+                        <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 mb-4">
+                          <FaCheckCircle size={32} />
+                        </div>
+                        <h4 className="text-xl font-black text-gray-800 dark:text-white mb-2">
+                          ¡Felicidades! Tu pedido se envió
+                        </h4>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6 font-medium">
+                          Esta es tu guía de despacho oficial:
+                        </p>
+
+                        <div className="w-full max-w-sm mx-auto space-y-4">
+                          {pedido.imagenes.guia.map((img, idx) => (
+                            <div
+                              key={`guia-cont-${idx}`}
+                              className="flex flex-col items-center gap-3"
+                            >
+                              <a
+                                href={`http://127.0.0.1:8000/storage/${img}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full rounded-2xl overflow-hidden border-2 border-white dark:border-darkmode-light shadow-2xl hover:scale-[1.02] transition-transform duration-300"
+                              >
+                                <img
+                                  src={`http://127.0.0.1:8000/storage/${img}`}
+                                  alt={`Guía de Envío ${idx + 1}`}
+                                  className="w-full h-auto object-cover"
+                                  loading="lazy"
+                                />
+                              </a>
+                              <button
+                                onClick={() => {
+                                  if (
+                                    pedido.imagenes.guia_base64 &&
+                                    pedido.imagenes.guia_base64[idx]
+                                  ) {
+                                    downloadImage(
+                                      pedido.imagenes.guia_base64[idx],
+                                      `guia-envio-${pedido.cuaderno.id}.png`,
+                                      true,
+                                    );
+                                  } else {
+                                    downloadImage(
+                                      `http://127.0.0.1:8000/storage/${img}`,
+                                      `guia-envio-${pedido.cuaderno.id}.png`,
+                                      false,
+                                    );
+                                  }
+                                }}
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#F2275D] text-white font-bold rounded-xl shadow-lg hover:bg-[#D11F4E] transition-all transform active:scale-95 border-none"
+                              >
+                                <FaTruck />
+                                Descargar Guía
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-4">
+                        <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <FaSpinner className="text-amber-600 animate-spin text-2xl" />
+                        </div>
+                        <p className="font-bold text-gray-800 dark:text-white text-lg">
+                          Pronto estará listo para enviar
+                        </p>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          Estamos procesando tu despacho. Vuelve a consultar
+                          pronto.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </>
@@ -517,7 +640,7 @@ const PedidoView: React.FC = () => {
 
     if (viewMode === "selection") {
       return (
-        <div className="max-w-md mx-auto space-y-6 py-8 animate-fade-in">
+        <div className="max-w-md mx-auto space-y-6 py-2 animate-fade-in">
           <div className="text-center mb-10">
             <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-[#F2275D] to-[#451773] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-6">
               <FaBoxOpen className="text-4xl text-white" />
@@ -581,7 +704,7 @@ const PedidoView: React.FC = () => {
 
     if (viewMode === "manual") {
       return (
-        <div className="max-w-md mx-auto animate-fade-in pt-4">
+        <div className="max-w-md mx-auto animate-fade-in pt-2">
           <div className="bg-white dark:bg-darkmode-light p-8 rounded-[2.5rem] shadow-2xl border border-gray-50 dark:border-darkmode-border relative overflow-hidden">
             {/* Fondo decorativo */}
             <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-gradient-to-br from-[#F2275D]/10 to-[#451773]/10 rounded-full blur-2xl"></div>
@@ -611,11 +734,11 @@ const PedidoView: React.FC = () => {
             >
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
-                  ID del Pedido
+                  Numero de tu Pedido
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej. 12345"
+                  placeholder="Ingresa tu número de pedido"
                   value={manualId}
                   onChange={(e) => setManualId(e.target.value)}
                   className="w-full px-5 py-4 bg-gray-50 dark:bg-darkmode-body border-2 border-transparent focus:border-[#F2275D] dark:focus:border-[#F2275D] rounded-2xl outline-none transition-all font-semibold text-gray-800 dark:text-white"
@@ -643,7 +766,7 @@ const PedidoView: React.FC = () => {
                 </label>
                 <input
                   type="tel"
-                  placeholder="Ej. 78945612"
+                  placeholder="Ingresa tu número de celular"
                   value={manualCelular}
                   onChange={(e) => setManualCelular(e.target.value)}
                   className="w-full px-5 py-4 bg-gray-50 dark:bg-darkmode-body border-2 border-transparent focus:border-[#F2275D] dark:focus:border-[#F2275D] rounded-2xl outline-none transition-all font-semibold text-gray-800 dark:text-white"
@@ -688,7 +811,7 @@ const PedidoView: React.FC = () => {
     }
 
     return (
-      <div className="max-w-md mx-auto space-y-6 py-8 animate-fade-in">
+      <div className="max-w-md mx-auto space-y-6 py-2 animate-fade-in">
         <div className="text-center mb-8">
           <button
             onClick={() => setViewMode("selection")}
