@@ -41,6 +41,7 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [contactId, setContactId] = useState<string | null>(null);
+  const [pdfData, setPdfData] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -207,6 +208,9 @@ export default function ContactForm() {
       // El PDF se sigue descargando si está presente
       const pdfBase64 = response.data.pdf_base64;
       if (pdfBase64) {
+        // Guardar el PDF en el estado para poder descargarlo manualmente
+        setPdfData(pdfBase64);
+
         try {
           const byteString = atob(pdfBase64);
           const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -248,6 +252,31 @@ export default function ContactForm() {
         error?.response?.data?.message ||
           "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (!pdfData || !contactId) return;
+
+    try {
+      const byteString = atob(pdfData);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([uint8Array], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `pedido_${contactId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error al descargar el PDF:", err);
+      toast.error("No se pudo descargar el PDF.");
     }
   };
 
@@ -856,8 +885,8 @@ export default function ContactForm() {
               ¡Pedido Enviado!
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Su pedido{" "}
-              <span className="font-bold text-primary">#{contactId}</span> ha
+              Su pedido numero {" "}
+              <span className="font-bold text-primary">{contactId}</span> ha
               sido registrado.
             </p>
 
@@ -881,7 +910,7 @@ export default function ContactForm() {
                 <span className="text-amber-500 text-lg">📸</span>
                 <p className="text-xs text-amber-800 dark:text-amber-200 text-left font-medium">
                   Por favor, saque una captura de pantalla a este mensaje para
-                  tener sus datos a mano.
+                  tener su numero de pedido a mano o descargue el PDF.
                 </p>
               </div>
 
@@ -893,11 +922,33 @@ export default function ContactForm() {
                   Ver ubicación
                 </a>
               )}
+
+              {pdfData && (
+                <button
+                  onClick={handleDownloadPDF}
+                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors text-lg shadow-lg shadow-red-600/20"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Descargar PDF
+                </button>
+              )}
             </div>
 
             <button
               onClick={() => setIsSuccess(false)}
-              className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-primary/20"
+              className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
             >
               Aceptar
             </button>
