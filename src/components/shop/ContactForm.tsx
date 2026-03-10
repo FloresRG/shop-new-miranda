@@ -208,13 +208,11 @@ export default function ContactForm() {
       // El PDF se sigue descargando si está presente
       const pdfBase64 = response.data.pdf_base64;
       if (pdfBase64) {
-        // Limpiar el prefijo si viene como data URI
-        const cleanPdfBase64 = pdfBase64.replace(/^data:[a-zA-Z0-9\/+-]+;base64,/, "");
         // Guardar el PDF en el estado para poder descargarlo manualmente
-        setPdfData(cleanPdfBase64);
+        setPdfData(pdfBase64);
 
         try {
-          const byteString = atob(cleanPdfBase64);
+          const byteString = atob(pdfBase64);
           const arrayBuffer = new ArrayBuffer(byteString.length);
           const uint8Array = new Uint8Array(arrayBuffer);
           for (let i = 0; i < byteString.length; i++) {
@@ -252,7 +250,7 @@ export default function ContactForm() {
       setIsSubmitting(false);
       toast.error(
         error?.response?.data?.message ||
-        "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+          "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
     }
   };
@@ -261,8 +259,7 @@ export default function ContactForm() {
     if (!pdfData || !contactId) return;
 
     try {
-      const cleanPdfData = pdfData.replace(/^data:[a-zA-Z0-9\/+-]+;base64,/, "");
-      const byteString = atob(cleanPdfData);
+      const byteString = atob(pdfData);
       const arrayBuffer = new ArrayBuffer(byteString.length);
       const uint8Array = new Uint8Array(arrayBuffer);
       for (let i = 0; i < byteString.length; i++) {
@@ -511,10 +508,11 @@ export default function ContactForm() {
                     onClick={() =>
                       setFormData({ ...formData, provincia: prov })
                     }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                      formData.provincia === prov
                         ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
                         : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                      }`}
+                    }`}
                   >
                     {prov}
                   </button>
@@ -648,10 +646,11 @@ export default function ContactForm() {
                         type="button"
                         onClick={() => updateQuantity(index, prod.quantity - 1)}
                         disabled={prod.quantity <= 1}
-                        className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full transition-colors ${prod.quantity <= 1
+                        className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full transition-colors ${
+                          prod.quantity <= 1
                             ? "text-gray-400 cursor-not-allowed"
                             : "text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900/30"
-                          }`}
+                        }`}
                       >
                         −
                       </button>
@@ -893,7 +892,7 @@ export default function ContactForm() {
 
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-6 text-sm text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 w-full">
               {selectedLocation.departamento === "La Paz" &&
-                selectedLocation.provincia === "Recojo en tienda" ? (
+              selectedLocation.provincia === "Recojo en tienda" ? (
                 <p className="font-medium">
                   Información: Puede recojer su pedido el dia de hoy o en los
                   proximos 3 dias.
