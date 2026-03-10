@@ -102,14 +102,14 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   subtitle: "Realiza tu pago de forma segura",
                 },
                 {
+                  title: "VERIFICAR TU PEDIDO",
+                  url: "/qr",
+                  subtitle: "Verifica el estado de tu pedido",
+                },
+                {
                   title: "LIQUIDACIONES",
                   url: "/liquidaciones",
                   subtitle: "Ofertazos de locura disponibles ya",
-                },
-                {
-                  title: "TIENDA DE PRODUCTOS",
-                  url: "/tienda?page=1",
-                  subtitle: "Explora nuestro catálogo completo",
                 },
                 {
                   title: "ENVÍOS A TODO EL PAÍS",

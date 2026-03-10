@@ -177,7 +177,7 @@ export default function ContactForm() {
       }
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/shoppedidos",
+        "https://importadoramiranda.com/api/shoppedidos",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -916,7 +916,7 @@ export default function ContactForm() {
 
               {selectedLocation.provincia === "Recojo en tienda" && (
                 <a
-                  href="/about#ubicacion"
+                  href="/about#map-section"
                   className="w-full flex items-center justify-center bg-accent/10 text-accent py-3 rounded-xl font-bold hover:bg-accent hover:text-white transition-colors text-sm border border-accent/20"
                 >
                   Ver ubicación
