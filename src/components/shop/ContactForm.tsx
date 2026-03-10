@@ -55,6 +55,11 @@ export default function ContactForm() {
   const [provincias, setProvincias] = useState<string[]>([]);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
+  const [selectedLocation, setSelectedLocation] = useState({
+    departamento: "",
+    provincia: "",
+  });
+
   const productosFileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -183,6 +188,10 @@ export default function ContactForm() {
         response.data.data?.id?.toString() ||
         "ID no disponible";
       setContactId(pedidoId);
+      setSelectedLocation({
+        departamento: formData.departamento,
+        provincia: formData.provincia,
+      });
       setIsSuccess(true);
       setIsSubmitting(false);
 
@@ -634,7 +643,7 @@ export default function ContactForm() {
                           }
                         }}
                         onBlur={() => {
-                          if (prod.quantity === 0 || prod.quantity === "") {
+                          if (prod.quantity === 0) {
                             updateQuantity(index, 1);
                           }
                         }}
@@ -852,9 +861,9 @@ export default function ContactForm() {
               sido registrado.
             </p>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-6 text-sm text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">
-              {formData.departamento === "La Paz" &&
-              formData.provincia === "Recojo en tienda" ? (
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-6 text-sm text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 w-full">
+              {selectedLocation.departamento === "La Paz" &&
+              selectedLocation.provincia === "Recojo en tienda" ? (
                 <p className="font-medium">
                   Información: Puede recojer su pedido el dia de hoy o en los
                   proximos 3 dias.
@@ -867,51 +876,16 @@ export default function ContactForm() {
               )}
             </div>
 
-            <div className="flex flex-col gap-3 w-full mb-3">
-              <button
-                onClick={async () => {
-                  if (modalRef.current) {
-                    try {
-                      // Fix for oklch: We clone and replace colors in the cloned document
-                      const html2canvas = (await import("html2canvas")).default;
-                      const canvas = await html2canvas(modalRef.current, {
-                        backgroundColor: "#ffffff",
-                        scale: 2,
-                        logging: false,
-                        useCORS: true,
-                        onclone: (clonedDoc) => {
-                          const elements = clonedDoc.querySelectorAll("*");
-                          elements.forEach((el) => {
-                            const style = window.getComputedStyle(el);
-                            // Replace oklch/modern colors with standard ones if detected or just force safe colors
-                            // This is a common workaround for html2canvas color issues
-                            if (el instanceof HTMLElement) {
-                              if (style.backgroundColor.includes("oklch")) {
-                                el.style.backgroundColor = "#ffffff";
-                              }
-                              if (style.color.includes("oklch")) {
-                                el.style.color = "#333333";
-                              }
-                            }
-                          });
-                        },
-                      });
-                      const link = document.createElement("a");
-                      link.download = `comprobante_pedido_${contactId}.png`;
-                      link.href = canvas.toDataURL("image/png");
-                      link.click();
-                    } catch (err) {
-                      console.error("Error al capturar pantalla:", err);
-                      toast.error("No se pudo realizar la captura.");
-                    }
-                  }
-                }}
-                className="w-full flex items-center justify-center bg-gray-100 dark:bg-darkmode-body text-gray-700 dark:text-white py-3 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-darkmode-border transition-colors text-sm"
-              >
-                Sacar captura
-              </button>
+            <div className="flex flex-col gap-3 w-full mb-6">
+              <div className="bg-amber-50 dark:bg-amber-900/10 p-3 rounded-lg border border-amber-100 dark:border-amber-900/20 flex items-start gap-3">
+                <span className="text-amber-500 text-lg">📸</span>
+                <p className="text-xs text-amber-800 dark:text-amber-200 text-left font-medium">
+                  Por favor, saque una captura de pantalla a este mensaje para
+                  tener sus datos a mano.
+                </p>
+              </div>
 
-              {formData.provincia === "Recojo en tienda" && (
+              {selectedLocation.provincia === "Recojo en tienda" && (
                 <a
                   href="/about#ubicacion"
                   className="w-full flex items-center justify-center bg-accent/10 text-accent py-3 rounded-xl font-bold hover:bg-accent hover:text-white transition-colors text-sm border border-accent/20"
