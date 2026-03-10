@@ -8,6 +8,7 @@ import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import { Toaster } from "react-hot-toast";
+import BranchNotification from "../../components/BranchNotification";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -71,7 +72,14 @@ const description =
   </head>
   <body class="overflow-x-hidden antialiased transition-colors duration-300">
     <TwSizeIndicator />
-    <Toaster client:load />
+    <Toaster
+      client:load
+      position="top-center"
+      containerStyle={{
+        top: "100px",
+      }}
+    />
+    <BranchNotification client:load />
 
     <main
       id="main-content"
