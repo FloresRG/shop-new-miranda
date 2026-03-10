@@ -11,7 +11,7 @@ import {
   FaUser,
   FaMapMarkerAlt,
   FaSpinner,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 // Tipos actualizados
 interface ProductoDetalle {
@@ -52,20 +52,23 @@ interface PedidoData {
 
 // Colores Premium
 const COLORS = {
-  primary: '#F2275D',
-  secondary: '#451773',
-  accent: '#17BFBF',
-  danger: '#F20505',
-  success: '#10B981',
+  primary: "#F2275D",
+  secondary: "#451773",
+  accent: "#17BFBF",
+  danger: "#F20505",
+  success: "#10B981",
 };
 
 const PedidoView: React.FC = () => {
   const [pedido, setPedido] = useState<PedidoData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"initial" | "camera" | "result">(
-    "initial",
-  );
+  const [viewMode, setViewMode] = useState<
+    "selection" | "initial" | "camera" | "result" | "manual"
+  >("selection");
+  const [manualId, setManualId] = useState("");
+  const [manualCi, setManualCi] = useState("");
+  const [manualCelular, setManualCelular] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -85,7 +88,7 @@ const PedidoView: React.FC = () => {
     setViewMode("result");
 
     try {
-      const API_BASE = 'https://importadoramiranda.com/api'; // ✅ Sin espacios
+      const API_BASE = "http://127.0.0.1:8000/api"; // ✅ Sin espacios
       const url = `${API_BASE}/qrverificacion?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
 
       const res = await fetch(url);
@@ -93,7 +96,7 @@ const PedidoView: React.FC = () => {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-          "Pedido no encontrado o credenciales incorrectas.",
+            "Pedido no encontrado o credenciales incorrectas.",
         );
       }
 
@@ -125,7 +128,7 @@ const PedidoView: React.FC = () => {
       try {
         const temp = new Html5Qrcode(elementId);
         await temp.clear();
-      } catch (e) { }
+      } catch (e) {}
       alert("No se pudo leer el código QR. Intenta con una imagen más clara.");
       setLoading(false);
     }
@@ -151,7 +154,7 @@ const PedidoView: React.FC = () => {
                 processScannedUrl(decodedText);
               }
             },
-            () => { },
+            () => {},
           );
         } catch (err) {
           console.error("Error starting camera", err);
@@ -168,7 +171,7 @@ const PedidoView: React.FC = () => {
         html5QrcodeScanner
           .stop()
           .then(() => html5QrcodeScanner?.clear())
-          .catch(() => { });
+          .catch(() => {});
       }
     };
   }, [viewMode]);
@@ -198,7 +201,10 @@ const PedidoView: React.FC = () => {
     window.history.pushState({}, "", window.location.pathname);
     setPedido(null);
     setError(null);
-    setViewMode("initial");
+    setViewMode("selection");
+    setManualId("");
+    setManualCi("");
+    setManualCelular("");
   };
 
   const renderMainContent = () => {
@@ -211,7 +217,7 @@ const PedidoView: React.FC = () => {
               style={{ color: COLORS.danger }}
             />
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-              Error de Verificación
+              Registro no encontrado, por favor verifique los datos.
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
             <button
@@ -243,7 +249,10 @@ const PedidoView: React.FC = () => {
       return (
         <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pt-4">
           {/* Encabezado de verificación */}
-          <div className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden" style={{ borderColor: COLORS.success }}>
+          <div
+            className="bg-white dark:bg-darkmode-light rounded-3xl p-6 shadow-xl border-t-8 border-gray-100 dark:border-darkmode-border relative overflow-hidden"
+            style={{ borderColor: COLORS.success }}
+          >
             <div className="absolute top-0 right-0 p-4 opacity-10">
               <FaCheckCircle size={100} color={COLORS.success} />
             </div>
@@ -399,11 +408,17 @@ const PedidoView: React.FC = () => {
           {/* Imágenes */}
           {pedido.imagenes && (
             <>
-              {(pedido.imagenes.producto.length > 0 || pedido.imagenes.comprobante.length > 0) && (
+              {(pedido.imagenes.producto.length > 0 ||
+                pedido.imagenes.comprobante.length > 0) && (
                 <div className="bg-white dark:bg-darkmode-light p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-darkmode-border">
                   <div className="flex items-center gap-3 mb-6">
-                    <FaImage style={{ color: COLORS.accent }} className="text-xl" />
-                    <h3 className="font-bold text-gray-800 dark:text-white text-lg">Imágenes del Pedido</h3>
+                    <FaImage
+                      style={{ color: COLORS.accent }}
+                      className="text-xl"
+                    />
+                    <h3 className="font-bold text-gray-800 dark:text-white text-lg">
+                      Imágenes del Pedido
+                    </h3>
                   </div>
 
                   {pedido.imagenes.producto.length > 0 && (
@@ -416,13 +431,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.producto.map((img, idx) => (
                           <a
                             key={`prod-${idx}`}
-                            href={`https://importadoramiranda.com/storage/${img}`}
+                            href={`http://127.0.0.1:8000/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`https://importadoramiranda.com/storage/${img}`}
+                              src={`http://127.0.0.1:8000/storage/${img}`}
                               alt={`Producto ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -443,13 +458,13 @@ const PedidoView: React.FC = () => {
                         {pedido.imagenes.comprobante.map((img, idx) => (
                           <a
                             key={`comp-${idx}`}
-                            href={`https://importadoramiranda.com/storage/${img}`}
+                            href={`http://127.0.0.1:8000/storage/${img}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-darkmode-border hover:opacity-90 transition"
                           >
                             <img
-                              src={`https://importadoramiranda.com/storage/${img}`}
+                              src={`http://127.0.0.1:8000/storage/${img}`}
                               alt={`Comprobante ${idx + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -500,14 +515,193 @@ const PedidoView: React.FC = () => {
       );
     }
 
+    if (viewMode === "selection") {
+      return (
+        <div className="max-w-md mx-auto space-y-6 py-8 animate-fade-in">
+          <div className="text-center mb-10">
+            <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-[#F2275D] to-[#451773] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-6">
+              <FaBoxOpen className="text-4xl text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
+              Verifica tu Pedido
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400">
+              Selecciona una opción para continuar
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <button
+              onClick={() => setViewMode("initial")}
+              className="group relative overflow-hidden p-6 rounded-3xl bg-white dark:bg-darkmode-light shadow-xl border border-gray-100 dark:border-darkmode-border transition-all hover:-translate-y-2 hover:shadow-2xl text-left"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#17BFBF] to-[#451773] flex items-center justify-center text-white shadow-inner">
+                  <FaCamera size={26} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-800 dark:text-white text-xl">
+                    Verificar por QR
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">
+                    Usa tu cámara o sube una imagen
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setViewMode("manual")}
+              className="group relative overflow-hidden p-6 rounded-3xl bg-white dark:bg-darkmode-light shadow-xl border border-gray-100 dark:border-darkmode-border transition-all hover:-translate-y-2 hover:shadow-2xl text-left"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#F2275D] to-[#451773] flex items-center justify-center text-white shadow-inner">
+                  <FaUser size={26} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-800 dark:text-white text-xl">
+                    Verificar con mis datos
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">
+                    Número de pedido, CI y celular
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-gray-100 dark:border-darkmode-border text-center">
+            <p className="text-sm text-gray-400 dark:text-gray-500">
+              Shop Importadora Miranda &copy; {new Date().getFullYear()}
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (viewMode === "manual") {
+      return (
+        <div className="max-w-md mx-auto animate-fade-in pt-4">
+          <div className="bg-white dark:bg-darkmode-light p-8 rounded-[2.5rem] shadow-2xl border border-gray-50 dark:border-darkmode-border relative overflow-hidden">
+            {/* Fondo decorativo */}
+            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-gradient-to-br from-[#F2275D]/10 to-[#451773]/10 rounded-full blur-2xl"></div>
+
+            <button
+              onClick={() => setViewMode("selection")}
+              className="mb-6 flex items-center text-sm font-bold text-gray-400 hover:text-[#F2275D] transition-colors"
+            >
+              <FaTimesCircle className="mr-2" /> Volver atrás
+            </button>
+
+            <h2 className="text-2xl font-black text-gray-800 dark:text-white mb-6 flex items-center gap-3">
+              <span className="w-2 h-8 bg-gradient-to-b from-[#F2275D] to-[#451773] rounded-full"></span>
+              Datos del Pedido
+            </h2>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (manualId && manualCi && manualCelular) {
+                  fetchPedido(manualId, manualCi, manualCelular);
+                } else {
+                  alert("Por favor, completa todos los campos.");
+                }
+              }}
+              className="space-y-5"
+            >
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                  ID del Pedido
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej. 12345"
+                  value={manualId}
+                  onChange={(e) => setManualId(e.target.value)}
+                  className="w-full px-5 py-4 bg-gray-50 dark:bg-darkmode-body border-2 border-transparent focus:border-[#F2275D] dark:focus:border-[#F2275D] rounded-2xl outline-none transition-all font-semibold text-gray-800 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                  Cédula de Identidad (CI)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Tu número de carnet"
+                  value={manualCi}
+                  onChange={(e) => setManualCi(e.target.value)}
+                  className="w-full px-5 py-4 bg-gray-50 dark:bg-darkmode-body border-2 border-transparent focus:border-[#F2275D] dark:focus:border-[#F2275D] rounded-2xl outline-none transition-all font-semibold text-gray-800 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                  Número de Celular
+                </label>
+                <input
+                  type="tel"
+                  placeholder="Ej. 78945612"
+                  value={manualCelular}
+                  onChange={(e) => setManualCelular(e.target.value)}
+                  className="w-full px-5 py-4 bg-gray-50 dark:bg-darkmode-body border-2 border-transparent focus:border-[#F2275D] dark:focus:border-[#F2275D] rounded-2xl outline-none transition-all font-semibold text-gray-800 dark:text-white"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-5 mt-4 rounded-2xl font-black text-white shadow-xl transform transition hover:-translate-y-1 hover:shadow-2xl active:scale-95"
+                style={{
+                  background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
+                }}
+              >
+                VERIFICAR AHORA
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    if (viewMode === "camera") {
+      return (
+        <div className="max-w-md mx-auto animate-fade-in pt-8">
+          <button
+            onClick={() => setViewMode("initial")}
+            className="mb-6 flex items-center text-sm font-bold text-gray-400 hover:text-[#F2275D] transition-colors"
+          >
+            <FaTimesCircle className="mr-2" /> Cancelar escaneo
+          </button>
+
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+            Escaneando QR
+          </h2>
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black aspect-square mb-6">
+            <div id="reader-camera" className="w-full h-full"></div>
+            <div className="absolute inset-0 border-2 border-white/30 pointer-events-none rounded-3xl"></div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="max-w-md mx-auto space-y-6 py-8 animate-fade-in">
         <div className="text-center mb-8">
+          <button
+            onClick={() => setViewMode("selection")}
+            className="mb-6 flex items-center text-sm font-bold text-gray-400 hover:text-[#F2275D] transition-colors mx-auto"
+          >
+            <FaTimesCircle className="mr-2" /> Volver al menú principal
+          </button>
+
           <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-[#F2275D] to-[#451773] rounded-3xl flex items-center justify-center shadow-lg transform rotate-3 mb-4">
-            <FaTruck className="text-4xl text-white" />
+            <FaCamera className="text-4xl text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-            Verificar Pedido
+            Verificar por QR
           </h2>
           <p className="text-gray-500 dark:text-gray-400">
             Escanea el código QR de tu comprobante digital
