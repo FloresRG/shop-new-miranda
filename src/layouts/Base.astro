@@ -221,6 +221,13 @@ const {
     <WhatsAppButton />
     <Footer />
     <script is:inline>
+      window.chatwootSettings = {
+        hideMessageBubble: false,
+        position: 'right', // Puede ser 'left' o 'right'
+        locale: 'es', // Idioma en español
+        type: 'standard', // 'standard' o 'expanded_bubble'
+        darkMode: 'auto', // Permite que el chat se adapte al modo oscuro / claro
+      };
       (function(d,t) {
         var BASE_URL="http://localhost:3000";
         var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
@@ -229,7 +236,7 @@ const {
         s.parentNode.insertBefore(g,s);
         g.onload=function(){
           window.chatwootSDK.run({
-            websiteToken: 'E2pZdsgbjqE94K22efJ2YhT7',  // ← 🔑 TU TOKEN ÚNICO
+            websiteToken: 'E2pZdsgbjqE94K22efJ2YhT7',
             baseUrl: BASE_URL
           })
         }
