@@ -97,6 +97,17 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
             <div className="w-full max-w-lg space-y-4" ref={linksContainerRef}>
               {[
                 {
+                  title: "CHATEA CON NOSOTROS",
+                  url: "#",
+                  subtitle: "Si ingresa podremos hablar directamente con el equipo de pedidos.",
+                  onClick: (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if ((window as any).$chatwoot) {
+                      (window as any).$chatwoot.toggle();
+                    }
+                  }
+                },
+                {
                   title: "PAGO CON QR (LIVE)",
                   url: "/liveqr",
                   subtitle: "Realiza tu pago de forma segura",
@@ -105,11 +116,6 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   title: "VERIFICAR TU PEDIDO",
                   url: "/qr",
                   subtitle: "Verifica el estado de tu pedido",
-                },
-                {
-                  title: "LIQUIDACIONES",
-                  url: "/liquidaciones",
-                  subtitle: "Ofertazos de locura disponibles ya",
                 },
                 {
                   title: "ENVÍOS A TODO EL PAÍS",
@@ -125,6 +131,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                 <a
                   key={link.title}
                   href={link.url}
+                  onClick={link.onClick}
                   className="hero-link-item group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden opacity-0"
                 >
                   <div className="flex justify-between items-center relative z-10">
