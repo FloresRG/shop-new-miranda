@@ -229,14 +229,14 @@ const {
         darkMode: 'auto', // Permite que el chat se adapte al modo oscuro / claro
       };
       (function(d,t) {
-        var BASE_URL="http://localhost:3000";
+        var BASE_URL="https://chat.importadoramiranda.com";
         var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
         g.src=BASE_URL+"/packs/js/sdk.js";
         g.async = true;
         s.parentNode.insertBefore(g,s);
         g.onload=function(){
           window.chatwootSDK.run({
-            websiteToken: 'E2pZdsgbjqE94K22efJ2YhT7',
+            websiteToken: 'hTeAyL52RgrNP1uRzip9r3RT',
             baseUrl: BASE_URL
           })
         }
