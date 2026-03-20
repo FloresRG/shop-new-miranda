@@ -297,33 +297,31 @@ export default function ExpressForm() {
   if (isAgreedModalOpen) {
     return (
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-        <div className="relative max-w-lg w-full bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-5 sm:p-8 border-2 border-amber-200 dark:border-amber-900/50 max-h-[90vh] overflow-y-auto transition-colors duration-500">
+        <div className="relative max-w-lg w-full bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-5 sm:p-8 border-2 border-primary/20 dark:border-primary/30 max-h-[90vh] overflow-y-auto transition-colors duration-500">
           
           <div className="text-center mb-5">
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/40">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary to-[#FF0040] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/40">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
             
-            <h2 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600 mb-2 uppercase tracking-tighter">
-              ¡INFORMACIÓN IMPORTANTE!
+            <h2 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#FF0040] mb-2 uppercase tracking-tighter">
+              ¡AVISO IMPORTANTE!
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-sm font-semibold italic">
               Por favor lee con atención antes de continuar con tu envío express
             </p>
           </div>
 
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 rounded-xl p-4 sm:p-5 mb-6 border border-amber-200 dark:border-amber-800">
-           
-            
+          <div className="bg-gradient-to-r from-primary/5 to-red-500/5 dark:from-primary/10 dark:to-red-900/10 rounded-xl p-4 sm:p-5 mb-6 border border-primary/10 dark:border-primary/20">
             <div className="space-y-4 text-gray-800 dark:text-gray-100 font-medium text-sm sm:text-base leading-relaxed text-justify">
               <p className="flex items-start gap-2">
-                <span className="text-amber-600 flex-shrink-0 mt-1">●</span>
+                <span className="text-primary flex-shrink-0 mt-1">●</span>
                 <span>Al elegir pedido Express, tu pedido se reserva y <strong className="underline decoration-red-500 decoration-2 text-red-600">DEBE SER RECOGIDO HOY MISMO</strong> en horario de tienda.</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-amber-600 flex-shrink-0 mt-1">●</span>
+                <span className="text-primary flex-shrink-0 mt-1">●</span>
                 <span>En caso de no recoger tu pedido el día de hoy, se generará un cargo de <strong className="text-red-500 font-bold underline">10 Bs por cada día adicional</strong> de almacenaje.</span>
               </p>
               <p className="flex items-start gap-2 text-red-700 dark:text-orange-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900/30">
@@ -334,7 +332,7 @@ export default function ExpressForm() {
           </div>
           
           <div className="space-y-5">
-            <label className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-darkmode-body border-2 border-transparent hover:border-amber-400 transition-all cursor-pointer group shadow-sm">
+            <label className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-darkmode-body border-2 border-transparent hover:border-primary transition-all cursor-pointer group shadow-sm">
               <div className="relative flex items-center justify-center">
                 <input
                   type="checkbox"
@@ -342,14 +340,14 @@ export default function ExpressForm() {
                   checked={isAgreed}
                   onChange={(e) => setIsAgreed(e.target.checked)}
                 />
-                <div className="w-7 h-7 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 peer-checked:bg-amber-500 peer-checked:border-amber-500 transition-all flex items-center justify-center shadow-inner">
+                <div className="w-7 h-7 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center shadow-inner">
                   <svg className="w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-all transform scale-50 peer-checked:scale-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
               </div>
-              <span className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 group-hover:text-amber-700 transition-colors select-none">
-                Confirmo que he leído y acepto íntegramente las condiciones de Miranda Express.
+              <span className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors select-none">
+                Confirmo que he leído y acepto las condiciones de Miranda Express.
               </span>
             </label>
 
@@ -358,7 +356,7 @@ export default function ExpressForm() {
                 if (isAgreed) setIsAgreedModalOpen(false);
               }}
               disabled={!isAgreed}
-              className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white py-4 px-6 rounded-xl font-black text-lg shadow-xl shadow-amber-500/30 active:scale-95 disabled:opacity-30 disabled:active:scale-100 flex items-center justify-center gap-2 uppercase tracking-wider transition-all"
+              className="w-full bg-linear-to-r from-primary to-[#FF0040] text-white py-4 px-6 rounded-xl font-black text-lg shadow-xl shadow-primary/30 active:scale-95 disabled:opacity-30 disabled:active:scale-100 flex items-center justify-center gap-2 uppercase tracking-wider transition-all"
             >
               Confirmar y Continuar
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
