@@ -52,6 +52,9 @@ export default function ExpressForm() {
     celular: "",
     departamento: "La Paz",
     provincia: "Recojo en tienda",
+    horaRecojo: "",
+    estado: "express",
+    tipo: "express",
   });
 
   const [productos, setProductos] = useState<Product[]>([]);
@@ -124,6 +127,8 @@ export default function ExpressForm() {
       errors.celular = "El número debe tener 8 dígitos.";
     else if (!/^[67]/.test(formData.celular))
       errors.celular = "El número debe comenzar con 6 o 7.";
+    if (!formData.horaRecojo.trim())
+      errors.horaRecojo = "Por favor, ingrese la hora estimada de recojo.";
     if (!formData.departamento.trim())
       errors.departamento = "Por favor, seleccione un departamento.";
     if (!formData.provincia.trim())
@@ -167,7 +172,9 @@ export default function ExpressForm() {
       apiFormData.append("celular", formData.celular);
       apiFormData.append("departamento", formData.departamento);
       apiFormData.append("provincia", formData.provincia);
-      apiFormData.append("estado", "express");
+      apiFormData.append("estado", formData.estado);
+      apiFormData.append("tipo", formData.tipo);
+      apiFormData.append("detalle", formData.horaRecojo);
 
       productos.forEach((prod) => {
         apiFormData.append("imagenes[]", prod.file);
@@ -181,7 +188,7 @@ export default function ExpressForm() {
       }
 
       const response = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        "http://127.0.0.1:8000/api/shoppedidos",
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -244,6 +251,9 @@ export default function ExpressForm() {
         celular: "",
         departamento: "La Paz",
         provincia: "Recojo en tienda",
+        horaRecojo: "",
+        estado: "express",
+        tipo: "express",
       });
       setProductos([]);
       setComprobanteFile(null);
@@ -487,7 +497,7 @@ export default function ExpressForm() {
           </div>
         </div>
 
-        {/* Departamento y Provincia */}
+        {/* Departamento y Provincia (Bloqueados) */}
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -504,89 +514,72 @@ export default function ExpressForm() {
               </svg>
               Departamento
             </label>
-            <select
-              required
-              name="departamento"
-              value={formData.departamento}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white"
-            >
-              <option value="">Seleccione un departamento</option>
-              {Object.keys(departamentos).map((dep) => (
-                <option key={dep} value={dep}>
-                  {dep}
-                </option>
-              ))}
-            </select>
-            {formErrors.departamento && (
-              <p className="text-red-500 text-sm flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {formErrors.departamento}
-              </p>
-            )}
+            <div className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl bg-gray-100/50 dark:bg-darkmode-body/50 text-gray-500 dark:text-gray-400 font-medium flex items-center justify-between cursor-not-allowed">
+              <span>{formData.departamento}</span>
+              <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              </svg>
+            </div>
           </div>
 
-          {formData.departamento && (
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-primary"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Provincia o Ciudad
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {provincias.map((prov) => (
-                  <button
-                    key={prov}
-                    type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, provincia: prov })
-                    }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                      formData.provincia === prov
-                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                    }`}
-                  >
-                    {prov}
-                  </button>
-                ))}
-              </div>
-              {formErrors.provincia && (
-                <p className="text-red-500 text-sm flex items-center gap-1">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {formErrors.provincia}
-                </p>
-              )}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-primary"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Provincia o Ciudad
+            </label>
+            <div className="w-full px-4 py-3 border-2 border-primary/20 rounded-xl bg-primary/5 text-primary font-bold flex items-center justify-between cursor-not-allowed shadow-sm shadow-primary/5">
+              <span>{formData.provincia}</span>
+              <span className="text-[10px] uppercase bg-primary text-white px-2 py-0.5 rounded-full">Fijo</span>
             </div>
+          </div>
+        </div>
+
+        {/* Hora estimada de recojo */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg
+              className="w-4 h-4 text-primary"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Hora estimada de recojo
+          </label>
+          <input
+            required
+            type="text"
+            name="horaRecojo"
+            value={formData.horaRecojo}
+            onChange={(e) => setFormData({ ...formData, horaRecojo: e.target.value })}
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            placeholder="Ej: 15:30 o Entre las 4 y 5 PM"
+          />
+          {formErrors.horaRecojo && (
+            <p className="text-red-500 text-sm flex items-center gap-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {formErrors.horaRecojo}
+            </p>
           )}
         </div>
 
