@@ -340,8 +340,18 @@ export default function ExpressForm() {
                   checked={isAgreed}
                   onChange={(e) => setIsAgreed(e.target.checked)}
                 />
-                <div className="w-7 h-7 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center shadow-inner">
-                  <svg className="w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-all transform scale-50 peer-checked:scale-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                <div className="w-8 h-8 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 peer-checked:bg-primary/10 peer-checked:border-primary transition-all flex items-center justify-center relative shadow-inner overflow-visible">
+                  {/* El círculo que se llena (opcional para estilo similar) */}
+                  <div className="absolute inset-0.5 rounded-full bg-primary transform scale-0 peer-checked:scale-100 transition-transform duration-300"></div>
+                  {/* El Check Prominente */}
+                  <svg 
+                    className="w-5 h-5 text-gray-400 peer-checked:text-white transition-all transform scale-110 relative z-10" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor" 
+                    strokeWidth="4"
+                    style={{ strokeDasharray: 50, strokeDashoffset: isAgreed ? 0 : 50 }}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
