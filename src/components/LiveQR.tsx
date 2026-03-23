@@ -241,6 +241,11 @@ export default function LiveQR() {
                   </p>
                 </li>
               </ol>
+              <div className="mt-4 pt-4 border-t border-purple-200 dark:border-purple-800/50">
+                <span className="block text-center text-sm sm:text-base font-bold text-red-600 dark:text-red-400 animate-pulse">
+                  ⚠️ No pague ningún producto sin la confirmación de stock del encargado de pedido
+                </span>
+              </div>
             </div>
 
             <button
