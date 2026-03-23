@@ -36,7 +36,10 @@ export default function LiveQR() {
   };
 
   const handlePaymentDone = () => {
-    window.location.href = "/live";
+    // Obtener la ruta de origen desde los parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const from = urlParams.get('from') || '/live';
+    window.location.href = from;
   };
 
   const handleDownloadQR = async () => {
