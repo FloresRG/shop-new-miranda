@@ -16,31 +16,31 @@
     "sticky_header": true,
     "theme_switcher": true,
     "default_theme": "system",
-    "pagination": 2,
+    "pagination": 6,
     "summary_length": 200,
     "blog_folder": "blog"
   },
   "params": {
     "contact_form_action": "#",
-    "copyright": "© 2026 Importadora Miranda. Todos los derechos reservados."
+    "copyright": "© 2026 Importadora Miranda - La Paz, Bolivia. Todos los derechos reservados."
   },
   "navigation_button": {
     "enable": true,
-    "label": "Get Started",
-    "link": "https://github.com/zeon-studio/astroplate"
+    "label": "Contáctanos",
+    "link": "#contacto"
   },
   "google_tag_manager": {
     "enable": false,
-    "gtm_id": "GTM-XXXXXX"
+    "gtm_id": ""
   },
   "disqus": {
-    "enable": true,
-    "shortname": "themefisher-template",
+    "enable": false,
+    "shortname": "",
     "settings": {}
   },
   "metadata": {
-    "meta_author": "zeon.studio",
-    "meta_image": "/images/og-image.png",
-    "meta_description": "astro and tailwind boilerplate"
+    "meta_author": "Importadora Miranda",
+    "meta_image": "/images/logo.png",
+    "meta_description": "Importadora Miranda en La Paz, Bolivia. Ofrecemos productos importados de alta calidad con garantía y confianza."
   }
 }
