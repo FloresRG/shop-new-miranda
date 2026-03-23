@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "Importadora Miranda",
-    "base_url": "https://astroplate.netlify.app",
+    "base_url": "https://shop.importadoramiranda.com/",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/logo.png",
