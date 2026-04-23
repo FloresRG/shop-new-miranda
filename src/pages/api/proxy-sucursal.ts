@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Reenviamos el FormData exacto a la API externa
     // No establecemos 'Content-Type' manualmente para que fetch genere el boundary correcto
-    const response = await fetch('https://test.importadoramiranda.com/api/sugerencias-sucursales', {
+    const response = await fetch('https://importadoramiranda.com/api/sugerencias-sucursales', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
