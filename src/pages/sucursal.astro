@@ -11,43 +11,40 @@ const TIPOS_OPERACION = [
 ];
 ---
 
-<Base title="Nueva Sucursal ">
+<Base title="Nueva Sucursal | Miranda">
   <!-- MapLibre GL JS -->
   <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
-
+  
   <div class="min-h-screen bg-gray-50 dark:bg-darkmode-body py-12 px-4 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
-
+      
       <!-- Header Section -->
       <div class="text-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2 uppercase">
-          Agrega tu<span class="text-primary"> Sugerencia de Sucursal</span>
+        Registra tu Sugerencia para<span class="text-primary"> la Nueva Sucursal</span>
         </h1>
-        <p class="text-gray-500 dark:text-text-light text-lg">
-          Aqui completa el formulario para sugerir una nueva ubicación de sucursal. ¡Tu sugerencia es valiosa para nosotros!
-        </p>
       </div>
 
       <!-- Main Form -->
       <form id="sucursalForm" class="bg-white dark:bg-darkmode-light rounded-3xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden transition-all duration-300">
         <div class="p-8 space-y-10">
-
+          
           <!-- Datos de Contacto Section -->
           <section class="space-y-6">
             <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
               <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
               </div>
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Datos del Contacto</h2>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Datos del Contacto</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Nombre Completo</label>
-                <input
-                  type="text"
-                  name="nombre"
-                  required
+                <input 
+                  type="text" 
+                  name="nombre" 
+                  required 
                   placeholder="JUAN PÉREZ"
                   oninput="this.value = this.value.toUpperCase()"
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none uppercase font-semibold"
@@ -61,17 +58,17 @@ const TIPOS_OPERACION = [
                     <img src="https://flagcdn.com/w20/bo.png" class="w-4 h-3 rounded-sm" alt="BO" />
                     <span class="text-sm font-medium text-gray-500">+591</span>
                   </div>
-                  <input
-                    type="tel"
-                    id="celular"
-                    name="celular"
-                    required
-                    maxlength="8"
+                  <input 
+                    type="tel" 
+                    id="celular" 
+                    name="celular" 
+                    required 
+                    maxlength="8" 
                     placeholder="70000000"
                     class="w-full pl-24 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                   />
                 </div>
-                <p id="phone-error" class="text-xs text-danger mt-1 hidden italic">⚠️ Número inválido. Debe empezar con 6 o 7.</p>
+                <p id="phone-error" class="text-xs text-danger mt-1 hidden italic uppercase">⚠️ Número inválido</p>
               </div>
             </div>
           </section>
@@ -82,17 +79,17 @@ const TIPOS_OPERACION = [
               <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011-1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
               </div>
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Detalles de la Propiedad</h2>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Detalles de la Propiedad</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Tipo de Propiedad</label>
-                <select
+                <select 
                   id="tipo_operacion"
-                  name="tipo_operacion"
-                  required
-                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                  name="tipo_operacion" 
+                  required 
+                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none uppercase"
                 >
                   <option value="" disabled selected>Selecciona una opción</option>
                   {TIPOS_OPERACION.map(t => <option value={t.value}>{t.label}</option>)}
@@ -101,22 +98,22 @@ const TIPOS_OPERACION = [
 
               <div id="otro_input_container" class="space-y-1 hidden">
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Especificar Tipo</label>
-                <input
-                  type="text"
-                  name="tipo_otro"
-                  placeholder="Ej. Traspaso"
-                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                <input 
+                  type="text" 
+                  name="tipo_otro" 
+                  placeholder="Ej. Local Comercial"
+                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none uppercase"
                 />
               </div>
 
               <div class="space-y-1">
-                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Precio Sugerido (Bs.)</label>
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Precio Estimado</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary">Bs.</span>
-                  <input
-                    type="number"
-                    name="precio"
-                    required
+                  <input 
+                    type="number" 
+                    name="precio" 
+                    required 
                     placeholder="0.00"
                     class="w-full pl-12 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                   />
@@ -126,9 +123,9 @@ const TIPOS_OPERACION = [
 
             <div class="space-y-1">
               <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Direccion y detalles</label>
-              <textarea
-                name="descripcion"
-                rows="4"
+              <textarea 
+                name="descripcion" 
+                rows="4" 
                 placeholder="Ubicación exacta, ambientes, detalles relevantes..."
                 class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none resize-none"
               ></textarea>
@@ -141,11 +138,11 @@ const TIPOS_OPERACION = [
               <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
               </div>
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Fotos de la Propiedad</h2>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Fotos de la Propiedad</h2>
             </div>
 
-            <div
-              id="drop-zone"
+            <div 
+              id="drop-zone" 
               class="group relative border-2 border-dashed border-border dark:border-darkmode-border rounded-2xl p-10 text-center hover:border-primary transition-all cursor-pointer bg-gray-50/30 dark:bg-darkmode-body/30"
             >
               <input type="file" id="fotos" name="fotos" multiple accept="image/*" class="hidden" />
@@ -154,7 +151,7 @@ const TIPOS_OPERACION = [
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                 </div>
                 <div>
-                  <p class="text-gray-900 dark:text-white font-bold">Añadir Imágenes</p>
+                  <p class="text-gray-900 dark:text-white font-bold uppercase">Añadir Imágenes</p>
                   <p class="text-sm text-gray-500 uppercase tracking-wider">Máximo 10 archivos</p>
                 </div>
               </div>
@@ -171,16 +168,16 @@ const TIPOS_OPERACION = [
               <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
               </div>
-              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Ubicación en Mapa</h2>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Ubicación en Mapa</h2>
             </div>
-
+            
             <div class="space-y-4">
               <p class="text-sm text-gray-500 uppercase tracking-widest font-bold">Mueve el marcador hacia la ubicación exacta</p>
               <div id="map" class="h-[450px] w-full rounded-2xl border border-border dark:border-darkmode-border shadow-2xl z-10 bg-gray-100"></div>
-
+              
               <div class="flex flex-col sm:flex-row gap-4">
-                <button
-                  type="button"
+                <button 
+                  type="button" 
                   id="get-location"
                   class="flex-1 py-3 px-4 bg-gray-100 dark:bg-darkmode-body hover:bg-gray-200 dark:hover:bg-darkmode-border text-gray-900 dark:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase"
                 >
@@ -201,8 +198,8 @@ const TIPOS_OPERACION = [
 
           <!-- Submit Button -->
           <div class="pt-6">
-            <button
-              type="submit"
+            <button 
+              type="submit" 
               id="submit-btn"
               class="w-full bg-primary hover:bg-primary/90 text-white font-black py-5 px-6 rounded-2xl shadow-2xl shadow-primary/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-4 text-xl uppercase tracking-tighter"
             >
@@ -227,7 +224,7 @@ const TIPOS_OPERACION = [
       </div>
       <h3 class="text-4xl font-black text-gray-900 dark:text-white mb-4 uppercase">¡Registrada!</h3>
       <p class="text-gray-500 dark:text-text-light mb-10 text-lg">
-        La propiedad ha sido enviada con éxito al sistema Nexus.
+        La propiedad ha sido enviada con éxito al sistema Miranda.
       </p>
       <button onclick="window.location.href='/'" class="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl shadow-primary/30 hover:scale-[1.02] transition-all uppercase">
         Regresar al Inicio
@@ -245,20 +242,17 @@ const TIPOS_OPERACION = [
     function initMap() {
       const container = document.getElementById('map');
       if (!container || typeof maplibregl === 'undefined') return;
-
       if (window._currentMap) { window._currentMap.remove(); }
 
-      // Cambiamos a un estilo más estable para evitar errores de fuentes PBF
       map = new maplibregl.Map({
         container: 'map',
-        style: 'https://tiles.openfreemap.org/styles/liberty', // Estilo alternativo más robusto
+        style: 'https://tiles.openfreemap.org/styles/liberty',
         center: LA_PAZ,
         zoom: 13,
         attributionControl: false
       });
       window._currentMap = map;
 
-      // Pin tipo Google Maps (SVG Rojo)
       const el = document.createElement('div');
       el.className = 'marker-google';
       el.innerHTML = `
@@ -270,11 +264,7 @@ const TIPOS_OPERACION = [
       el.style.cursor = 'move';
       el.style.filter = 'drop-shadow(0 3px 5px rgba(0,0,0,0.4))';
 
-      marker = new maplibregl.Marker({
-        element: el,
-        draggable: true,
-        anchor: 'bottom'
-      })
+      marker = new maplibregl.Marker({ element: el, draggable: true, anchor: 'bottom' })
       .setLngLat(LA_PAZ)
       .addTo(map);
 
@@ -288,10 +278,7 @@ const TIPOS_OPERACION = [
       }
 
       marker.on('dragend', () => updateCoords(marker.getLngLat()));
-      map.on('click', (e) => {
-        marker.setLngLat(e.lngLat);
-        updateCoords(e.lngLat);
-      });
+      map.on('click', (e) => { marker.setLngLat(e.lngLat); updateCoords(e.lngLat); });
 
       document.getElementById('get-location')?.addEventListener('click', () => {
         if (!navigator.geolocation) return alert('GPS no disponible');
@@ -353,20 +340,63 @@ const TIPOS_OPERACION = [
         });
       });
 
+      // ----- SUBMIT CON ARCHIVOS REALES (FormData) -----
       const form = document.getElementById('sucursalForm');
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submit-btn');
-        if (!document.getElementById('lat').value) return alert('Selecciona ubicación en el mapa');
+        const lat = document.getElementById('lat').value;
+        const lng = document.getElementById('lng').value;
+        
+        if (!lat || !lng) return alert('Por favor, selecciona la ubicación exacta en el mapa.');
+
         submitBtn.disabled = true;
-        document.getElementById('btn-text').textContent = 'REGISTRANDO...';
+        document.getElementById('btn-text').textContent = 'ENVIANDO...';
         document.getElementById('loading-spinner').classList.remove('hidden');
         document.querySelector('.btn-icon').classList.add('hidden');
-        await new Promise(r => setTimeout(r, 2000));
-        const modal = document.getElementById('success-modal');
-        const card = document.getElementById('success-card');
-        modal.classList.remove('hidden');
-        setTimeout(() => card.classList.add('scale-100', 'opacity-100'), 50);
+
+        try {
+          const formData = new FormData();
+          formData.append('nombre_contacto', form.nombre.value);
+          formData.append('celular', form.celular.value);
+          formData.append('ubicacion', `${lat}, ${lng}`);
+          formData.append('tipo', form.tipo_operacion.value === 'otro' ? form.tipo_otro.value : form.tipo_operacion.value);
+          formData.append('precio', form.precio.value);
+          formData.append('descripcion', form.descripcion.value);
+
+          // Adjuntar archivos reales
+          selectedFiles.forEach((file) => {
+            formData.append('fotos[]', file);
+          });
+
+          const response = await fetch('/api/proxy-sucursal', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            const modal = document.getElementById('success-modal');
+            const card = document.getElementById('success-card');
+            modal.classList.remove('hidden');
+            setTimeout(() => card.classList.add('scale-100', 'opacity-100'), 50);
+            form.reset();
+            previews.innerHTML = '';
+            selectedFiles = [];
+          } else {
+            const errorMsg = result.message || 'Error en el servidor';
+            alert('⚠️ ' + errorMsg);
+          }
+        } catch (err) {
+          console.error('Error al enviar:', err);
+          alert('⚠️ Hubo un problema al enviar la información.');
+        } finally {
+          submitBtn.disabled = false;
+          document.getElementById('btn-text').textContent = 'REGISTRAR PROPIEDAD';
+          document.getElementById('loading-spinner').classList.add('hidden');
+          document.querySelector('.btn-icon').classList.remove('hidden');
+        }
       });
     }
 
@@ -374,18 +404,9 @@ const TIPOS_OPERACION = [
   </script>
 
   <style is:global>
-    @keyframes bounce-short {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-    .animate-bounce-short {
-      animation: bounce-short 1.5s ease-in-out infinite;
-    }
-    .marker-google {
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .marker-google:hover {
-      transform: scale(1.1) translateY(-5px);
-    }
+    @keyframes bounce-short { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .animate-bounce-short { animation: bounce-short 1.5s ease-in-out infinite; }
+    .marker-google { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .marker-google:hover { transform: scale(1.1) translateY(-5px); }
   </style>
 </Base>
