@@ -1,0 +1,408 @@
+---
+import Base from "@/layouts/Base.astro";
+
+export const prerender = false;
+
+const TIPOS_OPERACION = [
+  { value: "anticretico", label: "Anticrético" },
+  { value: "alquiler", label: "Alquiler" },
+  { value: "venta", label: "Venta" },
+  { value: "otro", label: "Otro" }
+];
+---
+
+<Base title="Nueva Sucursal | Nexus">
+  <div class="min-h-screen bg-gray-50 dark:bg-darkmode-body py-12 px-4 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2 uppercase">
+          📍 Registrar <span class="text-primary">Nueva Sucursal</span>
+        </h1>
+        <p class="text-gray-500 dark:text-text-light text-lg">
+          Completa los detalles de la propiedad para integrarla al sistema Nexus.
+        </p>
+      </div>
+
+      <!-- Main Form -->
+      <form id="sucursalForm" class="bg-white dark:bg-darkmode-light rounded-3xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden transition-all duration-300">
+        <div class="p-8 space-y-10">
+          
+          <!-- Datos de Contacto Section -->
+          <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
+              <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Datos del Contacto</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Nombre Completo</label>
+                <input 
+                  type="text" 
+                  name="nombre" 
+                  required 
+                  placeholder="JUAN PÉREZ"
+                  oninput="this.value = this.value.toUpperCase()"
+                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none uppercase font-semibold"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Celular (Bolivia)</label>
+                <div class="relative flex items-center">
+                  <div class="absolute left-4 flex items-center gap-1 pointer-events-none border-r border-border pr-3">
+                    <img src="https://flagcdn.com/w20/bo.png" class="w-4 h-3 rounded-sm" alt="BO" />
+                    <span class="text-sm font-medium text-gray-500">+591</span>
+                  </div>
+                  <input 
+                    type="tel" 
+                    id="celular" 
+                    name="celular" 
+                    required 
+                    maxlength="8" 
+                    placeholder="70000000"
+                    class="w-full pl-24 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                  />
+                </div>
+                <p id="phone-error" class="text-xs text-danger mt-1 hidden italic">⚠️ Número inválido. Debe empezar con 6 o 7.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Detalles de la Propiedad Section -->
+          <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
+              <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011-1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Detalles de la Propiedad</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Tipo de Operación</label>
+                <select 
+                  id="tipo_operacion"
+                  name="tipo_operacion" 
+                  required 
+                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                >
+                  <option value="" disabled selected>Selecciona una opción</option>
+                  {TIPOS_OPERACION.map(t => <option value={t.value}>{t.label}</option>)}
+                </select>
+              </div>
+
+              <div id="otro_input_container" class="space-y-1 hidden">
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Especificar Tipo</label>
+                <input 
+                  type="text" 
+                  name="tipo_otro" 
+                  placeholder="Ej. Traspaso"
+                  class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Precio Sugerido (Bs.)</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary">Bs.</span>
+                  <input 
+                    type="number" 
+                    name="precio" 
+                    required 
+                    placeholder="0.00"
+                    class="w-full pl-12 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Descripción (Opcional)</label>
+              <textarea 
+                name="descripcion" 
+                rows="4" 
+                placeholder="Ubicación exacta, ambientes, detalles relevantes..."
+                class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none resize-none"
+              ></textarea>
+            </div>
+          </section>
+
+          <!-- Multimedia Section -->
+          <section class="space-y-6">
+            <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
+              <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Fotos de la Propiedad</h2>
+            </div>
+
+            <div 
+              id="drop-zone" 
+              class="group relative border-2 border-dashed border-border dark:border-darkmode-border rounded-2xl p-10 text-center hover:border-primary transition-all cursor-pointer bg-gray-50/30 dark:bg-darkmode-body/30"
+            >
+              <input type="file" id="fotos" name="fotos" multiple accept="image/*" class="hidden" />
+              <div class="space-y-3">
+                <div class="w-16 h-16 bg-white dark:bg-darkmode-light rounded-2xl shadow-md flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                </div>
+                <div>
+                  <p class="text-gray-900 dark:text-white font-bold">Añadir Imágenes</p>
+                  <p class="text-sm text-gray-500 uppercase tracking-wider">Máximo 10 archivos</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="image-previews" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+              <!-- Previews will appear here -->
+            </div>
+          </section>
+
+          <!-- Ubicación Section (Moved Here) -->
+          <section class="space-y-6 pt-4">
+            <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
+              <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Ubicación en Mapa</h2>
+            </div>
+            
+            <div class="space-y-4">
+              <p class="text-sm text-gray-500 uppercase tracking-widest font-bold">Mueve el marcador hacia la ubicación exacta</p>
+              <div id="map" class="h-[400px] w-full rounded-2xl border border-border dark:border-darkmode-border shadow-inner z-10"></div>
+              
+              <div class="flex flex-col sm:flex-row gap-4">
+                <button 
+                  type="button" 
+                  id="get-location"
+                  class="flex-1 py-3 px-4 bg-gray-100 dark:bg-darkmode-body hover:bg-gray-200 dark:hover:bg-darkmode-border text-gray-900 dark:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  Usar mi GPS
+                </button>
+                <div id="location-badge" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary/5 rounded-xl border border-primary/20 hidden">
+                  <span class="text-primary animate-pulse">●</span>
+                  <span id="coords-text" class="text-xs font-mono text-primary font-bold"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden Coordinates -->
+            <input type="hidden" name="latitud" id="lat" />
+            <input type="hidden" name="longitud" id="lng" />
+          </section>
+
+          <!-- Submit Button -->
+          <div class="pt-6">
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="w-full bg-primary hover:bg-primary/90 text-white font-black py-5 px-6 rounded-2xl shadow-2xl shadow-primary/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-4 text-xl uppercase tracking-tighter"
+            >
+              <span id="btn-text">Registrar Propiedad</span>
+              <svg id="loading-spinner" class="animate-spin h-6 w-6 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="fixed inset-0 z-[100] hidden bg-gray-900/80 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-darkmode-light rounded-[3rem] p-12 max-w-md w-full text-center shadow-2xl transform transition-all scale-90 opacity-0 duration-500" id="success-card">
+      <div class="w-28 h-28 mx-auto bg-primary/10 rounded-3xl flex items-center justify-center mb-8 rotate-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-primary animate-bounce-short" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h3 class="text-4xl font-black text-gray-900 dark:text-white mb-4 uppercase">¡Registrada!</h3>
+      <p class="text-gray-500 dark:text-text-light mb-10 text-lg">
+        La propiedad ha sido enviada con éxito al sistema Nexus.
+      </p>
+      <button onclick="window.location.href='/'" class="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl shadow-primary/30 hover:scale-[1.02] transition-all uppercase">
+        Regresar al Inicio
+      </button>
+    </div>
+  </div>
+
+  <!-- Google Maps API -->
+  <script is:inline src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initGoogleMap" defer></script>
+
+  <script is:inline>
+    /**
+     * Gestión de Google Maps
+     */
+    let googleMap, googleMarker;
+    const LA_PAZ = { lat: -16.500, lng: -68.120 };
+
+    window.initGoogleMap = function() {
+      const mapContainer = document.getElementById('map');
+      if (!mapContainer) return;
+
+      googleMap = new google.maps.Map(mapContainer, {
+        center: LA_PAZ,
+        zoom: 14,
+        disableDefaultUI: false,
+        zoomControl: true,
+        mapTypeControl: false,
+        streetViewControl: false,
+        styles: [
+          {
+            "featureType": "poi",
+            "stylers": [{ "visibility": "off" }]
+          }
+        ]
+      });
+
+      googleMarker = new google.maps.Marker({
+        position: LA_PAZ,
+        map: googleMap,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        icon: {
+            url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+        }
+      });
+
+      function updateCoords(pos) {
+        const lat = pos.lat();
+        const lng = pos.lng();
+        document.getElementById('lat').value = lat.toFixed(6);
+        document.getElementById('lng').value = lng.toFixed(6);
+        
+        const badge = document.getElementById('location-badge');
+        const text = document.getElementById('coords-text');
+        badge.classList.remove('hidden');
+        text.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      }
+
+      googleMarker.addListener('dragend', () => {
+        updateCoords(googleMarker.getPosition());
+      });
+
+      googleMap.addListener('click', (e) => {
+        googleMarker.setPosition(e.latLng);
+        updateCoords(e.latLng);
+      });
+
+      // GPS Button
+      document.getElementById('get-location').addEventListener('click', () => {
+        if (!navigator.geolocation) return alert('GPS no disponible');
+        
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          googleMap.setCenter(newPos);
+          googleMap.setZoom(17);
+          googleMarker.setPosition(newPos);
+          updateCoords(googleMarker.getPosition());
+        });
+      });
+    };
+
+    /**
+     * Lógica General del Formulario
+     */
+    function initFormLogic() {
+      // Re-inicializar mapa si Google Maps ya cargó (para View Transitions)
+      if (typeof google !== 'undefined' && google.maps) {
+        window.initGoogleMap();
+      }
+
+      // Validación Teléfono
+      const phoneInput = document.getElementById('celular');
+      const phoneError = document.getElementById('phone-error');
+      
+      phoneInput?.addEventListener('input', (e) => {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 0 && !['6', '7'].includes(val[0])) val = '';
+        e.target.value = val.slice(0, 8);
+        
+        if (e.target.value.length === 8 && !/^[67]\d{7}$/.test(e.target.value)) {
+          phoneError.classList.remove('hidden');
+        } else {
+          phoneError.classList.add('hidden');
+        }
+      });
+
+      // Toggle Otro
+      const tipoSelect = document.getElementById('tipo_operacion');
+      const otroContainer = document.getElementById('otro_input_container');
+      tipoSelect?.addEventListener('change', (e) => {
+        otroContainer.classList.toggle('hidden', e.target.value !== 'otro');
+      });
+
+      // Fotos
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('fotos');
+      const previews = document.getElementById('image-previews');
+      let selectedFiles = [];
+
+      dropZone?.addEventListener('click', () => fileInput.click());
+      fileInput?.addEventListener('change', (e) => {
+        const newFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+        if (selectedFiles.length + newFiles.length > 10) return alert('Máximo 10 fotos');
+        
+        newFiles.forEach(file => {
+          selectedFiles.push(file);
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const div = document.createElement('div');
+            div.className = 'relative group aspect-square rounded-2xl overflow-hidden shadow-md border border-border';
+            div.innerHTML = `
+              <img src="${ev.target.result}" class="w-full h-full object-cover" />
+              <button type="button" class="absolute top-2 right-2 bg-danger text-white rounded-lg p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+              </button>
+            `;
+            div.querySelector('button').onclick = () => {
+              selectedFiles = selectedFiles.filter(f => f !== file);
+              div.remove();
+            };
+            previews.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      // Submit
+      const form = document.getElementById('sucursalForm');
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        
+        if (!document.getElementById('lat').value) return alert('Selecciona ubicación en el mapa');
+
+        submitBtn.disabled = true;
+        document.getElementById('btn-text').textContent = 'REGISTRANDO...';
+        document.getElementById('loading-spinner').classList.remove('hidden');
+        document.querySelector('.btn-icon').classList.add('hidden');
+
+        await new Promise(r => setTimeout(r, 2000));
+        
+        const modal = document.getElementById('success-modal');
+        const card = document.getElementById('success-card');
+        modal.classList.remove('hidden');
+        setTimeout(() => card.classList.add('scale-100', 'opacity-100'), 50);
+      });
+    }
+
+    document.addEventListener('astro:page-load', initFormLogic);
+  </script>
+
+  <style is:global>
+    @keyframes bounce-short {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .animate-bounce-short {
+      animation: bounce-short 1.5s ease-in-out infinite;
+    }
+  </style>
+</Base>

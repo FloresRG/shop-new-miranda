@@ -28,6 +28,10 @@
     {
       "name": "Trabaja con nosotros",
       "url": "/solicitudes"
+    },
+    {
+      "name": "Sucursales",
+      "url": "/sucursal"
     }
   ],
   "footer": [

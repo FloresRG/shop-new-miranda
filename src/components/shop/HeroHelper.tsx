@@ -127,6 +127,11 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   url: "/about#map-section",
                   subtitle: "Visítanos en nuestra sucursal",
                 },
+                {
+                  title: "AGREGA TU SUGERENCIA DE SUCURSAL",
+                  url: "/sucursal",
+                  subtitle: "Aqui agrega tu sugerencia de sucursal para que estemos ahi",
+                },
               ].map((link, i) => (
                 <a
                   key={link.title}
