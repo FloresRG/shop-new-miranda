@@ -11,24 +11,27 @@ const TIPOS_OPERACION = [
 ];
 ---
 
-<Base title="Nueva Sucursal | Nexus">
+<Base title="Nueva Sucursal ">
+  <!-- MapLibre GL JS -->
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+
   <div class="min-h-screen bg-gray-50 dark:bg-darkmode-body py-12 px-4 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
-      
+
       <!-- Header Section -->
       <div class="text-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2 uppercase">
-          📍 Registrar <span class="text-primary">Nueva Sucursal</span>
+          Agrega tu<span class="text-primary"> Sugerencia de Sucursal</span>
         </h1>
         <p class="text-gray-500 dark:text-text-light text-lg">
-          Completa los detalles de la propiedad para integrarla al sistema Nexus.
+          Aqui completa el formulario para sugerir una nueva ubicación de sucursal. ¡Tu sugerencia es valiosa para nosotros!
         </p>
       </div>
 
       <!-- Main Form -->
       <form id="sucursalForm" class="bg-white dark:bg-darkmode-light rounded-3xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden transition-all duration-300">
         <div class="p-8 space-y-10">
-          
+
           <!-- Datos de Contacto Section -->
           <section class="space-y-6">
             <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
@@ -41,10 +44,10 @@ const TIPOS_OPERACION = [
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Nombre Completo</label>
-                <input 
-                  type="text" 
-                  name="nombre" 
-                  required 
+                <input
+                  type="text"
+                  name="nombre"
+                  required
                   placeholder="JUAN PÉREZ"
                   oninput="this.value = this.value.toUpperCase()"
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none uppercase font-semibold"
@@ -58,12 +61,12 @@ const TIPOS_OPERACION = [
                     <img src="https://flagcdn.com/w20/bo.png" class="w-4 h-3 rounded-sm" alt="BO" />
                     <span class="text-sm font-medium text-gray-500">+591</span>
                   </div>
-                  <input 
-                    type="tel" 
-                    id="celular" 
-                    name="celular" 
-                    required 
-                    maxlength="8" 
+                  <input
+                    type="tel"
+                    id="celular"
+                    name="celular"
+                    required
+                    maxlength="8"
                     placeholder="70000000"
                     class="w-full pl-24 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                   />
@@ -84,11 +87,11 @@ const TIPOS_OPERACION = [
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
-                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Tipo de Operación</label>
-                <select 
+                <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Tipo de Propiedad</label>
+                <select
                   id="tipo_operacion"
-                  name="tipo_operacion" 
-                  required 
+                  name="tipo_operacion"
+                  required
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
                 >
                   <option value="" disabled selected>Selecciona una opción</option>
@@ -98,9 +101,9 @@ const TIPOS_OPERACION = [
 
               <div id="otro_input_container" class="space-y-1 hidden">
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Especificar Tipo</label>
-                <input 
-                  type="text" 
-                  name="tipo_otro" 
+                <input
+                  type="text"
+                  name="tipo_otro"
                   placeholder="Ej. Traspaso"
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                 />
@@ -110,10 +113,10 @@ const TIPOS_OPERACION = [
                 <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Precio Sugerido (Bs.)</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary">Bs.</span>
-                  <input 
-                    type="number" 
-                    name="precio" 
-                    required 
+                  <input
+                    type="number"
+                    name="precio"
+                    required
                     placeholder="0.00"
                     class="w-full pl-12 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                   />
@@ -122,10 +125,10 @@ const TIPOS_OPERACION = [
             </div>
 
             <div class="space-y-1">
-              <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Descripción (Opcional)</label>
-              <textarea 
-                name="descripcion" 
-                rows="4" 
+              <label class="text-sm font-semibold text-gray-700 dark:text-text-dark ml-1 uppercase">Direccion y detalles</label>
+              <textarea
+                name="descripcion"
+                rows="4"
                 placeholder="Ubicación exacta, ambientes, detalles relevantes..."
                 class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none resize-none"
               ></textarea>
@@ -141,8 +144,8 @@ const TIPOS_OPERACION = [
               <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Fotos de la Propiedad</h2>
             </div>
 
-            <div 
-              id="drop-zone" 
+            <div
+              id="drop-zone"
               class="group relative border-2 border-dashed border-border dark:border-darkmode-border rounded-2xl p-10 text-center hover:border-primary transition-all cursor-pointer bg-gray-50/30 dark:bg-darkmode-body/30"
             >
               <input type="file" id="fotos" name="fotos" multiple accept="image/*" class="hidden" />
@@ -162,7 +165,7 @@ const TIPOS_OPERACION = [
             </div>
           </section>
 
-          <!-- Ubicación Section (Moved Here) -->
+          <!-- Ubicación Section -->
           <section class="space-y-6 pt-4">
             <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
               <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -170,14 +173,14 @@ const TIPOS_OPERACION = [
               </div>
               <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Ubicación en Mapa</h2>
             </div>
-            
+
             <div class="space-y-4">
               <p class="text-sm text-gray-500 uppercase tracking-widest font-bold">Mueve el marcador hacia la ubicación exacta</p>
-              <div id="map" class="h-[400px] w-full rounded-2xl border border-border dark:border-darkmode-border shadow-inner z-10"></div>
-              
+              <div id="map" class="h-[450px] w-full rounded-2xl border border-border dark:border-darkmode-border shadow-2xl z-10 bg-gray-100"></div>
+
               <div class="flex flex-col sm:flex-row gap-4">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   id="get-location"
                   class="flex-1 py-3 px-4 bg-gray-100 dark:bg-darkmode-body hover:bg-gray-200 dark:hover:bg-darkmode-border text-gray-900 dark:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase"
                 >
@@ -198,8 +201,8 @@ const TIPOS_OPERACION = [
 
           <!-- Submit Button -->
           <div class="pt-6">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               id="submit-btn"
               class="w-full bg-primary hover:bg-primary/90 text-white font-black py-5 px-6 rounded-2xl shadow-2xl shadow-primary/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-4 text-xl uppercase tracking-tighter"
             >
@@ -232,123 +235,102 @@ const TIPOS_OPERACION = [
     </div>
   </div>
 
-  <!-- Google Maps API -->
-  <script is:inline src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initGoogleMap" defer></script>
+  <!-- MapLibre GL JS -->
+  <script is:inline src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
 
   <script is:inline>
-    /**
-     * Gestión de Google Maps
-     */
-    let googleMap, googleMarker;
-    const LA_PAZ = { lat: -16.500, lng: -68.120 };
+    let map, marker;
+    const LA_PAZ = [-68.120, -16.500];
 
-    window.initGoogleMap = function() {
-      const mapContainer = document.getElementById('map');
-      if (!mapContainer) return;
+    function initMap() {
+      const container = document.getElementById('map');
+      if (!container || typeof maplibregl === 'undefined') return;
 
-      googleMap = new google.maps.Map(mapContainer, {
+      if (window._currentMap) { window._currentMap.remove(); }
+
+      // Cambiamos a un estilo más estable para evitar errores de fuentes PBF
+      map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/liberty', // Estilo alternativo más robusto
         center: LA_PAZ,
-        zoom: 14,
-        disableDefaultUI: false,
-        zoomControl: true,
-        mapTypeControl: false,
-        streetViewControl: false,
-        styles: [
-          {
-            "featureType": "poi",
-            "stylers": [{ "visibility": "off" }]
-          }
-        ]
+        zoom: 13,
+        attributionControl: false
       });
+      window._currentMap = map;
 
-      googleMarker = new google.maps.Marker({
-        position: LA_PAZ,
-        map: googleMap,
+      // Pin tipo Google Maps (SVG Rojo)
+      const el = document.createElement('div');
+      el.className = 'marker-google';
+      el.innerHTML = `
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#EA4335" stroke="white" stroke-width="1"/>
+          <circle cx="12" cy="9" r="3" fill="white"/>
+        </svg>
+      `;
+      el.style.cursor = 'move';
+      el.style.filter = 'drop-shadow(0 3px 5px rgba(0,0,0,0.4))';
+
+      marker = new maplibregl.Marker({
+        element: el,
         draggable: true,
-        animation: google.maps.Animation.DROP,
-        icon: {
-            url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-        }
-      });
+        anchor: 'bottom'
+      })
+      .setLngLat(LA_PAZ)
+      .addTo(map);
 
-      function updateCoords(pos) {
-        const lat = pos.lat();
-        const lng = pos.lng();
-        document.getElementById('lat').value = lat.toFixed(6);
-        document.getElementById('lng').value = lng.toFixed(6);
-        
+      function updateCoords(lngLat) {
+        document.getElementById('lat').value = lngLat.lat.toFixed(6);
+        document.getElementById('lng').value = lngLat.lng.toFixed(6);
         const badge = document.getElementById('location-badge');
         const text = document.getElementById('coords-text');
         badge.classList.remove('hidden');
-        text.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        text.textContent = `${lngLat.lat.toFixed(4)}, ${lngLat.lng.toFixed(4)}`;
       }
 
-      googleMarker.addListener('dragend', () => {
-        updateCoords(googleMarker.getPosition());
+      marker.on('dragend', () => updateCoords(marker.getLngLat()));
+      map.on('click', (e) => {
+        marker.setLngLat(e.lngLat);
+        updateCoords(e.lngLat);
       });
 
-      googleMap.addListener('click', (e) => {
-        googleMarker.setPosition(e.latLng);
-        updateCoords(e.latLng);
-      });
-
-      // GPS Button
-      document.getElementById('get-location').addEventListener('click', () => {
+      document.getElementById('get-location')?.addEventListener('click', () => {
         if (!navigator.geolocation) return alert('GPS no disponible');
-        
         navigator.geolocation.getCurrentPosition((pos) => {
-          const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          googleMap.setCenter(newPos);
-          googleMap.setZoom(17);
-          googleMarker.setPosition(newPos);
-          updateCoords(googleMarker.getPosition());
+          const coords = [pos.coords.longitude, pos.coords.latitude];
+          map.flyTo({ center: coords, zoom: 16 });
+          marker.setLngLat(coords);
+          updateCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         });
       });
-    };
+    }
 
-    /**
-     * Lógica General del Formulario
-     */
-    function initFormLogic() {
-      // Re-inicializar mapa si Google Maps ya cargó (para View Transitions)
-      if (typeof google !== 'undefined' && google.maps) {
-        window.initGoogleMap();
-      }
+    function initLogic() {
+      initMap();
 
-      // Validación Teléfono
       const phoneInput = document.getElementById('celular');
       const phoneError = document.getElementById('phone-error');
-      
       phoneInput?.addEventListener('input', (e) => {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 0 && !['6', '7'].includes(val[0])) val = '';
         e.target.value = val.slice(0, 8);
-        
-        if (e.target.value.length === 8 && !/^[67]\d{7}$/.test(e.target.value)) {
-          phoneError.classList.remove('hidden');
-        } else {
-          phoneError.classList.add('hidden');
-        }
+        if (e.target.value.length === 8 && !/^[67]\d{7}$/.test(e.target.value)) phoneError.classList.remove('hidden');
+        else phoneError.classList.add('hidden');
       });
 
-      // Toggle Otro
       const tipoSelect = document.getElementById('tipo_operacion');
       const otroContainer = document.getElementById('otro_input_container');
       tipoSelect?.addEventListener('change', (e) => {
         otroContainer.classList.toggle('hidden', e.target.value !== 'otro');
       });
 
-      // Fotos
       const dropZone = document.getElementById('drop-zone');
       const fileInput = document.getElementById('fotos');
       const previews = document.getElementById('image-previews');
       let selectedFiles = [];
-
       dropZone?.addEventListener('click', () => fileInput.click());
       fileInput?.addEventListener('change', (e) => {
         const newFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
         if (selectedFiles.length + newFiles.length > 10) return alert('Máximo 10 fotos');
-        
         newFiles.forEach(file => {
           selectedFiles.push(file);
           const reader = new FileReader();
@@ -371,21 +353,16 @@ const TIPOS_OPERACION = [
         });
       });
 
-      // Submit
       const form = document.getElementById('sucursalForm');
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submit-btn');
-        
         if (!document.getElementById('lat').value) return alert('Selecciona ubicación en el mapa');
-
         submitBtn.disabled = true;
         document.getElementById('btn-text').textContent = 'REGISTRANDO...';
         document.getElementById('loading-spinner').classList.remove('hidden');
         document.querySelector('.btn-icon').classList.add('hidden');
-
         await new Promise(r => setTimeout(r, 2000));
-        
         const modal = document.getElementById('success-modal');
         const card = document.getElementById('success-card');
         modal.classList.remove('hidden');
@@ -393,7 +370,7 @@ const TIPOS_OPERACION = [
       });
     }
 
-    document.addEventListener('astro:page-load', initFormLogic);
+    document.addEventListener('astro:page-load', initLogic);
   </script>
 
   <style is:global>
@@ -403,6 +380,12 @@ const TIPOS_OPERACION = [
     }
     .animate-bounce-short {
       animation: bounce-short 1.5s ease-in-out infinite;
+    }
+    .marker-google {
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .marker-google:hover {
+      transform: scale(1.1) translateY(-5px);
     }
   </style>
 </Base>
