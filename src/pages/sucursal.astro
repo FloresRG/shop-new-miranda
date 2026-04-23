@@ -340,7 +340,10 @@ const TIPOS_OPERACION = [
       const tipoSelect = document.getElementById('tipo_operacion');
       const otroContainer = document.getElementById('otro_input_container');
       tipoSelect?.addEventListener('change', (e) => {
-        otroContainer.classList.toggle('hidden', e.target.value !== 'otro');
+        const isOtro = e.target.value === 'otro';
+        otroContainer.classList.toggle('hidden', !isOtro);
+        const inputOtro = form.querySelector('[name="tipo_otro"]');
+        if (inputOtro) inputOtro.required = isOtro;
       });
 
       const dropZone = document.getElementById('drop-zone');
