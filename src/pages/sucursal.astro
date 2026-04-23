@@ -21,7 +21,7 @@ const TIPOS_OPERACION = [
       <!-- Header Section -->
       <div class="text-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2 uppercase">
-        Registra tu Sugerencia para<span class="text-primary"> la Nueva Sucursal</span>
+          Registra tu Sugerencia para<span class="text-primary"> la Nueva Sucursal</span>
         </h1>
       </div>
 
@@ -40,7 +40,7 @@ const TIPOS_OPERACION = [
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
-                <label class="text-sm font-semibold   ml-1 uppercase">Nombre Completo</label>
+                <label class="text-sm font-semibold ml-1 uppercase">Nombre Completo</label>
                 <input 
                   type="text" 
                   name="nombre" 
@@ -52,7 +52,7 @@ const TIPOS_OPERACION = [
               </div>
 
               <div class="space-y-1">
-                <label class="text-sm font-semibold   ml-1 uppercase">Celular (Bolivia)</label>
+                <label class="text-sm font-semibold ml-1 uppercase">Celular de Contacto</label>
                 <div class="relative flex items-center">
                   <div class="absolute left-4 flex items-center gap-1 pointer-events-none border-r border-border pr-3">
                     <img src="https://flagcdn.com/w20/bo.png" class="w-4 h-3 rounded-sm" alt="BO" />
@@ -84,7 +84,7 @@ const TIPOS_OPERACION = [
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
-                <label class="text-sm font-semibold   ml-1 uppercase">Tipo de Propiedad</label>
+                <label class="text-sm font-semibold ml-1 uppercase">Tipo de Propiedad</label>
                 <select 
                   id="tipo_operacion"
                   name="tipo_operacion" 
@@ -97,7 +97,7 @@ const TIPOS_OPERACION = [
               </div>
 
               <div id="otro_input_container" class="space-y-1 hidden">
-                <label class="text-sm font-semibold   ml-1 uppercase">Especificar Tipo</label>
+                <label class="text-sm font-semibold ml-1 uppercase">Especificar Tipo</label>
                 <input 
                   type="text" 
                   name="tipo_otro" 
@@ -107,7 +107,7 @@ const TIPOS_OPERACION = [
               </div>
 
               <div class="space-y-1">
-                <label class="text-sm font-semibold   ml-1 uppercase">Precio Estimado</label>
+                <label class="text-sm font-semibold ml-1 uppercase">Precio Estimado</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary">Bs.</span>
                   <input 
@@ -122,7 +122,7 @@ const TIPOS_OPERACION = [
             </div>
 
             <div class="space-y-1">
-              <label class="text-sm font-semibold   ml-1 uppercase">Direccion y detalles</label>
+              <label class="text-sm font-semibold ml-1 uppercase">Direccion y detalles</label>
               <textarea 
                 name="descripcion" 
                 rows="4" 
@@ -152,7 +152,7 @@ const TIPOS_OPERACION = [
                 </div>
                 <div>
                   <p class="text-gray-900 dark:text-white font-bold uppercase">Añadir Imágenes</p>
-                  <p class="text-sm text-gray-500 uppercase tracking-wider">Máximo 10 archivos</p>
+                  <p class="text-sm text-gray-500 uppercase tracking-wider">Máximo 5 archivos</p>
                 </div>
               </div>
             </div>
@@ -232,12 +232,45 @@ const TIPOS_OPERACION = [
     </div>
   </div>
 
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] flex flex-col gap-3 pointer-events-none"></div>
+
   <!-- MapLibre GL JS -->
   <script is:inline src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
 
   <script is:inline>
     let map, marker;
     const LA_PAZ = [-68.120, -16.500];
+
+    /**
+     * Reusable Toast Function
+     */
+    function showToast(message, type = 'error') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `px-6 py-4 rounded-2xl shadow-2xl text-white font-bold flex items-center gap-3 transform transition-all duration-500 translate-y-20 opacity-0 pointer-events-auto cursor-pointer uppercase text-sm tracking-wide ${type === 'error' ? 'bg-danger' : 'bg-primary'}`;
+      
+      const icon = type === 'error' 
+        ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>';
+
+      toast.innerHTML = `${icon} <span>${message}</span>`;
+      container.appendChild(toast);
+
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove('translate-y-20', 'opacity-0');
+      }, 10);
+
+      // Remove after 4s
+      const remove = () => {
+        toast.classList.add('translate-y-[-20px]', 'opacity-0');
+        setTimeout(() => toast.remove(), 500);
+      };
+
+      toast.onclick = remove;
+      setTimeout(remove, 4000);
+    }
 
     function initMap() {
       const container = document.getElementById('map');
@@ -317,7 +350,7 @@ const TIPOS_OPERACION = [
       dropZone?.addEventListener('click', () => fileInput.click());
       fileInput?.addEventListener('change', (e) => {
         const newFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
-        if (selectedFiles.length + newFiles.length > 10) return alert('Máximo 10 fotos');
+        if (selectedFiles.length + newFiles.length > 5) return showToast('Solo puedes subir hasta 5 fotos');
         newFiles.forEach(file => {
           selectedFiles.push(file);
           const reader = new FileReader();
@@ -340,7 +373,6 @@ const TIPOS_OPERACION = [
         });
       });
 
-      // ----- SUBMIT CON ARCHIVOS REALES (FormData) -----
       const form = document.getElementById('sucursalForm');
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -348,7 +380,7 @@ const TIPOS_OPERACION = [
         const lat = document.getElementById('lat').value;
         const lng = document.getElementById('lng').value;
         
-        if (!lat || !lng) return alert('Por favor, selecciona la ubicación exacta en el mapa.');
+        if (!lat || !lng) return showToast('Selecciona la ubicación en el mapa');
 
         submitBtn.disabled = true;
         document.getElementById('btn-text').textContent = 'ENVIANDO...';
@@ -363,17 +395,9 @@ const TIPOS_OPERACION = [
           formData.append('tipo', form.tipo_operacion.value === 'otro' ? form.tipo_otro.value : form.tipo_operacion.value);
           formData.append('precio', form.precio.value);
           formData.append('descripcion', form.descripcion.value);
+          selectedFiles.forEach((file) => formData.append('fotos[]', file));
 
-          // Adjuntar archivos reales
-          selectedFiles.forEach((file) => {
-            formData.append('fotos[]', file);
-          });
-
-          const response = await fetch('/api/proxy-sucursal', {
-            method: 'POST',
-            body: formData
-          });
-
+          const response = await fetch('/api/proxy-sucursal', { method: 'POST', body: formData });
           const result = await response.json();
 
           if (response.ok) {
@@ -385,12 +409,10 @@ const TIPOS_OPERACION = [
             previews.innerHTML = '';
             selectedFiles = [];
           } else {
-            const errorMsg = result.message || 'Error en el servidor';
-            alert('⚠️ ' + errorMsg);
+            showToast(result.message || 'Error en el servidor');
           }
         } catch (err) {
-          console.error('Error al enviar:', err);
-          alert('⚠️ Hubo un problema al enviar la información.');
+          showToast('Hubo un problema al enviar la información');
         } finally {
           submitBtn.disabled = false;
           document.getElementById('btn-text').textContent = 'REGISTRAR PROPIEDAD';
