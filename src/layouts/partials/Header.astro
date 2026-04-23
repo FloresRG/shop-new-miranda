@@ -50,7 +50,7 @@ const { transparent } = Astro.props;
               "dark:bg-darkmode-body",
               "py-4",
               "shadow-md",
-              "border-b", 
+              "border-b",
               "border-border/50",
               "dark:border-darkmode-border/30"
             );
@@ -61,7 +61,7 @@ const { transparent } = Astro.props;
               "dark:bg-darkmode-body",
               "py-4",
               "shadow-md",
-              "border-b", 
+              "border-b",
               "border-border/50",
               "dark:border-darkmode-border/30"
             );
@@ -162,13 +162,13 @@ const { transparent } = Astro.props;
           </>
         ))
       }
-     
+
     </ul>
     <div class="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
       <!-- Mobile Search Toggle -->
-      <button 
-        id="mobile-search-toggle" 
-        aria-label="Toggle Search" 
+      <button
+        id="mobile-search-toggle"
+        aria-label="Toggle Search"
         class="mr-4 md:hidden text-text-dark dark:text-white hover:text-primary transition-colors focus:outline-none"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,16 +202,16 @@ const { transparent } = Astro.props;
   function initMobileSearch() {
     const toggleBtn = document.getElementById('mobile-search-toggle');
     const searchBar = document.getElementById('mobile-search-bar');
-    
+
     if (toggleBtn && searchBar) {
       toggleBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const isHidden = searchBar.classList.contains('max-h-0');
-        
+
         if (isHidden) {
             searchBar.classList.remove('max-h-0', 'opacity-0', 'py-0');
             searchBar.classList.add('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
-            
+
             setTimeout(() => {
                 if (searchBar.classList.contains('opacity-100')) {
                     searchBar.classList.remove('overflow-hidden');
@@ -221,11 +221,11 @@ const { transparent } = Astro.props;
         } else {
             searchBar.classList.remove('overflow-visible');
             searchBar.classList.add('overflow-hidden');
-            
+
             searchBar.classList.remove('max-h-[500px]', 'opacity-100', 'py-3', 'border-t');
             searchBar.classList.add('max-h-0', 'opacity-0', 'py-0');
         }
-        
+
         const input = searchBar.querySelector('input');
         if (isHidden && input) {
             setTimeout(() => input.focus(), 300);

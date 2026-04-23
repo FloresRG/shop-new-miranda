@@ -63,7 +63,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
 
   return (
     <section
-      className={`relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${
+      className={` xl:pt-16  relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${
         bannerImages
           ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
           : "bg-[#0a0a0a]"
