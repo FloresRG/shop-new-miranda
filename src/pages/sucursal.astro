@@ -6,7 +6,7 @@ export const prerender = false;
 const TIPOS_OPERACION = [
   { value: "anticretico", label: "Anticrético" },
   { value: "alquiler", label: "Alquiler" },
-  { value: "venta", label: "Venta" },
+  { value: "compra", label: "Compra" },
   { value: "otro", label: "Otro" }
 ];
 ---
@@ -14,10 +14,10 @@ const TIPOS_OPERACION = [
 <Base title="Nueva Sucursal | Miranda">
   <!-- MapLibre GL JS -->
   <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
-  
+
   <div class="min-h-screen bg-gray-50 dark:bg-darkmode-body py-12 px-4 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
-      
+
       <!-- Header Section -->
       <div class="text-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2 uppercase">
@@ -28,7 +28,7 @@ const TIPOS_OPERACION = [
       <!-- Main Form -->
       <form id="sucursalForm" class="bg-white dark:bg-darkmode-light rounded-3xl shadow-xl border border-border dark:border-darkmode-border overflow-hidden transition-all duration-300">
         <div class="p-8 space-y-10">
-          
+
           <!-- Datos de Contacto Section -->
           <section class="space-y-6">
             <div class="flex items-center gap-3 border-b border-border dark:border-darkmode-border pb-4">
@@ -41,10 +41,10 @@ const TIPOS_OPERACION = [
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-sm font-semibold ml-1 uppercase">Nombre Completo</label>
-                <input 
-                  type="text" 
-                  name="nombre" 
-                  required 
+                <input
+                  type="text"
+                  name="nombre"
+                  required
                   placeholder="JUAN PÉREZ"
                   oninput="this.value = this.value.toUpperCase()"
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none uppercase font-semibold"
@@ -58,12 +58,12 @@ const TIPOS_OPERACION = [
                     <img src="https://flagcdn.com/w20/bo.png" class="w-4 h-3 rounded-sm" alt="BO" />
                     <span class="text-sm font-medium text-gray-500">+591</span>
                   </div>
-                  <input 
-                    type="tel" 
-                    id="celular" 
-                    name="celular" 
-                    required 
-                    maxlength="8" 
+                  <input
+                    type="tel"
+                    id="celular"
+                    name="celular"
+                    required
+                    maxlength="8"
                     placeholder="70000000"
                     class="w-full pl-24 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                   />
@@ -85,10 +85,10 @@ const TIPOS_OPERACION = [
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-sm font-semibold ml-1 uppercase">Tipo de Propiedad</label>
-                <select 
+                <select
                   id="tipo_operacion"
-                  name="tipo_operacion" 
-                  required 
+                  name="tipo_operacion"
+                  required
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none uppercase"
                 >
                   <option value="" disabled selected>Selecciona una opción</option>
@@ -98,9 +98,9 @@ const TIPOS_OPERACION = [
 
               <div id="otro_input_container" class="space-y-1 hidden">
                 <label class="text-sm font-semibold ml-1 uppercase">Especificar Tipo</label>
-                <input 
-                  type="text" 
-                  name="tipo_otro" 
+                <input
+                  type="text"
+                  name="tipo_otro"
                   placeholder="Ej. Local Comercial"
                   class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none uppercase"
                 />
@@ -110,10 +110,10 @@ const TIPOS_OPERACION = [
                 <label class="text-sm font-semibold ml-1 uppercase">Precio Estimado</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary">Bs.</span>
-                  <input 
-                    type="number" 
-                    name="precio" 
-                    required 
+                  <input
+                    type="number"
+                    name="precio"
+                    required
                     placeholder="0.00"
                     class="w-full pl-12 pr-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                   />
@@ -123,9 +123,9 @@ const TIPOS_OPERACION = [
 
             <div class="space-y-1">
               <label class="text-sm font-semibold ml-1 uppercase">Direccion y detalles</label>
-              <textarea 
-                name="descripcion" 
-                rows="4" 
+              <textarea
+                name="descripcion"
+                rows="4"
                 placeholder="Ubicación exacta, ambientes, detalles relevantes..."
                 class="w-full px-4 py-3 rounded-xl border border-border dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none resize-none"
               ></textarea>
@@ -141,8 +141,8 @@ const TIPOS_OPERACION = [
               <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Fotos de la Propiedad</h2>
             </div>
 
-            <div 
-              id="drop-zone" 
+            <div
+              id="drop-zone"
               class="group relative border-2 border-dashed border-border dark:border-darkmode-border rounded-2xl p-10 text-center hover:border-primary transition-all cursor-pointer bg-gray-50/30 dark:bg-darkmode-body/30"
             >
               <input type="file" id="fotos" name="fotos" multiple accept="image/*" class="hidden" />
@@ -170,14 +170,14 @@ const TIPOS_OPERACION = [
               </div>
               <h2 class="text-2xl font-bold text-gray-900 dark:text-white uppercase">Ubicación en Mapa</h2>
             </div>
-            
+
             <div class="space-y-4">
               <p class="text-sm text-gray-500 uppercase tracking-widest font-bold">Mueve el marcador hacia la ubicación exacta</p>
               <div id="map" class="h-[450px] w-full rounded-2xl border border-border dark:border-darkmode-border shadow-2xl z-10 bg-gray-100"></div>
-              
+
               <div class="flex flex-col sm:flex-row gap-4">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   id="get-location"
                   class="flex-1 py-3 px-4 bg-gray-100 dark:bg-darkmode-body hover:bg-gray-200 dark:hover:bg-darkmode-border text-gray-900 dark:text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase"
                 >
@@ -198,8 +198,8 @@ const TIPOS_OPERACION = [
 
           <!-- Submit Button -->
           <div class="pt-6">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               id="submit-btn"
               class="w-full bg-primary hover:bg-primary/90 text-white font-black py-5 px-6 rounded-2xl shadow-2xl shadow-primary/30 transform active:scale-[0.98] transition-all flex items-center justify-center gap-4 text-xl uppercase tracking-tighter"
             >
@@ -249,8 +249,8 @@ const TIPOS_OPERACION = [
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
       toast.className = `px-6 py-4 rounded-2xl shadow-2xl text-white font-bold flex items-center gap-3 transform transition-all duration-500 translate-y-20 opacity-0 pointer-events-auto cursor-pointer uppercase text-sm tracking-wide ${type === 'error' ? 'bg-danger' : 'bg-primary'}`;
-      
-      const icon = type === 'error' 
+
+      const icon = type === 'error'
         ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>'
         : '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>';
 
@@ -382,7 +382,7 @@ const TIPOS_OPERACION = [
         const submitBtn = document.getElementById('submit-btn');
         const lat = document.getElementById('lat').value;
         const lng = document.getElementById('lng').value;
-        
+
         if (!lat || !lng) return showToast('Selecciona la ubicación en el mapa');
 
         submitBtn.disabled = true;
