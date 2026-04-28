@@ -11,6 +11,8 @@ export default function SolicitudTrabajo() {
     nombre: "",
     ci: "",
     celular: "",
+    cargo: "",
+    sobre_ti: "",
   });
 
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -56,6 +58,14 @@ export default function SolicitudTrabajo() {
     }
   };
 
+  const CARGOS = [
+    { value: "vendedor", label: "Vendedor" },
+    { value: "cajero", label: "Cajero" },
+    { value: "filmaker", label: "Filmaker" },
+    { value: "creativo", label: "Creativo" },
+    { value: "almacen_cargador", label: "Almacén / Cargador de Cajas" },
+  ];
+
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
 
@@ -75,6 +85,16 @@ export default function SolicitudTrabajo() {
       errors.celular = "El número debe tener 8 dígitos.";
     } else if (!/^[67]/.test(formData.celular)) {
       errors.celular = "El número debe comenzar con 6 o 7.";
+    }
+
+    if (!formData.cargo) {
+      errors.cargo = "Por favor, seleccione un cargo.";
+    }
+
+    if (!formData.sobre_ti.trim()) {
+      errors.sobre_ti = "Por favor, cuéntanos algo sobre ti.";
+    } else if (formData.sobre_ti.trim().length < 30) {
+      errors.sobre_ti = "Escribe al menos 30 caracteres.";
     }
 
     // CV PDF es obligatorio
@@ -104,6 +124,8 @@ export default function SolicitudTrabajo() {
       apiFormData.append("nombre", formData.nombre);
       apiFormData.append("ci", formData.ci);
       apiFormData.append("celular", formData.celular);
+      apiFormData.append("cargo", formData.cargo);
+      apiFormData.append("sobre_ti", formData.sobre_ti);
 
       if (cvFile) {
         apiFormData.append("cv_pdf", cvFile);
@@ -122,7 +144,7 @@ export default function SolicitudTrabajo() {
       setIsSubmitting(false);
 
       // Reset form
-      setFormData({ nombre: "", ci: "", celular: "" });
+      setFormData({ nombre: "", ci: "", celular: "", cargo: "", sobre_ti: "" });
       setCvFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -248,6 +270,74 @@ export default function SolicitudTrabajo() {
                 {formErrors.celular}
               </p>
             )}
+          </div>
+        </div>
+
+        {/* Cargo */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
+              <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+            </svg>
+            Cargo al que postula <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <select
+              name="cargo"
+              value={formData.cargo}
+              onChange={handleChange}
+              className="w-full px-4 py-3 pr-10 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white appearance-none cursor-pointer"
+            >
+              <option value="" disabled>Seleccione un cargo...</option>
+              {CARGOS.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+            
+          </div>
+          {formErrors.cargo && (
+            <p className="text-red-500 text-sm flex items-center gap-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              {formErrors.cargo}
+            </p>
+          )}
+        </div>
+
+        {/* Hablemos sobre ti */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
+            </svg>
+            Hablemos sobre ti <span className="text-red-500">*</span>
+          </label>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Cuéntanos quién eres, tu experiencia y por qué quieres unirte a nuestro equipo.
+          </p>
+          <textarea
+            name="sobre_ti"
+            value={formData.sobre_ti}
+            onChange={handleChange}
+            rows={5}
+            maxLength={1000}
+            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
+            placeholder="Ej: Soy una persona proactiva con 2 años de experiencia en ventas..."
+          />
+          <div className="flex justify-between items-center">
+            {formErrors.sobre_ti ? (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {formErrors.sobre_ti}
+              </p>
+            ) : <span />}
+            <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+              {formData.sobre_ti.length}/1000
+            </span>
           </div>
         </div>
 
