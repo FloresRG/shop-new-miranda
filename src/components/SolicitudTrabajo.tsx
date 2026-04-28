@@ -6,13 +6,15 @@ export default function SolicitudTrabajo() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [responseData, setResponseData] = useState<any>(null);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [turno, setTurno] = useState("");
 
   const [formData, setFormData] = useState({
     nombre: "",
     ci: "",
     celular: "",
     cargo: "",
-    sobre_ti: "",
+    descripcion: "",
   });
 
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -35,7 +37,12 @@ export default function SolicitudTrabajo() {
       processedValue = value.toUpperCase();
     }
 
-    setFormData({ ...formData, [name]: processedValue });
+    const updated = { ...formData, [name]: processedValue };
+    setFormData(updated);
+    if (name === "cargo") {
+      setSelectedSkills([]);
+      setTurno(["Filmaker", "Creativo"].includes(processedValue) ? "Completo" : "");
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,49 +66,42 @@ export default function SolicitudTrabajo() {
   };
 
   const CARGOS = [
-    { value: "vendedor", label: "Vendedor" },
-    { value: "cajero", label: "Cajero" },
-    { value: "filmaker", label: "Filmaker" },
-    { value: "creativo", label: "Creativo" },
-    { value: "almacen_cargador", label: "Almacén / Cargador de Cajas" },
+    { value: "Vendedor", label: "Vendedor" },
+    { value: "Cajero", label: "Cajero" },
+    { value: "Filmaker", label: "Filmaker" },
+    { value: "Creativo", label: "Creativo" },
+    { value: "Almacén / Cargador de Cajas", label: "Almacén / Cargador de Cajas" },
+    { value: "Acomodador", label: "Acomodador" },
   ];
+
+  const SKILLS_BY_CARGO: Record<string, string[]> = {
+    "Vendedor": ["Atención al cliente", "Poder de comunicación", "Paciencia"],
+    "Almacén / Cargador de Cajas": ["Resistencia física", "Buena memoria", "Paciencia"],
+    "Acomodador": ["Buen trato", "Paciente"],
+  };
+
+  const SOLO_COMPLETO = ["Filmaker", "Creativo"];
+  const currentSkills = SKILLS_BY_CARGO[formData.cargo] ?? [];
+
+  const toggleSkill = (skill: string) => {
+    setSelectedSkills(prev =>
+      prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill]
+    );
+  };
 
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
-
-    if (!formData.nombre.trim()) {
-      errors.nombre = "Por favor, ingrese su nombre.";
-    } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.nombre.trim())) {
-      errors.nombre = "El nombre solo puede contener letras y espacios.";
-    }
-
-    if (!formData.ci.trim()) {
-      errors.ci = "Por favor, ingrese su cédula de identidad.";
-    }
-
-    if (!formData.celular.trim()) {
-      errors.celular = "Por favor, ingrese su número de celular.";
-    } else if (formData.celular.length !== 8) {
-      errors.celular = "El número debe tener 8 dígitos.";
-    } else if (!/^[67]/.test(formData.celular)) {
-      errors.celular = "El número debe comenzar con 6 o 7.";
-    }
-
-    if (!formData.cargo) {
-      errors.cargo = "Por favor, seleccione un cargo.";
-    }
-
-    if (!formData.sobre_ti.trim()) {
-      errors.sobre_ti = "Por favor, cuéntanos algo sobre ti.";
-    } else if (formData.sobre_ti.trim().length < 30) {
-      errors.sobre_ti = "Escribe al menos 30 caracteres.";
-    }
-
-    // CV PDF es obligatorio
-    if (!cvFile) {
-      errors.cv_pdf = "Por favor, suba su Curriculum Vitae en PDF.";
-    }
-
+    if (!formData.nombre.trim()) errors.nombre = "Por favor, ingrese su nombre.";
+    else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.nombre.trim())) errors.nombre = "Solo letras y espacios.";
+    if (!formData.ci.trim()) errors.ci = "Ingrese su cédula de identidad.";
+    if (!formData.celular.trim()) errors.celular = "Ingrese su número de celular.";
+    else if (formData.celular.length !== 8) errors.celular = "El número debe tener 8 dígitos.";
+    else if (!/^[67]/.test(formData.celular)) errors.celular = "Debe comenzar con 6 o 7.";
+    if (!formData.cargo) errors.cargo = "Seleccione un cargo.";
+    if (!turno) errors.turno = "Seleccione un turno.";
+    if (!formData.descripcion.trim()) errors.descripcion = "Cuéntanos algo sobre ti.";
+    else if (formData.descripcion.trim().length < 30) errors.descripcion = "Escribe al menos 30 caracteres.";
+    if (!cvFile) errors.cv_pdf = "Suba su Curriculum Vitae en PDF.";
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -120,44 +120,32 @@ export default function SolicitudTrabajo() {
     try {
       setIsSubmitting(true);
       const apiFormData = new FormData();
-
       apiFormData.append("nombre", formData.nombre);
       apiFormData.append("ci", formData.ci);
       apiFormData.append("celular", formData.celular);
       apiFormData.append("cargo", formData.cargo);
-      apiFormData.append("sobre_ti", formData.sobre_ti);
-
-      if (cvFile) {
-        apiFormData.append("cv_pdf", cvFile);
-      }
+      apiFormData.append("detalle", selectedSkills.join(", "));
+      apiFormData.append("descripcion", formData.descripcion);
+      apiFormData.append("turno", turno);
+      if (cvFile) apiFormData.append("cv_pdf", cvFile);
 
       const response = await axios.post(
         "https://importadoramiranda.com/api/solicitudes",
         apiFormData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-
       setResponseData(response.data);
       setIsSuccess(true);
       setIsSubmitting(false);
-
-      // Reset form
-      setFormData({ nombre: "", ci: "", celular: "", cargo: "", sobre_ti: "" });
+      setFormData({ nombre: "", ci: "", celular: "", cargo: "", descripcion: "" });
+      setSelectedSkills([]);
+      setTurno("");
       setCvFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setFormErrors({});
-
     } catch (error: any) {
-      console.error("Error al enviar la solicitud:", error);
       setIsSubmitting(false);
-      toast.error(
-        error?.response?.data?.message ||
-        "Hubo un error al registrar tu solicitud. Inténtalo nuevamente."
-      );
+      toast.error(error?.response?.data?.message || "Hubo un error. Inténtalo nuevamente.");
     }
   };
 
@@ -298,28 +286,100 @@ export default function SolicitudTrabajo() {
           </div>
           {formErrors.cargo && (
             <p className="text-red-500 text-sm flex items-center gap-1">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
               {formErrors.cargo}
             </p>
           )}
         </div>
 
+        {/* Cualidades del cargo */}
+        {currentSkills.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+              ¿Cuáles son tus cualidades? <span className="text-gray-500 font-normal">(Selecciona las que apliquen)</span>
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {currentSkills.map((skill) => {
+                const checked = selectedSkills.includes(skill);
+                return (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => toggleSkill(skill)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${
+                      checked
+                        ? "border-primary bg-primary/10 dark:bg-primary/20 text-primary font-semibold"
+                        : "border-gray-200 dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-700 dark:text-gray-300 hover:border-primary/50"
+                    }`}
+                  >
+                    <span className={`w-5 h-5 flex-shrink-0 rounded-md border-2 flex items-center justify-center transition-all ${
+                      checked ? "bg-primary border-primary" : "border-gray-300 dark:border-gray-600"
+                    }`}>
+                      {checked && (
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                      )}
+                    </span>
+                    <span className="text-sm">{skill}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Turno */}
+        {formData.cargo && (
+          <div className="space-y-3">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg>
+              Turno disponible <span className="text-red-500">*</span>
+            </p>
+            {SOLO_COMPLETO.includes(formData.cargo) ? (
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-primary bg-primary/10 dark:bg-primary/20">
+                <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l3-3z" clipRule="evenodd" /></svg>
+                <span className="text-sm font-semibold text-primary">Tiempo Completo (requerido para este cargo)</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {["Mañana", "Tarde", "Completo"].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTurno(t)}
+                    className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                      turno === t
+                        ? "border-primary bg-primary/10 dark:bg-primary/20 text-primary font-semibold"
+                        : "border-gray-200 dark:border-darkmode-border bg-gray-50 dark:bg-darkmode-body text-gray-700 dark:text-gray-300 hover:border-primary/50"
+                    }`}
+                  >
+                    {t === "Mañana" && <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg>}
+                    {t === "Tarde" && <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
+                    {t === "Completo" && <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg>}
+                    {t}
+                  </button>
+                ))}
+              </div>
+            )}
+            {formErrors.turno && (
+              <p className="text-red-500 text-sm flex items-center gap-1">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                {formErrors.turno}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Hablemos sobre ti */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
-            </svg>
-            Hablemos sobre ti <span className="text-red-500">*</span>
+            <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" /></svg>
+            ¿Hablemos sobre ti? <span className="text-red-500">*</span>
           </label>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Cuéntanos quién eres, tu experiencia y por qué quieres unirte a nuestro equipo.
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Cuéntanos quién eres, tu experiencia y por qué quieres unirte a nuestro equipo.</p>
           <textarea
-            name="sobre_ti"
-            value={formData.sobre_ti}
+            name="descripcion"
+            value={formData.descripcion}
             onChange={handleChange}
             rows={5}
             maxLength={1000}
@@ -327,17 +387,13 @@ export default function SolicitudTrabajo() {
             placeholder="Ej: Soy una persona proactiva con 2 años de experiencia en ventas..."
           />
           <div className="flex justify-between items-center">
-            {formErrors.sobre_ti ? (
+            {formErrors.descripcion ? (
               <p className="text-red-500 text-sm flex items-center gap-1">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                {formErrors.sobre_ti}
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                {formErrors.descripcion}
               </p>
             ) : <span />}
-            <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
-              {formData.sobre_ti.length}/1000
-            </span>
+            <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">{formData.descripcion.length}/1000</span>
           </div>
         </div>
 
