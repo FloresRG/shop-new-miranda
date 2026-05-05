@@ -132,6 +132,11 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   url: "/sucursal",
                   subtitle: "Aqui agrega tu sugerencia de sucursal para que estemos ahi",
                 },
+                {
+                  title: "INGRESE A NUESTRO GRUPO DE DIFUCION",
+                  url: "https://whatsapp.com/channel/0029Vb8NgBe2kNFn3YppK125",
+                  subtitle: "Únete a nuestro grupo para novedades y ofertas",
+                },
               ].map((link, i) => (
                 <a
                   key={link.title}
