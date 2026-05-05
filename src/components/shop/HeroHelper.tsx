@@ -93,8 +93,8 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
       <div className="container relative z-10">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Contenido Principal - Lado Izquierdo */}
-          <div className="flex-1 text-white space-y-8 pt-24 pb-12 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
-            <div className="w-full max-w-lg space-y-4" ref={linksContainerRef}>
+          <div className="flex-1 text-white space-y-8 pt-24 pb-2 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
+            <div className="w-full max-w-lg space-y-2.5" ref={linksContainerRef}>
               {[
                 {
                   title: "CHATEA CON NOSOTROS",
@@ -142,19 +142,19 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   key={link.title}
                   href={link.url}
                   onClick={link.onClick}
-                  className="hero-link-item group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden opacity-0"
+                  className="hero-link-item group block w-full bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-3.5 transition-all duration-300 hover:scale-[1.02] hover:border-secondary/50 dark:hover:border-accent/50 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden opacity-0"
                 >
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex flex-col text-left">
-                      <span className="text-lg md:text-xl font-bold text-secondary dark:text-white group-hover:text-white transition-colors uppercase tracking-tight leading-none mb-1">
+                      <span className="text-base md:text-lg font-bold text-secondary dark:text-white group-hover:text-white transition-colors uppercase tracking-tight leading-none mb-1">
                         {link.title}
                       </span>
-                      <span className="text-xs md:text-sm font-medium text-secondary/90 dark:text-white/80 group-hover:text-white transition-colors">
+                      <span className="text-[10px] md:text-xs font-medium text-secondary/90 dark:text-white/80 group-hover:text-white transition-colors">
                         {link.subtitle}
                       </span>
                     </div>
-                    <div className="bg-secondary/10 dark:bg-white/10 p-3 rounded-xl text-secondary dark:text-white group-hover:bg-secondary group-hover:text-white transition-all shadow-lg">
-                      <FaArrowRight className="w-5 h-5 group-hover:rotate-0 -rotate-45 transition-transform" />
+                    <div className="bg-secondary/10 dark:bg-white/10 p-2.5 rounded-xl text-secondary dark:text-white group-hover:bg-secondary group-hover:text-white transition-all shadow-lg">
+                      <FaArrowRight className="w-4 h-4 group-hover:rotate-0 -rotate-45 transition-transform" />
                     </div>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -164,7 +164,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           </div>
 
           {/* Carrusel de Productos en Liquidación o Logo */}
-          <div className="w-full lg:flex-1 flex flex-col items-center justify-center gap-4 mt-12 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
+          <div className="w-full lg:flex-1 flex flex-col items-center justify-center gap-4 mt-6 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
             {!isLoading && floatingProducts.length > 0 ? (
               <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
                 <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
