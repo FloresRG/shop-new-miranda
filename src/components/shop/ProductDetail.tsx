@@ -136,15 +136,14 @@ export default function ProductDetail({ product: initialProduct, productId }: Pr
         </div>
 
         <div className="flex flex-col gap-4 mt-auto">
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 p-4 bg-gray-50 dark:bg-darkmode-theme-light rounded-lg border dark:border-gray-700">
-            <div className="flex items-center gap-2">
-              <FaTag /> {product.tipo.tipo}
-            </div>
-            <div className="flex items-center gap-2">
-              <FaBox /> Stock: {stock > 0 ? stock : "Agotado"}
-            </div>
-          </div>
-
+       <div className="flex items-center gap-4 text-sm text-accent dark:text-gray-400 p-4 bg-gray-50 dark:bg-darkmode-theme-light rounded-lg border dark:border-gray-700">
+  <div className="flex items-center gap-2">
+    <FaTag /> {product.tipo.tipo}
+  </div>
+  <div className="flex items-center gap-2">
+    <FaBox /> {stock > 0 ? "Disponible" : "Agotado"}
+  </div>
+</div>
           <div className="flex gap-4">
             <button
               onClick={() => addCartItem(product!)}
