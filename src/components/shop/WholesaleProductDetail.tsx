@@ -90,21 +90,16 @@ export default function WholesaleProductDetail({ product: initialProduct, produc
     const priceDocena = Number(product.precio_docena || (priceUnidad * 0.9));
 
     const getStock = (p: any) => {
-        if (p.inventario) {
-            const inv = p.inventario;
+        if (!p) return 0;
+        const inv = p.inventario || p.inventarios;
+        if (inv) {
             if (Array.isArray(inv)) {
-                const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-                if (item) return item.cantidad ?? item.stock ?? 0;
+                return inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0);
             } else {
-                if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
-                return 0;
+                return inv.cantidad ?? inv.stock ?? 0;
             }
         }
-        if (p.inventarios && Array.isArray(p.inventarios)) {
-            const item = p.inventarios.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-            if (item) return item.cantidad ?? item.stock ?? 0;
-        }
-        return 0;
+        return p.stock ?? p.cantidad ?? 0;
     };
 
     const stock = getStock(product);

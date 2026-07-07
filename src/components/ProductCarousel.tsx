@@ -87,22 +87,21 @@ const ProductCarousel: React.FC = () => {
                         <div
                           className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider ${(() => {
                               const inv = producto.inventario;
-                              const item = Array.isArray(inv)
-                                ? inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1)
-                                : ((inv.id_sucursal == 1 || inv.sucursal_id == 1) ? inv : null);
+                              const qty = Array.isArray(inv)
+                                ? inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0)
+                                : (inv.cantidad ?? inv.stock ?? 0);
 
-                              if (item && item.cantidad > 10) return "bg-[#17BFBF]/10 text-[#17BFBF] border border-[#17BFBF]/20";
-                              if (item && item.cantidad > 0) return "bg-yellow-400/10 text-yellow-600 border border-yellow-400/20";
+                              if (qty > 10) return "bg-[#17BFBF]/10 text-[#17BFBF] border border-[#17BFBF]/20";
+                              if (qty > 0) return "bg-yellow-400/10 text-yellow-600 border border-yellow-400/20";
                               return "bg-red-500/10 text-red-600 border border-red-500/20";
                             })()
                             }`}
                         >
                           Disponibles: {(() => {
                             const inv = producto.inventario;
-                            const item = Array.isArray(inv)
-                              ? inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1)
-                              : ((inv.id_sucursal == 1 || inv.sucursal_id == 1) ? inv : null);
-                            return item ? item.cantidad : 0;
+                            return Array.isArray(inv)
+                              ? inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0)
+                              : (inv.cantidad ?? inv.stock ?? 0);
                           })()}
                         </div>
                       )}

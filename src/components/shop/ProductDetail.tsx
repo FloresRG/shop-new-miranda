@@ -54,30 +54,16 @@ export default function ProductDetail({ product: initialProduct, productId }: Pr
 
   const price = parseFloat(product.precio) || 0;
   const getStock = (p: any) => {
-    // Prioridad 1: Campo inventario (objeto o array)
-    if (p.inventario) {
-      const inv = p.inventario;
+    if (!p) return 0;
+    const inv = p.inventario || p.inventarios;
+    if (inv) {
       if (Array.isArray(inv)) {
-        const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-        if (item) return item.cantidad ?? item.stock ?? 0;
+        return inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0);
       } else {
-        // Si tiene sucursal definida, validamos que sea la 1
-        if (inv.id_sucursal != null || inv.sucursal_id != null) {
-          if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
-          return 0; // Es de otra sucursal
-        }
-        // Si es un objeto sin id_sucursal, asumimos que es el del producto actual (ya filtrado por API)
         return inv.cantidad ?? inv.stock ?? 0;
       }
     }
-
-    // Prioridad 2: Campo inventarios (plural)
-    if (p.inventarios && Array.isArray(p.inventarios)) {
-      const item = p.inventarios.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-      if (item) return item.cantidad ?? item.stock ?? 0;
-    }
-
-    return 0;
+    return p.stock ?? p.cantidad ?? 0;
   };
 
   const stock = getStock(product);

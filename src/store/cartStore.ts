@@ -46,13 +46,8 @@ export const addCartItem = (product: Product, quantityToAdd: number = 1, forceWh
         const inv = p.inventario || p.inventarios;
         if (inv) {
             if (Array.isArray(inv)) {
-                const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-                if (item) return item.cantidad ?? item.stock ?? 0;
+                return inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0);
             } else {
-                if (inv.id_sucursal != null || inv.sucursal_id != null) {
-                    if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
-                    return 0;
-                }
                 return inv.cantidad ?? inv.stock ?? 0;
             }
         }
@@ -94,13 +89,8 @@ export const updateQuantity = (productId: number, quantity: number) => {
         const inv = p.inventario || p.inventarios;
         if (inv) {
             if (Array.isArray(inv)) {
-                const item = inv.find((i: any) => i.id_sucursal == 1 || i.sucursal_id == 1);
-                if (item) return item.cantidad ?? item.stock ?? 0;
+                return inv.reduce((sum: number, item: any) => sum + (item.cantidad ?? item.stock ?? 0), 0);
             } else {
-                if (inv.id_sucursal != null || inv.sucursal_id != null) {
-                    if (inv.id_sucursal == 1 || inv.sucursal_id == 1) return inv.cantidad ?? inv.stock ?? 0;
-                    return 0;
-                }
                 return inv.cantidad ?? inv.stock ?? 0;
             }
         }
