@@ -331,13 +331,13 @@ export default function ContactForm() {
 
     setIsSharing(true);
     const shareText =
+      `Hola, completé mi formulario de manera exitosa.\n\n` +
       `*IMPORTADORA MIRANDA - PEDIDO #${contactId}*\n\n` +
-      `👤 *Cliente:* ${orderSummary?.nombre || ""}\n` +
-      `🆔 *CI:* ${orderSummary?.ci || ""}\n` +
-      `📱 *Celular:* +591 ${orderSummary?.celular || ""}\n` +
-      `📍 *Destino:* ${orderSummary?.departamento || ""} - ${orderSummary?.provincia || ""}\n` +
-      `📅 *Fecha:* ${orderSummary?.fecha || ""}\n\n` +
-      `Adjunto mi comprobante de pedido con QR para confirmación.`;
+      `*Cliente:* ${orderSummary?.nombre || ""}\n` +
+      `*CI:* ${orderSummary?.ci || ""}\n` +
+      `*Celular:* +591 ${orderSummary?.celular || ""}\n` +
+      `*Destino:* ${orderSummary?.departamento || ""} - ${orderSummary?.provincia || ""}\n` +
+      `*Fecha:* ${orderSummary?.fecha || ""}`;
 
     try {
       const canvas = await html2canvas(ticketRef.current, {
@@ -1088,9 +1088,9 @@ export default function ContactForm() {
                 <div className="mt-2.5 p-2 rounded-xl text-center text-[10px] font-medium bg-blue-50 text-blue-900 border border-blue-100">
                   {selectedLocation.departamento === "La Paz" &&
                   selectedLocation.provincia === "Recojo en tienda" ? (
-                    <span>📍 Puedes recoger tu pedido hoy o en los próximos 3 días hábiles.</span>
+                    <span>Puedes recoger tu pedido hoy o en los próximos 3 días hábiles.</span>
                   ) : (
-                    <span>🚚 Tu pedido será despachado en los siguientes 3 a 5 días hábiles.</span>
+                    <span>Tu pedido será despachado en los siguientes 3 a 5 días hábiles.</span>
                   )}
                 </div>
 
@@ -1120,7 +1120,7 @@ export default function ContactForm() {
                     ) : (
                       <FaShareAlt className="text-sm" />
                     )}
-                    <span>{isSharing ? "Abriendo..." : "Compartir a WhatsApp"}</span>
+                    <span>{isSharing ? "Abriendo..." : "Compartir Datos por WhatsApp"}</span>
                   </button>
 
                   {/* Botón: Descargar PDF */}
