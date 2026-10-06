@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import html2canvas from "html2canvas";
 import QRCode from "qrcode";
 import {
-  FaCamera,
   FaShareAlt,
   FaFilePdf,
   FaUser,
@@ -65,7 +64,6 @@ export default function ContactForm() {
     provincia: string;
     fecha: string;
   } | null>(null);
-  const [isCapturing, setIsCapturing] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -327,33 +325,7 @@ export default function ContactForm() {
     }
   };
 
-  // Acción 2: Sacar Captura del Comprobante (Descarga de imagen PNG)
-  const handleCaptureTicket = async () => {
-    if (!ticketRef.current) return;
-    try {
-      setIsCapturing(true);
-      const canvas = await html2canvas(ticketRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-      });
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = `comprobante_pedido_${contactId || "miranda"}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success("¡Captura guardada en tu dispositivo!");
-    } catch (error) {
-      console.error("Error al capturar comprobante:", error);
-      toast.error("No se pudo generar la captura.");
-    } finally {
-      setIsCapturing(false);
-    }
-  };
-
-  // Acción 3: Compartir Comprobante (Web Share API o WhatsApp directo)
+  // Acción 2: Compartir Comprobante a WhatsApp (+591 63952544)
   const handleShareTicket = async () => {
     if (!ticketRef.current || !contactId) return;
 
@@ -374,53 +346,22 @@ export default function ContactForm() {
         backgroundColor: "#ffffff",
       });
 
-      let sharedWithFile = false;
-      if (navigator.share) {
-        try {
-          const blob = await new Promise<Blob | null>((resolve) =>
-            canvas.toBlob(resolve, "image/png"),
-          );
-          if (blob) {
-            const file = new File(
-              [blob],
-              `comprobante_pedido_${contactId}.png`,
-              { type: "image/png" },
-            );
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({
-                title: `Pedido #${contactId} - Importadora Miranda`,
-                text: shareText,
-                files: [file],
-              });
-              sharedWithFile = true;
-              toast.success("¡Comprobante compartido!");
-            }
-          }
-        } catch (shareErr: any) {
-          if (shareErr.name === "AbortError") {
-            setIsSharing(false);
-            return;
-          }
-        }
-      }
+      // Descargamos la imagen del comprobante como respaldo para el cliente
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `comprobante_pedido_${contactId}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-      // Si no se compartió por WebShare con archivo, descargamos la imagen y abrimos WhatsApp
-      if (!sharedWithFile) {
-        const image = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = image;
-        link.download = `comprobante_pedido_${contactId}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        const whatsappUrl = `https://wa.me/59170621016?text=${encodeURIComponent(shareText)}`;
-        window.open(whatsappUrl, "_blank");
-        toast.success("Captura descargada. Abriendo WhatsApp...");
-      }
+      // Abrir WhatsApp directamente al número +591 63952544
+      const whatsappUrl = `https://wa.me/59163952544?text=${encodeURIComponent(shareText)}`;
+      window.open(whatsappUrl, "_blank");
+      toast.success("Abriendo WhatsApp...");
     } catch (err) {
       console.error("Error al compartir:", err);
-      const fallbackUrl = `https://wa.me/59170621016?text=${encodeURIComponent(shareText)}`;
+      const fallbackUrl = `https://wa.me/59163952544?text=${encodeURIComponent(shareText)}`;
       window.open(fallbackUrl, "_blank");
     } finally {
       setIsSharing(false);
@@ -1165,60 +1106,34 @@ export default function ContactForm() {
                   Acciones Rápidas
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {/* Botón 1: Sacar Captura */}
-                  <button
-                    type="button"
-                    onClick={handleCaptureTicket}
-                    disabled={isCapturing}
-                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow-md transition-all transform active:scale-95 disabled:opacity-50"
-                    title="Descargar imagen del comprobante"
-                  >
-                    {isCapturing ? (
-                      <FaSpinner className="animate-spin text-sm" />
-                    ) : (
-                      <FaCamera className="text-sm text-cyan-400" />
-                    )}
-                    <span>{isCapturing ? "Guardando..." : "Sacar Captura"}</span>
-                  </button>
-
-                  {/* Botón 2: Compartir */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {/* Botón: Compartir a WhatsApp */}
                   <button
                     type="button"
                     onClick={handleShareTicket}
                     disabled={isSharing}
-                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-[#25D366] hover:bg-[#20ba59] text-white rounded-xl font-bold text-xs shadow-md shadow-green-600/20 transition-all transform active:scale-95 disabled:opacity-50"
-                    title="Compartir por WhatsApp"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-3 bg-[#25D366] hover:bg-[#20ba59] text-white rounded-xl font-bold text-xs shadow-md shadow-green-600/20 transition-all transform active:scale-95 disabled:opacity-50"
+                    title="Enviar comprobante a WhatsApp"
                   >
                     {isSharing ? (
                       <FaSpinner className="animate-spin text-sm" />
                     ) : (
                       <FaShareAlt className="text-sm" />
                     )}
-                    <span>{isSharing ? "Enviando..." : "Compartir"}</span>
+                    <span>{isSharing ? "Abriendo..." : "Compartir a WhatsApp"}</span>
                   </button>
 
-                  {/* Botón 3: Descargar PDF */}
+                  {/* Botón: Descargar PDF */}
                   <button
                     type="button"
                     onClick={handleDownloadPDF}
-                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow-md shadow-red-600/20 transition-all transform active:scale-95"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow-md shadow-red-600/20 transition-all transform active:scale-95"
                     title="Descargar comprobante en PDF"
                   >
                     <FaFilePdf className="text-sm" />
                     <span>Descargar PDF</span>
                   </button>
                 </div>
-
-                {/* Botón de ubicación si es recojo en tienda */}
-                {selectedLocation.provincia === "Recojo en tienda" && (
-                  <a
-                    href="/about#map-section"
-                    className="w-full flex items-center justify-center bg-accent/10 text-accent py-2.5 rounded-xl font-bold hover:bg-accent hover:text-white transition-colors text-xs border border-accent/20"
-                  >
-                    Ver ubicación de la tienda
-                  </a>
-                )}
 
                 {/* Botón de cierre */}
                 <button
