@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import html2canvas from "html2canvas";
+import QRCode from "qrcode";
 import {
   FaCamera,
   FaShareAlt,
@@ -210,11 +211,11 @@ export default function ContactForm() {
       );
 
       const pedidoId =
-        response.data.pedido_id ||
-        response.data.data?.id?.toString() ||
-        "ID no disponible";
+        (response.data.pedido_id !== undefined && response.data.pedido_id !== null)
+          ? response.data.pedido_id.toString()
+          : response.data.data?.id?.toString() || "ID no disponible";
 
-      // 1. Anticipar el QR en base64 recibido de la API (con fallback preventivo)
+      // 1. Obtener QR de comprobante de la API o generar QR de verificación 100% funcional
       const rawQr =
         response.data.qr_base64 ||
         response.data.qr ||
@@ -227,8 +228,23 @@ export default function ContactForm() {
           ? rawQr
           : `data:image/png;base64,${rawQr}`;
       } else {
-        // Fallback preventivo mientras el backend añade el campo en la respuesta
-        formattedQr = "/api/qr-proxy";
+        try {
+          const origin =
+            typeof window !== "undefined" && window.location.origin
+              ? window.location.origin
+              : "https://shop.importadoramiranda.com";
+          const trackingUrl = `${origin}/qr?id=${pedidoId}&ci=${encodeURIComponent(formData.ci)}&celular=${encodeURIComponent(formData.celular)}`;
+          formattedQr = await QRCode.toDataURL(trackingUrl, {
+            width: 320,
+            margin: 1,
+            color: {
+              dark: "#000000",
+              light: "#ffffff",
+            },
+          });
+        } catch (qrErr) {
+          console.error("Error al generar QR de comprobante:", qrErr);
+        }
       }
       setQrData(formattedQr);
 
@@ -1037,7 +1053,7 @@ export default function ContactForm() {
                       IMPORTADORA MIRANDA
                     </span>
                     <h4 className="text-base font-extrabold text-gray-900 tracking-tight">
-                      Ticket de Pedido
+                      Comprobante de Pedido
                     </h4>
                   </div>
                   <div className="bg-red-50 border border-[#F2275D]/30 px-3 py-1.5 rounded-xl text-right">
@@ -1102,7 +1118,7 @@ export default function ContactForm() {
                 <div className="pt-3.5 pb-2 flex flex-col items-center text-center">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-[11px] font-bold text-gray-700 mb-2.5">
                     <FaQrcode className="text-[#F2275D]" />
-                    <span>Código QR de Pago</span>
+                    <span>QR de Verificación del Pedido</span>
                   </div>
 
                   {/* Recuadro del QR */}
@@ -1110,20 +1126,20 @@ export default function ContactForm() {
                     {qrData ? (
                       <img
                         src={qrData}
-                        alt="Código QR de Pago"
+                        alt="QR de Verificación del Pedido"
                         crossOrigin="anonymous"
                         className="w-full h-full object-contain rounded-lg"
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center text-gray-400 p-2">
                         <FaQrcode className="w-10 h-10 mb-1 text-gray-300" />
-                        <span className="text-[10px] font-medium">QR no disponible</span>
+                        <span className="text-[10px] font-medium">Generando QR...</span>
                       </div>
                     )}
                   </div>
 
                   <p className="text-[10px] text-gray-600 max-w-[240px] leading-tight">
-                    Escanea con tu aplicación bancaria con QR Simple para completar el pago de tu pedido.
+                    Escanea este código para consultar y verificar el estado de tu pedido en cualquier momento.
                   </p>
                 </div>
 
@@ -1139,7 +1155,7 @@ export default function ContactForm() {
 
                 {/* Pie del ticket */}
                 <div className="mt-2.5 pt-2 border-t border-dashed border-gray-200 text-center text-[9px] text-gray-400">
-                  Guarda este comprobante como respaldo de tu compra.
+                  Guarda este comprobante como respaldo de tu pedido registrado.
                 </div>
               </div>
 
