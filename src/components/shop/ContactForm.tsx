@@ -1,6 +1,19 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import html2canvas from "html2canvas";
+import {
+  FaCamera,
+  FaShareAlt,
+  FaFilePdf,
+  FaUser,
+  FaIdCard,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaQrcode,
+  FaSpinner,
+} from "react-icons/fa";
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
@@ -42,6 +55,17 @@ export default function ContactForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [contactId, setContactId] = useState<string | null>(null);
   const [pdfData, setPdfData] = useState<string | null>(null);
+  const [qrData, setQrData] = useState<string | null>(null);
+  const [orderSummary, setOrderSummary] = useState<{
+    nombre: string;
+    ci: string;
+    celular: string;
+    departamento: string;
+    provincia: string;
+    fecha: string;
+  } | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -63,6 +87,7 @@ export default function ContactForm() {
 
   const productosFileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const ticketRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -188,6 +213,38 @@ export default function ContactForm() {
         response.data.pedido_id ||
         response.data.data?.id?.toString() ||
         "ID no disponible";
+
+      // 1. Anticipar el QR en base64 recibido de la API (con fallback preventivo)
+      const rawQr =
+        response.data.qr_base64 ||
+        response.data.qr ||
+        response.data.data?.qr_base64 ||
+        null;
+
+      let formattedQr: string | null = null;
+      if (rawQr) {
+        formattedQr = rawQr.startsWith("data:")
+          ? rawQr
+          : `data:image/png;base64,${rawQr}`;
+      } else {
+        // Fallback preventivo mientras el backend añade el campo en la respuesta
+        formattedQr = "/api/qr-proxy";
+      }
+      setQrData(formattedQr);
+
+      // 2. Guardar resumen inmutable de los datos antes de resetear el formulario
+      const now = new Date();
+      const formattedDate = `${now.toLocaleDateString("es-BO")} ${now.toLocaleTimeString("es-BO", { hour: "2-digit", minute: "2-digit" })}`;
+
+      setOrderSummary({
+        nombre: formData.nombre,
+        ci: formData.ci,
+        celular: formData.celular,
+        departamento: formData.departamento,
+        provincia: formData.provincia,
+        fecha: formattedDate,
+      });
+
       setContactId(pedidoId);
       setSelectedLocation({
         departamento: formData.departamento,
@@ -196,44 +253,13 @@ export default function ContactForm() {
       setIsSuccess(true);
       setIsSubmitting(false);
 
-      /* SI EL WHATSAPP ESTABA DESCONECTADO (COMENTADO PARA NO REDIRIGIR AUTOMÁTICAMENTE)
-      if (response.data.whatsapp_connected === false) {
-        const mensaje = encodeURIComponent(
-          `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\n` +
-            `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
-        );
-        window.open(`https://wa.me/59170621016?text=${mensaje}`, "_blank");
-      } */
-
-      // El PDF se sigue descargando si está presente
+      // Guardar PDF en estado si la API lo envía
       const pdfBase64 = response.data.pdf_base64;
       if (pdfBase64) {
-        // Guardar el PDF en el estado para poder descargarlo manualmente
         setPdfData(pdfBase64);
-
-        try {
-          const byteString = atob(pdfBase64);
-          const arrayBuffer = new ArrayBuffer(byteString.length);
-          const uint8Array = new Uint8Array(arrayBuffer);
-          for (let i = 0; i < byteString.length; i++) {
-            uint8Array[i] = byteString.charCodeAt(i);
-          }
-          const blob = new Blob([uint8Array], { type: "application/pdf" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `pedido_${pedidoId}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        } catch (err) {
-          console.error("Error al procesar el PDF:", err);
-          toast.error("No se pudo generar el comprobante.");
-        }
       }
 
-      // Reset
+      // Reset de campos del formulario
       setFormData({
         nombre: "",
         ci: "",
@@ -255,8 +281,12 @@ export default function ContactForm() {
     }
   };
 
+  // Acción 1: Descargar Comprobante en PDF
   const handleDownloadPDF = () => {
-    if (!pdfData || !contactId) return;
+    if (!pdfData || !contactId) {
+      toast.error("El PDF no está disponible en este momento.");
+      return;
+    }
 
     try {
       const byteString = atob(pdfData);
@@ -274,9 +304,110 @@ export default function ContactForm() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      toast.success("PDF descargado correctamente.");
     } catch (err) {
       console.error("Error al descargar el PDF:", err);
       toast.error("No se pudo descargar el PDF.");
+    }
+  };
+
+  // Acción 2: Sacar Captura del Comprobante (Descarga de imagen PNG)
+  const handleCaptureTicket = async () => {
+    if (!ticketRef.current) return;
+    try {
+      setIsCapturing(true);
+      const canvas = await html2canvas(ticketRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `comprobante_pedido_${contactId || "miranda"}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("¡Captura guardada en tu dispositivo!");
+    } catch (error) {
+      console.error("Error al capturar comprobante:", error);
+      toast.error("No se pudo generar la captura.");
+    } finally {
+      setIsCapturing(false);
+    }
+  };
+
+  // Acción 3: Compartir Comprobante (Web Share API o WhatsApp directo)
+  const handleShareTicket = async () => {
+    if (!ticketRef.current || !contactId) return;
+
+    setIsSharing(true);
+    const shareText =
+      `*IMPORTADORA MIRANDA - PEDIDO #${contactId}*\n\n` +
+      `👤 *Cliente:* ${orderSummary?.nombre || ""}\n` +
+      `🆔 *CI:* ${orderSummary?.ci || ""}\n` +
+      `📱 *Celular:* +591 ${orderSummary?.celular || ""}\n` +
+      `📍 *Destino:* ${orderSummary?.departamento || ""} - ${orderSummary?.provincia || ""}\n` +
+      `📅 *Fecha:* ${orderSummary?.fecha || ""}\n\n` +
+      `Adjunto mi comprobante de pedido con QR para confirmación.`;
+
+    try {
+      const canvas = await html2canvas(ticketRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      let sharedWithFile = false;
+      if (navigator.share) {
+        try {
+          const blob = await new Promise<Blob | null>((resolve) =>
+            canvas.toBlob(resolve, "image/png"),
+          );
+          if (blob) {
+            const file = new File(
+              [blob],
+              `comprobante_pedido_${contactId}.png`,
+              { type: "image/png" },
+            );
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: `Pedido #${contactId} - Importadora Miranda`,
+                text: shareText,
+                files: [file],
+              });
+              sharedWithFile = true;
+              toast.success("¡Comprobante compartido!");
+            }
+          }
+        } catch (shareErr: any) {
+          if (shareErr.name === "AbortError") {
+            setIsSharing(false);
+            return;
+          }
+        }
+      }
+
+      // Si no se compartió por WebShare con archivo, descargamos la imagen y abrimos WhatsApp
+      if (!sharedWithFile) {
+        const image = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = `comprobante_pedido_${contactId}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        const whatsappUrl = `https://wa.me/59170621016?text=${encodeURIComponent(shareText)}`;
+        window.open(whatsappUrl, "_blank");
+        toast.success("Captura descargada. Abriendo WhatsApp...");
+      }
+    } catch (err) {
+      console.error("Error al compartir:", err);
+      const fallbackUrl = `https://wa.me/59170621016?text=${encodeURIComponent(shareText)}`;
+      window.open(fallbackUrl, "_blank");
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -861,97 +992,228 @@ export default function ContactForm() {
       )}
 
       {isSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-3 sm:p-4 overflow-y-auto">
           <div
             ref={modalRef}
-            className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-8 flex flex-col items-center max-w-sm w-full mx-4 text-center border border-gray-100 dark:border-darkmode-border"
+            className="bg-white dark:bg-darkmode-light rounded-3xl shadow-2xl max-w-md w-full my-auto overflow-hidden border border-gray-100 dark:border-darkmode-border flex flex-col"
           >
-            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 text-green-500 dark:text-green-400">
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Cabecera del Modal */}
+            <div className="px-5 pt-5 pb-3 flex items-center justify-between border-b border-gray-100 dark:border-darkmode-border">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center text-sm font-bold">
+                  ✓
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white leading-tight">
+                    ¡Pedido Registrado!
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Comprobante generado correctamente
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSuccess(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-darkmode-body text-gray-400 hover:text-gray-700 dark:hover:text-white flex items-center justify-center text-sm transition-colors"
+                title="Cerrar"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              ¡Pedido Enviado!
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Su pedido numero {" "}
-              <span className="font-bold text-primary">{contactId}</span> ha
-              sido registrado.
-            </p>
-
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-6 text-sm text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 w-full">
-              {selectedLocation.departamento === "La Paz" &&
-              selectedLocation.provincia === "Recojo en tienda" ? (
-                <p className="font-medium">
-                  Información: Puede recojer su pedido el dia de hoy o en los
-                  proximos 3 dias.
-                </p>
-              ) : (
-                <p className="font-medium">
-                  Información: Su pedido se enviará en los siguientes 3 a 5 días
-                  hábiles.
-                </p>
-              )}
+                ✕
+              </button>
             </div>
 
-            <div className="flex flex-col gap-3 w-full mb-6">
-              <div className="bg-amber-50 dark:bg-amber-900/10 p-3 rounded-lg border border-amber-100 dark:border-amber-900/20 flex items-start gap-3">
-                <span className="text-amber-500 text-lg">📸</span>
-                <p className="text-xs text-amber-800 dark:text-amber-200 text-left font-medium">
-                  Por favor, saque una captura de pantalla a este mensaje para
-                  tener su numero de pedido a mano o descargue el PDF.
-                </p>
+            {/* Contenido con Scroll */}
+            <div className="p-4 sm:p-5 overflow-y-auto max-h-[80vh] space-y-4">
+              {/* TICKET / VOUCHER DIGITAL A CAPTURAR (ref={ticketRef}) */}
+              <div
+                ref={ticketRef}
+                className="bg-white text-gray-900 rounded-2xl p-5 border-2 border-gray-200 shadow-sm relative overflow-hidden"
+                style={{ backgroundColor: "#ffffff", color: "#111827" }}
+              >
+                {/* Header del Ticket */}
+                <div className="flex items-center justify-between pb-3 border-b-2 border-dashed border-gray-200">
+                  <div>
+                    <span className="text-[10px] font-black tracking-widest text-[#F2275D] uppercase block">
+                      IMPORTADORA MIRANDA
+                    </span>
+                    <h4 className="text-base font-extrabold text-gray-900 tracking-tight">
+                      Ticket de Pedido
+                    </h4>
+                  </div>
+                  <div className="bg-red-50 border border-[#F2275D]/30 px-3 py-1.5 rounded-xl text-right">
+                    <span className="text-[9px] block font-bold text-gray-400 uppercase leading-none">
+                      Nº DE PEDIDO
+                    </span>
+                    <span className="text-sm font-black text-[#F2275D]">
+                      #{contactId}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Datos del Cliente */}
+                <div className="py-3 space-y-2 border-b-2 border-dashed border-gray-200 text-xs">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
+                      <FaUser className="text-[#F2275D] text-[10px]" /> Cliente:
+                    </span>
+                    <span className="font-bold text-gray-900 text-right uppercase truncate">
+                      {orderSummary?.nombre}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
+                      <FaIdCard className="text-[#F2275D] text-[10px]" /> C.I.:
+                    </span>
+                    <span className="font-bold text-gray-900 text-right">
+                      {orderSummary?.ci}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
+                      <FaPhoneAlt className="text-[#F2275D] text-[10px]" /> Celular:
+                    </span>
+                    <span className="font-bold text-gray-900 text-right">
+                      +591 {orderSummary?.celular}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
+                      <FaMapMarkerAlt className="text-[#F2275D] text-[10px]" /> Destino:
+                    </span>
+                    <span className="font-bold text-gray-900 text-right">
+                      {orderSummary?.departamento} - {orderSummary?.provincia}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
+                      <FaCalendarAlt className="text-[#F2275D] text-[10px]" /> Fecha:
+                    </span>
+                    <span className="font-medium text-gray-600 text-right">
+                      {orderSummary?.fecha}
+                    </span>
+                  </div>
+                </div>
+
+                {/* SECCIÓN DEL CÓDIGO QR */}
+                <div className="pt-3.5 pb-2 flex flex-col items-center text-center">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-[11px] font-bold text-gray-700 mb-2.5">
+                    <FaQrcode className="text-[#F2275D]" />
+                    <span>Código QR de Pago</span>
+                  </div>
+
+                  {/* Recuadro del QR */}
+                  <div className="p-2.5 bg-white border-2 border-gray-200 rounded-2xl shadow-inner mb-2 max-w-[190px] w-full aspect-square flex items-center justify-center">
+                    {qrData ? (
+                      <img
+                        src={qrData}
+                        alt="Código QR de Pago"
+                        crossOrigin="anonymous"
+                        className="w-full h-full object-contain rounded-lg"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-gray-400 p-2">
+                        <FaQrcode className="w-10 h-10 mb-1 text-gray-300" />
+                        <span className="text-[10px] font-medium">QR no disponible</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <p className="text-[10px] text-gray-600 max-w-[240px] leading-tight">
+                    Escanea con tu aplicación bancaria con QR Simple para completar el pago de tu pedido.
+                  </p>
+                </div>
+
+                {/* Nota de Entrega */}
+                <div className="mt-2.5 p-2 rounded-xl text-center text-[10px] font-medium bg-blue-50 text-blue-900 border border-blue-100">
+                  {selectedLocation.departamento === "La Paz" &&
+                  selectedLocation.provincia === "Recojo en tienda" ? (
+                    <span>📍 Puedes recoger tu pedido hoy o en los próximos 3 días hábiles.</span>
+                  ) : (
+                    <span>🚚 Tu pedido será despachado en los siguientes 3 a 5 días hábiles.</span>
+                  )}
+                </div>
+
+                {/* Pie del ticket */}
+                <div className="mt-2.5 pt-2 border-t border-dashed border-gray-200 text-center text-[9px] text-gray-400">
+                  Guarda este comprobante como respaldo de tu compra.
+                </div>
               </div>
 
-              {selectedLocation.provincia === "Recojo en tienda" && (
-                <a
-                  href="/about#map-section"
-                  className="w-full flex items-center justify-center bg-accent/10 text-accent py-3 rounded-xl font-bold hover:bg-accent hover:text-white transition-colors text-sm border border-accent/20"
-                >
-                  Ver ubicación
-                </a>
-              )}
+              {/* BOTONES DE ACCIÓN (Fuera del ticket para no incluirse en la captura) */}
+              <div className="space-y-2 pt-1">
+                <p className="text-[11px] font-bold text-center text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Acciones Rápidas
+                </p>
 
-              {pdfData && (
-                <button
-                  onClick={handleDownloadPDF}
-                  className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors text-lg shadow-lg shadow-red-600/20"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {/* Botón 1: Sacar Captura */}
+                  <button
+                    type="button"
+                    onClick={handleCaptureTicket}
+                    disabled={isCapturing}
+                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow-md transition-all transform active:scale-95 disabled:opacity-50"
+                    title="Descargar imagen del comprobante"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  Descargar PDF
-                </button>
-              )}
-            </div>
+                    {isCapturing ? (
+                      <FaSpinner className="animate-spin text-sm" />
+                    ) : (
+                      <FaCamera className="text-sm text-cyan-400" />
+                    )}
+                    <span>{isCapturing ? "Guardando..." : "Sacar Captura"}</span>
+                  </button>
 
-            <button
-              onClick={() => setIsSuccess(false)}
-              className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
-            >
-              Aceptar
-            </button>
+                  {/* Botón 2: Compartir */}
+                  <button
+                    type="button"
+                    onClick={handleShareTicket}
+                    disabled={isSharing}
+                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-[#25D366] hover:bg-[#20ba59] text-white rounded-xl font-bold text-xs shadow-md shadow-green-600/20 transition-all transform active:scale-95 disabled:opacity-50"
+                    title="Compartir por WhatsApp"
+                  >
+                    {isSharing ? (
+                      <FaSpinner className="animate-spin text-sm" />
+                    ) : (
+                      <FaShareAlt className="text-sm" />
+                    )}
+                    <span>{isSharing ? "Enviando..." : "Compartir"}</span>
+                  </button>
+
+                  {/* Botón 3: Descargar PDF */}
+                  <button
+                    type="button"
+                    onClick={handleDownloadPDF}
+                    className="w-full flex items-center justify-center gap-1.5 py-3 px-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow-md shadow-red-600/20 transition-all transform active:scale-95"
+                    title="Descargar comprobante en PDF"
+                  >
+                    <FaFilePdf className="text-sm" />
+                    <span>Descargar PDF</span>
+                  </button>
+                </div>
+
+                {/* Botón de ubicación si es recojo en tienda */}
+                {selectedLocation.provincia === "Recojo en tienda" && (
+                  <a
+                    href="/about#map-section"
+                    className="w-full flex items-center justify-center bg-accent/10 text-accent py-2.5 rounded-xl font-bold hover:bg-accent hover:text-white transition-colors text-xs border border-accent/20"
+                  >
+                    Ver ubicación de la tienda
+                  </a>
+                )}
+
+                {/* Botón de cierre */}
+                <button
+                  type="button"
+                  onClick={() => setIsSuccess(false)}
+                  className="w-full py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-darkmode-body dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-semibold text-xs transition-colors mt-1"
+                >
+                  Cerrar y continuar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
