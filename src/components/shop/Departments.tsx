@@ -25,7 +25,8 @@ const departments = [
     name: "La Paz",
     provinces: [
       "Caranavi",
-      "Recojo en tienda",
+    "Recojo en Caparazon Mall Center",
+    "Recojo en CineBol",
       "Palos blancos",
       "Mapiri",
       "Guanay",

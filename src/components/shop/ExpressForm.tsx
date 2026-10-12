@@ -6,7 +6,8 @@ const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
   "La Paz": [
     "Caranavi",
-    "Recojo en tienda",
+    "Recojo en Caparazon Mall Center",
+    "Recojo en CineBol",
     "Palos blancos",
     "Mapiri",
     "Guanay",
