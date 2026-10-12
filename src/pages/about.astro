@@ -213,50 +213,156 @@ if (aboutIndex.data.draft) {
     </div>
   </section>
 
+
   <!-- Map Section -->
   <section id="map-section" class="section py-24 relative overflow-hidden">
     <div class="absolute inset-0 bg-primary/5 dark:bg-primary/10 -z-10"></div>
+
     <div class="container relative z-10">
       <div class="row justify-center">
         <div class="lg:col-10 text-center">
-          <h2
-            class="h2 mb-4 font-black text-gray-900 dark:text-white uppercase tracking-tight"
-          >
-            Nuestra Ubicación <br /><span class="text-primary italic"
-              >Tienda Física</span
-            >
+
+          <h2 class="h2 mb-4 font-black text-gray-900 dark:text-white uppercase tracking-tight">
+            Nuestra Ubicación <br />
+            <span class="text-primary italic">Tienda Física</span>
           </h2>
-          <p
-            class="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto"
-          >
-            Visítanos en nuestra sucursal y descubre todos nuestros productos en
-            persona.
+
+          <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            Visítanos en nuestras sucursales y descubre todos nuestros productos en persona.
           </p>
 
-          <div class="relative group">
-            <div
-              class="absolute -inset-4 bg-gradient-to-r from-primary via-[#FF0040] to-primary rounded-[50px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000 animate-gradient-x"
+          <!-- 1. BOTONES DE SELECCIÓN (Sin onclick inline) -->
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
+            <button
+              id="btn-caparazon"
+              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer"
             >
-            </div>
+              📍 Caparazón Mall Center
+            </button>
 
-            <div
-              class="relative bg-white dark:bg-darkmode-light p-2 rounded-[42px] shadow-2xl overflow-hidden border border-white/20"
+            <button
+              id="btn-cinebol"
+              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer"
             >
-              <div
-                class="aspect-video w-full rounded-[38px] overflow-hidden shadow-inner bg-gray-100"
-              >
+              📍 Cinebol El Alto
+            </button>
+          </div>
+
+          <!-- 2. CONTENEDOR DEL MAPA -->
+          <div class="relative group max-w-4xl mx-auto">
+            <div class="absolute -inset-4 bg-gradient-to-r from-primary via-[#FF0040] to-primary rounded-[50px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000 animate-gradient-x"></div>
+
+            <div class="relative bg-white dark:bg-darkmode-light p-2 rounded-[42px] shadow-2xl overflow-hidden border border-white/20">
+              <div class="aspect-video w-full rounded-[38px] overflow-hidden shadow-inner bg-gray-100">
                 <iframe
+                  id="mapa-iframe"
                   width="100%"
                   height="100%"
                   src="https://maps.google.com/maps?q=-16.49311355914987,-68.14514980491366&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                  class="w-full h-full"></iframe>
+                  class="w-full h-full border-0 transition-opacity duration-500 ease-in-out"
+                  loading="lazy"
+                  allowfullscreen
+                  title="Mapa de la sucursal seleccionada"
+                ></iframe>
               </div>
             </div>
+
+            <p id="mapa-direccion" class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-200 transition-all duration-300">
+              📍 Sucursal Caparazón Mall Center, La Paz
+            </p>
           </div>
+
         </div>
       </div>
     </div>
   </section>
+
+  <!-- 3. LÓGICA CON EVENT LISTENERS (La forma correcta en Astro) -->
+    <!-- 3. LÓGICA CON EVENT LISTENERS (Corregido para navegación en Astro) -->
+  <script>
+    type Lugar = 'caparazon' | 'cinebol';
+
+    interface MapaData {
+      src: string;
+      direccion: string;
+      btnActivo: string;
+      btnInactivo: string;
+    }
+
+    const mapas: Record<Lugar, MapaData> = {
+      caparazon: {
+        src: "https://maps.google.com/maps?q=-16.49311355914987,-68.14514980491366&t=&z=17&ie=UTF8&iwloc=&output=embed",
+        direccion: "📍 Sucursal Caparazón Mall Center, La Paz",
+        btnActivo: "btn-caparazon",
+        btnInactivo: "btn-cinebol"
+      },
+      cinebol: {
+        src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d956.2444631615817!2d-68.14905313036854!3d-16.527215713317002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915edf4d7c5ee75b%3A0x50ad520f8ab3bf8f!2sCINEBOL!5e0!3m2!1ses-419!2sbo!4v1791837829028!5m2!1ses-419!2sbo",
+        direccion: "📍 Sucursal Cinebol, El Alto",
+        btnActivo: "btn-cinebol",
+        btnInactivo: "btn-caparazon"
+      }
+    };
+
+    function cambiarMapa(lugar: Lugar) {
+      const data = mapas[lugar];
+      const iframe = document.getElementById('mapa-iframe') as HTMLIFrameElement | null;
+      const direccionText = document.getElementById('mapa-direccion') as HTMLElement | null;
+      const btnActivo = document.getElementById(data.btnActivo) as HTMLElement | null;
+      const btnInactivo = document.getElementById(data.btnInactivo) as HTMLElement | null;
+
+      if (!iframe || !direccionText || !btnActivo || !btnInactivo) {
+        console.error("No se encontraron los elementos del mapa en el DOM");
+        return;
+      }
+
+      // Efecto de desvanecimiento
+      iframe.style.opacity = '0';
+
+      setTimeout(() => {
+        iframe.src = data.src;
+        direccionText.textContent = data.direccion;
+
+        // Actualizar clases de los botones
+        btnActivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer";
+        btnInactivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer";
+
+        // Volver a mostrar el mapa cuando termine de cargar
+        iframe.onload = () => {
+          iframe.style.opacity = '1';
+        };
+      }, 300);
+    }
+
+    // ✅ FUNCIÓN DE INICIALIZACIÓN (Se ejecuta cada vez que se muestra la página)
+    function inicializarBotonesMapa() {
+      const btnCaparazon = document.getElementById('btn-caparazon');
+      const btnCinebol = document.getElementById('btn-cinebol');
+
+      // Truco: Clonamos el nodo para eliminar listeners anteriores y evitar
+      // que se acumulen múltiples clics si el usuario navega ida y vuelta.
+      if (btnCaparazon) {
+        const nuevoBtnCaparazon = btnCaparazon.cloneNode(true);
+        btnCaparazon.parentNode?.replaceChild(nuevoBtnCaparazon, btnCaparazon);
+        nuevoBtnCaparazon.addEventListener('click', () => cambiarMapa('caparazon'));
+      }
+
+      if (btnCinebol) {
+        const nuevoBtnCinebol = btnCinebol.cloneNode(true);
+        btnCinebol.parentNode?.replaceChild(nuevoBtnCinebol, btnCinebol);
+        nuevoBtnCinebol.addEventListener('click', () => cambiarMapa('cinebol'));
+      }
+    }
+
+    // 1. Ejecutar en la primera carga de la página (navegación normal)
+    document.addEventListener('DOMContentLoaded', inicializarBotonesMapa);
+
+    // 2. Ejecutar en cada navegación interna de Astro (View Transitions o SPA)
+    document.addEventListener('astro:page-load', inicializarBotonesMapa);
+
+    // 3. Ejecutar después de que Astro termine de intercambiar el contenido de la página
+    document.addEventListener('astro:after-swap', inicializarBotonesMapa);
+  </script>
 
   <style is:global>
     @keyframes gradient-x {

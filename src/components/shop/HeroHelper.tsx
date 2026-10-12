@@ -63,7 +63,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
 
   return (
     <section
-      className={` xl:pt-16  relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${
+      className={` xl:pt-16  relative min-h-[500px] lg:min-h-[700px] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat ${
         bannerImages
           ? "bg-[image:var(--hero-bg-mobile)] md:bg-[image:var(--hero-bg-desktop)]"
           : "bg-[#0a0a0a]"
@@ -93,20 +93,9 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
       <div className="container relative z-10">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Contenido Principal - Lado Izquierdo */}
-          <div className="flex-1 text-white space-y-8 pt-24 pb-2 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
+          <div className="flex-1 text-white space-y-8 pb-2 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
             <div className="w-full max-w-lg space-y-2.5" ref={linksContainerRef}>
               {[
-                {
-                  title: "CHATEA CON NOSOTROS",
-                  url: "#",
-                  subtitle: "Si ingresa podremos hablar directamente con el equipo de pedidos.",
-                  onClick: (e: React.MouseEvent) => {
-                    e.preventDefault();
-                    if ((window as any).$chatwoot) {
-                      (window as any).$chatwoot.toggle();
-                    }
-                  }
-                },
                 {
                   title: "PAGO CON QR (LIVE)",
                   url: "/liveqr",
@@ -118,19 +107,9 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                   subtitle: "Verifica el estado de tu pedido",
                 },
                 {
-                  title: "ENVÍOS A TODO EL PAÍS",
-                  url: "/departamentos",
-                  subtitle: "Mira nuestra cobertura nacional",
-                },
-                {
                   title: "UBICACIÓN",
                   url: "/about#map-section",
                   subtitle: "Visítanos en nuestra sucursal",
-                },
-                {
-                  title: "AGREGA TU SUGERENCIA DE SUCURSAL",
-                  url: "/sucursal",
-                  subtitle: "Aqui agrega tu sugerencia de sucursal para que estemos ahi",
                 },
                 {
                   title: "INGRESE A NUESTRO GRUPO DE DIFUCION",
@@ -164,7 +143,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           </div>
 
           {/* Carrusel de Productos en Liquidación o Logo */}
-          <div className="w-full lg:flex-1 flex flex-col items-center justify-center gap-4 mt-6 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
+          <div className="hidden lg:block w-full lg:flex-1 flex flex-col items-center justify-center gap-4 mt-6 lg:mt-24 animate-in fade-in slide-in-from-right-full duration-1000 delay-500 ease-out fill-mode-backwards z-20">
             {!isLoading && floatingProducts.length > 0 ? (
               <div className="relative w-full h-[320px] lg:h-[550px] overflow-hidden flex items-center">
                 <div className="absolute left-0 flex gap-4 lg:gap-10 animate-carousel-x hover:[animation-play-state:paused] transition-all">
@@ -218,7 +197,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                 </div>
               </div>
             ) : !isLoading && floatingProducts.length === 0 ? (
-              <div className="relative w-full h-[320px] lg:h-[550px] flex items-center justify-center">
+              <div className="hidden lg:block relative w-full h-[320px] lg:h-[550px] flex items-center justify-center">
                 {logo && (
                   <img
                     src={logo}
@@ -231,7 +210,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-body dark:from-darkmode-body to-transparent"></div>
+      <div className="hidden lg:block absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-body dark:from-darkmode-body to-transparent"></div>
     </section>
   );
 };

@@ -21,8 +21,7 @@ import logoWebp from "@/assets/logo.webp";
     logo={logoWebp.src}
   />
 
-  {/* Category Carousel Client Side */}
-  <CategoryCarouselHelper client:load />
+
 
   {/* Productos Destacados */}
   <section class="section bg-body dark:bg-darkmode-body">
@@ -30,7 +29,7 @@ import logoWebp from "@/assets/logo.webp";
       <div
         class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4"
       >
-        <div>
+        <div class="hidden lg:block">
           <span
             class="text-[#F2275D] font-bold uppercase tracking-wider text-sm"
             >Selección Exclusiva</span
@@ -47,6 +46,8 @@ import logoWebp from "@/assets/logo.webp";
       <FeaturedProductsHelper client:load />
     </div>
   </section>
+   {/* Category Carousel Client Side */}
+  <CategoryCarouselHelper client:load />
   {/* Marcas */}
   <div
     class="bg-light dark:bg-darkmode-body p-2 border-b border-border dark:border-darkmode-border"
