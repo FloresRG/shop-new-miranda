@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 
 const departamentos = {
-  "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Zona Norte"],
+  "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Satelite Norte"],
   "La Paz": [
     "Caranavi",
     "Recojo en Caparazon Mall Center",
@@ -28,12 +28,14 @@ const departamentos = {
     "Coripata",
     "Asunta",
     "Coroico",
+    "Tipuani",
+    "Chulumani",
   ],
   Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],
-  Chuquisaca: ["Sucre"],
-  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo"],
+  Chuquisaca: ["Sucre","Camargo",],
+  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo","Carapari",],
   Beni: [
     "Trinidad",
     "Riberalta",
@@ -42,6 +44,7 @@ const departamentos = {
     "Santa Rosa",
     "Santa Ana del Yacuma",
     "Rurrenabaque",
+"Yucumo",
   ],
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
