@@ -21,6 +21,7 @@ import {
   FaCity,
 } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { API_BASE_URL } from "@/config/api";
 
 // 🔹 AÑADIDO: Objeto de departamentos y provincias
 const departamentos = {
@@ -139,7 +140,7 @@ export default function CheckoutForm() {
       };
 
       const apiResponse = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        `${API_BASE_URL}/api/shoppedidos`,
         orderData,
         { headers: { "Content-Type": "application/json" } },
       );

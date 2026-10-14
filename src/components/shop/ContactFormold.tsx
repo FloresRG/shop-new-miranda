@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API_BASE_URL } from "@/config/api";
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Satelite Norte"],
@@ -21,8 +22,15 @@ const departamentos = {
   Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],
-  Chuquisaca: ["Sucre","Camargo",],
-  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo","Carapari",],
+  Chuquisaca: ["Sucre", "Camargo"],
+  Tarija: [
+    "Tarija",
+    "Yacuiba",
+    "Villa Montes",
+    "Bermejo",
+    "Camargo",
+    "Carapari",
+  ],
   Beni: [
     "Trinidad",
     "Riberalta",
@@ -31,7 +39,7 @@ const departamentos = {
     "Santa Rosa",
     "Santa Ana del Yacuma",
     "Rurrenabaque",
-"Yucumo",
+    "Yucumo",
   ],
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
@@ -136,8 +144,7 @@ export default function ContactFormold() {
       };
 
       const response = await axios.post(
-        //"https://importadoramiranda.com/api/shoppedidos",
-        "https://importadoramiranda.com/api/shoppedidos",
+        `${API_BASE_URL}/api/shoppedidos`,
         payload,
         {
           headers: {
@@ -157,7 +164,7 @@ export default function ContactFormold() {
       if (response.data.whatsapp_connected === false) {
         const mensaje = encodeURIComponent(
           `Hola, me pongo en contacto para informarles que mi pedido es el número: #${pedidoId}.\n\n` +
-          `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
+            `Agradezco su atención y quedo atento(a) a su confirmación respecto a este pedido.`,
         );
         window.open(`https://wa.me/59170621016?text=  ${mensaje}`, "_blank");
 
@@ -204,7 +211,7 @@ export default function ContactFormold() {
       setIsSubmitting(false);
       toast.error(
         error?.response?.data?.message ||
-        "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
+          "Hubo un error al registrar tu pedido. Inténtalo nuevamente.",
       );
     }
   };
@@ -437,10 +444,11 @@ export default function ContactFormold() {
                     onClick={() =>
                       setFormData({ ...formData, provincia: prov })
                     }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${formData.provincia === prov
-                      ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                      : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                      }`}
+                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
+                      formData.provincia === prov
+                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                    }`}
                   >
                     {prov}
                   </button>

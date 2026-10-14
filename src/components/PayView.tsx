@@ -7,6 +7,7 @@ import {
   FaUser,
   FaUpload,
 } from "react-icons/fa";
+import { API_BASE_URL } from "../config/api";
 
 // Tipos
 interface ProductoDetalle {
@@ -97,7 +98,7 @@ const PayView: React.FC = () => {
     setError(null);
 
     try {
-      const url = `https://importadoramiranda.com/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
+      const url = `${API_BASE_URL}/api/pay?id=${id}&ci=${encodeURIComponent(ci)}&celular=${encodeURIComponent(celular)}`;
       const res = await fetch(url);
 
       if (!res.ok) {
@@ -161,13 +162,10 @@ const PayView: React.FC = () => {
 
     setUploading(true);
     try {
-      const res = await fetch(
-        "https://importadoramiranda.com/api/pay/comprobante",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+      const res = await fetch(`${API_BASE_URL}/api/pay/comprobante`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
@@ -369,10 +367,11 @@ const PayView: React.FC = () => {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onClick={handleClick}
-            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${previewUrl
-              ? "border-[#F2275D] bg-pink-50 dark:bg-pink-900/10"
-              : "border-gray-300 dark:border-gray-600 hover:border-[#F2275D]"
-              }`}
+            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+              previewUrl
+                ? "border-[#F2275D] bg-pink-50 dark:bg-pink-900/10"
+                : "border-gray-300 dark:border-gray-600 hover:border-[#F2275D]"
+            }`}
           >
             <input
               ref={fileInputRef}
@@ -417,12 +416,13 @@ const PayView: React.FC = () => {
             <button
               onClick={handleUploadReceipt}
               disabled={uploading || uploadSuccess}
-              className={`mt-6 w-full py-3 rounded-xl font-semibold text-white shadow-md transition-all ${uploadSuccess
-                ? "bg-green-500"
-                : uploading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[#F2275D] to-[#F20505] hover:opacity-90"
-                }`}
+              className={`mt-6 w-full py-3 rounded-xl font-semibold text-white shadow-md transition-all ${
+                uploadSuccess
+                  ? "bg-green-500"
+                  : uploading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-[#F2275D] to-[#F20505] hover:opacity-90"
+              }`}
             >
               {uploading ? (
                 <>

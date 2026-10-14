@@ -130,3 +130,35 @@ Copyright (c) 2023 - Present, Designed & Developed by [Zeon Studio](https://zeon
 ## 💻 Need Custom Development Services?
 
 If you need a custom theme, theme customization, or complete website development services from scratch you can [Hire Us](https://zeon.studio/).
+
+---
+
+## 🛠️ Configuración de API y Variables de Entorno (Backend Laravel)
+
+### 1. Desarrollo Local
+
+Para trabajar contra el servidor Laravel local:
+
+- Crea el archivo `.env.development` en la raíz del proyecto:
+  ```env
+  PUBLIC_API_URL=http://127.0.0.1:8000
+  PUBLIC_STORAGE_URL=http://127.0.0.1:8000/storage
+  ```
+- Se activa automáticamente al correr:
+  ```bash
+  yarn dev
+  ```
+
+### 2. Producción (Servidor Real)
+
+Para compilar o desplegar la versión final:
+
+- **Se debe crear el archivo `.env.production`** con las URLs reales del servidor:
+  ```env
+  PUBLIC_API_URL=https://URL_DE_LA_API
+  PUBLIC_STORAGE_URL=https://URL_DE_LA_API/storage
+  ```
+- Se activa automáticamente al compilar con:
+  ```bash
+  yarn build
+  ```

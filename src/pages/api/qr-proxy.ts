@@ -1,11 +1,12 @@
 // src/pages/api/qr-proxy.ts
-import type { APIRoute } from 'astro';
+import { API_BASE_URL } from "@/config/api";
+import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async () => {
   try {
-    const response = await fetch('https://importadoramiranda.com/images/QR.jpeg', {
+    const response = await fetch(`${API_BASE_URL}/images/QR.jpeg`, {
       headers: {
-        'User-Agent': 'Mozilla/5.0',
+        "User-Agent": "Mozilla/5.0",
       },
     });
 
@@ -18,13 +19,13 @@ export const GET: APIRoute = async () => {
 
     return new Response(buffer, {
       headers: {
-        'Content-Type': 'image/jpeg',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Access-Control-Allow-Origin': '*',
+        "Content-Type": "image/jpeg",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error) {
-    console.error('Error fetching QR:', error);
-    return new Response('Error al obtener el QR', { status: 500 });
+    console.error("Error fetching QR:", error);
+    return new Response("Error al obtener el QR", { status: 500 });
   }
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import gsap from "gsap";
 import type { Product, ApiResponse } from "../../interfaces/product";
+import { API_BASE_URL, STORAGE_BASE_URL } from "@/config/api";
 
 interface HeroHelperProps {
   bannerImages?: {
@@ -38,9 +39,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
   useEffect(() => {
     const fetchFloating = async () => {
       try {
-        const res = await fetch(
-          "https://importadoramiranda.com/api/liquidaciones?page=1",
-        );
+        const res = await fetch(`${API_BASE_URL}/api/liquidaciones?page=1`);
         if (res.ok) {
           const data = await res.json();
           if (data && data.data && Array.isArray(data.data)) {
@@ -94,7 +93,10 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
         <div className="flex flex-col lg:flex-row items-center">
           {/* Contenido Principal - Lado Izquierdo */}
           <div className="flex-1 text-white space-y-8 pb-2 lg:py-0 flex flex-col items-start text-left w-full px-4 sm:px-0">
-            <div className="w-full max-w-lg space-y-2.5" ref={linksContainerRef}>
+            <div
+              className="w-full max-w-lg space-y-2.5"
+              ref={linksContainerRef}
+            >
               {[
                 {
                   title: "PAGO CON QR (LIVE)",
@@ -169,7 +171,7 @@ const HeroHelper = ({ bannerImages, logo }: HeroHelperProps) => {
                         <img
                           src={
                             product.fotos[0]?.foto
-                              ? `https://importadoramiranda.com/storage/${product.fotos[0].foto}`
+                              ? `${STORAGE_BASE_URL}/${product.fotos[0].foto}`
                               : "https://placehold.co/200x200?text=Product"
                           }
                           alt={product.nombre}

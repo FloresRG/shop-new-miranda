@@ -1,4 +1,5 @@
-import type { APIRoute } from 'astro';
+import { API_BASE_URL } from "@/config/api";
+import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -7,10 +8,10 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Reenviamos el FormData exacto a la API externa
     // No establecemos 'Content-Type' manualmente para que fetch genere el boundary correcto
-    const response = await fetch('https://importadoramiranda.com/api/sugerencias-sucursales', {
-      method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/api/sugerencias-sucursales`, {
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
       body: formData,
     });
@@ -20,17 +21,16 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify(data || { success: response.ok }), {
       status: response.status,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
-
   } catch (error: any) {
-    console.error('Proxy Error:', error);
+    console.error("Proxy Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
   }
 };

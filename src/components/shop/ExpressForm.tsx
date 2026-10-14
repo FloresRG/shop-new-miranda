@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API_BASE_URL } from "@/config/api";
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Satelite Norte"],
@@ -21,8 +22,15 @@ const departamentos = {
   Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],
-  Chuquisaca: ["Sucre","Camargo",],
-  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo","Carapari",],
+  Chuquisaca: ["Sucre", "Camargo"],
+  Tarija: [
+    "Tarija",
+    "Yacuiba",
+    "Villa Montes",
+    "Bermejo",
+    "Camargo",
+    "Carapari",
+  ],
   Beni: [
     "Trinidad",
     "Riberalta",
@@ -31,7 +39,7 @@ const departamentos = {
     "Santa Rosa",
     "Santa Ana del Yacuma",
     "Rurrenabaque",
-"Yucumo",
+    "Yucumo",
   ],
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
@@ -63,7 +71,9 @@ export default function ExpressForm() {
 
   const [productos, setProductos] = useState<Product[]>([]);
   const [comprobanteFile, setComprobanteFile] = useState<File | null>(null);
-  const [provincias, setProvincias] = useState<string[]>(departamentos["La Paz"]);
+  const [provincias, setProvincias] = useState<string[]>(
+    departamentos["La Paz"],
+  );
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const [selectedLocation, setSelectedLocation] = useState({
@@ -192,7 +202,7 @@ export default function ExpressForm() {
       }
 
       const response = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        `${API_BASE_URL}/api/shoppedidos`,
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -302,14 +312,23 @@ export default function ExpressForm() {
     return (
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
         <div className="relative max-w-lg w-full bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-5 sm:p-8 border-2 border-primary/20 dark:border-primary/30 max-h-[90vh] overflow-y-auto transition-colors duration-500">
-          
           <div className="text-center mb-5">
             <div className="w-16 h-16 bg-gradient-to-br from-primary to-[#FF0040] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/40">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
             </div>
-            
+
             <h2 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#FF0040] mb-2 uppercase tracking-tighter">
               ¡AVISO IMPORTANTE!
             </h2>
@@ -322,19 +341,39 @@ export default function ExpressForm() {
             <div className="space-y-4 text-gray-800 dark:text-gray-100 font-medium text-sm sm:text-base leading-relaxed text-justify">
               <p className="flex items-start gap-2">
                 <span className="text-primary flex-shrink-0 mt-1">●</span>
-                <span>Al elegir pedido Express, tu pedido se reserva y <strong className="underline decoration-red-500 decoration-2 text-red-600">DEBE SER RECOGIDO HOY MISMO</strong> en horario de tienda.</span>
+                <span>
+                  Al elegir pedido Express, tu pedido se reserva y{" "}
+                  <strong className="underline decoration-red-500 decoration-2 text-red-600">
+                    DEBE SER RECOGIDO HOY MISMO
+                  </strong>{" "}
+                  en horario de tienda.
+                </span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-primary flex-shrink-0 mt-1">●</span>
-                <span>En caso de no recoger tu pedido el día de hoy, se generará un cargo de <strong className="text-red-500 font-bold underline">10 Bs por cada día adicional</strong> de almacenaje.</span>
+                <span>
+                  En caso de no recoger tu pedido el día de hoy, se generará un
+                  cargo de{" "}
+                  <strong className="text-red-500 font-bold underline">
+                    10 Bs por cada día adicional
+                  </strong>{" "}
+                  de almacenaje.
+                </span>
               </p>
               <p className="flex items-start gap-2 text-red-700 dark:text-orange-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900/30">
                 <span className="flex-shrink-0">⚠️</span>
-                <span><strong>STOCK LIMITADO:</strong> Si no recoges tu producto a tiempo y existe alta demanda del producto. <strong className="uppercase underline">NO SE ACEPTARÁN RECLAMOS POSTERIORES</strong> si el producto se agota.</span>
+                <span>
+                  <strong>STOCK LIMITADO:</strong> Si no recoges tu producto a
+                  tiempo y existe alta demanda del producto.{" "}
+                  <strong className="uppercase underline">
+                    NO SE ACEPTARÁN RECLAMOS POSTERIORES
+                  </strong>{" "}
+                  si el producto se agota.
+                </span>
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-5">
             <label className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-darkmode-body border-2 border-transparent hover:border-primary transition-all cursor-pointer group shadow-sm">
               <div className="relative flex items-center justify-center">
@@ -348,20 +387,28 @@ export default function ExpressForm() {
                   {/* El círculo que se llena (opcional para estilo similar) */}
                   <div className="absolute inset-0.5 rounded-full bg-primary transform scale-0 peer-checked:scale-100 transition-transform duration-300"></div>
                   {/* El Check Prominente */}
-                  <svg 
-                    className="w-5 h-5 text-gray-400 peer-checked:text-white transition-all transform scale-110 relative z-10" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor" 
+                  <svg
+                    className="w-5 h-5 text-gray-400 peer-checked:text-white transition-all transform scale-110 relative z-10"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                     strokeWidth="4"
-                    style={{ strokeDasharray: 50, strokeDashoffset: isAgreed ? 0 : 50 }}
+                    style={{
+                      strokeDasharray: 50,
+                      strokeDashoffset: isAgreed ? 0 : 50,
+                    }}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 </div>
               </div>
               <span className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors select-none">
-                Confirmo que he leído y acepto las condiciones de Miranda Express.
+                Confirmo que he leído y acepto las condiciones de Miranda
+                Express.
               </span>
             </label>
 
@@ -373,8 +420,18 @@ export default function ExpressForm() {
               className="w-full bg-linear-to-r from-primary to-[#FF0040] text-white py-4 px-6 rounded-xl font-black text-lg shadow-xl shadow-primary/30 active:scale-95 disabled:opacity-30 disabled:active:scale-100 flex items-center justify-center gap-2 uppercase tracking-wider transition-all"
             >
               Confirmar y Continuar
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </button>
           </div>
@@ -386,7 +443,6 @@ export default function ExpressForm() {
   return (
     <div className="bg-white dark:bg-darkmode-light rounded-2xl shadow-2xl p-4 border border-gray-100 dark:border-darkmode-border">
       <div className="text-center mb-8">
-
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
           Información Personal
         </h3>
@@ -558,8 +614,16 @@ export default function ExpressForm() {
             </label>
             <div className="w-full px-4 py-3 border-2 border-gray-100 dark:border-darkmode-border rounded-xl bg-gray-100/50 dark:bg-darkmode-body/50 text-gray-500 dark:text-gray-400 font-medium flex items-center justify-between cursor-not-allowed">
               <span>{formData.departamento}</span>
-              <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
           </div>
@@ -581,7 +645,9 @@ export default function ExpressForm() {
             </label>
             <div className="w-full px-4 py-3 border-2 border-primary/20 rounded-xl bg-primary/5 text-primary font-bold flex items-center justify-between cursor-not-allowed shadow-sm shadow-primary/5">
               <span>{formData.provincia}</span>
-              <span className="text-[10px] uppercase bg-primary text-white px-2 py-0.5 rounded-full">Fijo</span>
+              <span className="text-[10px] uppercase bg-primary text-white px-2 py-0.5 rounded-full">
+                Fijo
+              </span>
             </div>
           </div>
         </div>
@@ -607,7 +673,9 @@ export default function ExpressForm() {
             type="text"
             name="horaRecojo"
             value={formData.horaRecojo}
-            onChange={(e) => setFormData({ ...formData, horaRecojo: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, horaRecojo: e.target.value })
+            }
             className="w-full px-4 py-3 border-2 border-gray-200 dark:border-darkmode-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 dark:bg-darkmode-body text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder="Ej: 15:30 o Entre las 4 y 5 PM"
           />
@@ -972,7 +1040,7 @@ export default function ExpressForm() {
               ¡Pedido Enviado!
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Su pedido numero {" "}
+              Su pedido numero{" "}
               <span className="font-bold text-primary">{contactId}</span> ha
               sido registrado.
             </p>

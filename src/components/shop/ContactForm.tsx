@@ -14,6 +14,7 @@ import {
   FaQrcode,
   FaSpinner,
 } from "react-icons/fa";
+import { API_BASE_URL } from "@/config/api";
 
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Satelite Norte"],
@@ -34,8 +35,15 @@ const departamentos = {
   Cochabamba: ["Cochabamba", "Quillacollo", "Beijing", "Sacaba", "Zona Norte"],
   Potosí: ["Potosi", "Tupiza", "Villazón", "Uyuni", "Llallagua"],
   Oruro: ["Oruro"],
-  Chuquisaca: ["Sucre","Camargo",],
-  Tarija: ["Tarija", "Yacuiba", "Villa Montes", "Bermejo", "Camargo","Carapari",],
+  Chuquisaca: ["Sucre", "Camargo"],
+  Tarija: [
+    "Tarija",
+    "Yacuiba",
+    "Villa Montes",
+    "Bermejo",
+    "Camargo",
+    "Carapari",
+  ],
   Beni: [
     "Trinidad",
     "Riberalta",
@@ -44,7 +52,7 @@ const departamentos = {
     "Santa Rosa",
     "Santa Ana del Yacuma",
     "Rurrenabaque",
-"Yucumo",
+    "Yucumo",
   ],
   Pando: ["Cobija", "Puerto Rosa", "Puerto Cena", "Puerto Rico"],
 };
@@ -205,7 +213,7 @@ export default function ContactForm() {
       }
 
       const response = await axios.post(
-        "https://importadoramiranda.com/api/shoppedidos",
+        `${API_BASE_URL}/api/shoppedidos`,
         apiFormData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -213,7 +221,8 @@ export default function ContactForm() {
       );
 
       const pedidoId =
-        (response.data.pedido_id !== undefined && response.data.pedido_id !== null)
+        response.data.pedido_id !== undefined &&
+        response.data.pedido_id !== null
           ? response.data.pedido_id.toString()
           : response.data.data?.id?.toString() || "ID no disponible";
 
@@ -1033,7 +1042,8 @@ export default function ContactForm() {
 
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
-                      <FaPhoneAlt className="text-[#F2275D] text-[10px]" /> Celular:
+                      <FaPhoneAlt className="text-[#F2275D] text-[10px]" />{" "}
+                      Celular:
                     </span>
                     <span className="font-bold text-gray-900 text-right">
                       +591 {orderSummary?.celular}
@@ -1042,7 +1052,8 @@ export default function ContactForm() {
 
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
-                      <FaMapMarkerAlt className="text-[#F2275D] text-[10px]" /> Destino:
+                      <FaMapMarkerAlt className="text-[#F2275D] text-[10px]" />{" "}
+                      Destino:
                     </span>
                     <span className="font-bold text-gray-900 text-right">
                       {orderSummary?.departamento} - {orderSummary?.provincia}
@@ -1051,7 +1062,8 @@ export default function ContactForm() {
 
                   <div className="flex justify-between items-center gap-2">
                     <span className="text-gray-500 flex items-center gap-1.5 font-medium shrink-0">
-                      <FaCalendarAlt className="text-[#F2275D] text-[10px]" /> Fecha:
+                      <FaCalendarAlt className="text-[#F2275D] text-[10px]" />{" "}
+                      Fecha:
                     </span>
                     <span className="font-medium text-gray-600 text-right">
                       {orderSummary?.fecha}
@@ -1078,13 +1090,16 @@ export default function ContactForm() {
                     ) : (
                       <div className="flex flex-col items-center justify-center text-gray-400 p-2">
                         <FaQrcode className="w-10 h-10 mb-1 text-gray-300" />
-                        <span className="text-[10px] font-medium">Generando QR...</span>
+                        <span className="text-[10px] font-medium">
+                          Generando QR...
+                        </span>
                       </div>
                     )}
                   </div>
 
                   <p className="text-[10px] text-gray-600 max-w-[240px] leading-tight">
-                    Escanea este código para consultar y verificar el estado de tu pedido en cualquier momento.
+                    Escanea este código para consultar y verificar el estado de
+                    tu pedido en cualquier momento.
                   </p>
                 </div>
 
@@ -1092,9 +1107,15 @@ export default function ContactForm() {
                 <div className="mt-2.5 p-2 rounded-xl text-center text-[10px] font-medium bg-blue-50 text-blue-900 border border-blue-100">
                   {selectedLocation.departamento === "La Paz" &&
                   selectedLocation.provincia === "Recojo en tienda" ? (
-                    <span>Puedes recoger tu pedido hoy o en los próximos 3 días hábiles.</span>
+                    <span>
+                      Puedes recoger tu pedido hoy o en los próximos 3 días
+                      hábiles.
+                    </span>
                   ) : (
-                    <span>Tu pedido será despachado en los siguientes 3 a 5 días hábiles.</span>
+                    <span>
+                      Tu pedido será despachado en los siguientes 3 a 5 días
+                      hábiles.
+                    </span>
                   )}
                 </div>
 
@@ -1124,7 +1145,11 @@ export default function ContactForm() {
                     ) : (
                       <FaShareAlt className="text-sm" />
                     )}
-                    <span>{isSharing ? "Abriendo..." : "Compartir Datos por WhatsApp"}</span>
+                    <span>
+                      {isSharing
+                        ? "Abriendo..."
+                        : "Compartir Datos por WhatsApp"}
+                    </span>
                   </button>
 
                   {/* Botón: Descargar PDF */}
