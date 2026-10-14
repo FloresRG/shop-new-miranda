@@ -535,6 +535,7 @@ export default function ExpressForm() {
             )}
           </div>
 
+
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <svg
@@ -566,7 +567,7 @@ export default function ExpressForm() {
                   const numericValue = value.replace(/\D/g, "");
                   if (
                     numericValue.length === 1 &&
-                    !["6", "7"].includes(numericValue)
+                    !["6", "7","5"].includes(numericValue)
                   )
                     return;
                   const trimmed = numericValue.slice(0, 8);

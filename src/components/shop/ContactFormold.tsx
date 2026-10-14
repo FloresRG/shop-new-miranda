@@ -342,7 +342,7 @@ export default function ContactFormold() {
                   const numericValue = value.replace(/\D/g, "");
                   if (
                     numericValue.length === 1 &&
-                    !["6", "7"].includes(numericValue)
+                    !["6", "7","5"].includes(numericValue)
                   ) {
                     return;
                   }
