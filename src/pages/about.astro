@@ -231,20 +231,28 @@ if (aboutIndex.data.draft) {
             Visítanos en nuestras sucursales y descubre todos nuestros productos en persona.
           </p>
 
-          <!-- 1. BOTONES DE SELECCIÓN (Sin onclick inline) -->
+          <!-- 1. BOTONES DE SELECCIÓN (Con ícono SVG) -->
           <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
             <button
               id="btn-caparazon"
-              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer"
+              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer flex items-center"
             >
-              📍 Caparazón Mall Center
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 flex-shrink-0">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                <path d="m9 10 2 2 4-4"/>
+              </svg>
+              Caparazón Mall Center
             </button>
 
             <button
               id="btn-cinebol"
-              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer"
+              class="map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer flex items-center"
             >
-              📍 Cinebol El Alto
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 flex-shrink-0">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                <path d="m9 10 2 2 4-4"/>
+              </svg>
+              Cinebol El Alto
             </button>
           </div>
 
@@ -268,7 +276,7 @@ if (aboutIndex.data.draft) {
             </div>
 
             <p id="mapa-direccion" class="mt-6 text-lg font-semibold text-gray-800 dark:text-gray-200 transition-all duration-300">
-              📍 Sucursal Caparazón Mall Center, La Paz
+               Sucursal Caparazón Mall Center, La Paz
             </p>
           </div>
 
@@ -276,6 +284,8 @@ if (aboutIndex.data.draft) {
       </div>
     </div>
   </section>
+
+ 
 
   <!-- 3. LÓGICA CON EVENT LISTENERS (La forma correcta en Astro) -->
     <!-- 3. LÓGICA CON EVENT LISTENERS (Corregido para navegación en Astro) -->
@@ -292,19 +302,19 @@ if (aboutIndex.data.draft) {
     const mapas: Record<Lugar, MapaData> = {
       caparazon: {
         src: "https://maps.google.com/maps?q=-16.49311355914987,-68.14514980491366&t=&z=17&ie=UTF8&iwloc=&output=embed",
-        direccion: "📍 Sucursal Caparazón Mall Center, La Paz",
+        direccion: "Sucursal Caparazón Mall Center, La Paz",
         btnActivo: "btn-caparazon",
         btnInactivo: "btn-cinebol"
       },
       cinebol: {
         src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d956.2444631615817!2d-68.14905313036854!3d-16.527215713317002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915edf4d7c5ee75b%3A0x50ad520f8ab3bf8f!2sCINEBOL!5e0!3m2!1ses-419!2sbo!4v1791837829028!5m2!1ses-419!2sbo",
-        direccion: "📍 Sucursal Cinebol, El Alto",
+        direccion: "Sucursal Cinebol, El Alto",
         btnActivo: "btn-cinebol",
         btnInactivo: "btn-caparazon"
       }
     };
 
-    function cambiarMapa(lugar: Lugar) {
+      function cambiarMapa(lugar: Lugar) {
       const data = mapas[lugar];
       const iframe = document.getElementById('mapa-iframe') as HTMLIFrameElement | null;
       const direccionText = document.getElementById('mapa-direccion') as HTMLElement | null;
@@ -323,9 +333,9 @@ if (aboutIndex.data.draft) {
         iframe.src = data.src;
         direccionText.textContent = data.direccion;
 
-        // Actualizar clases de los botones
-        btnActivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer";
-        btnInactivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer";
+        // ✅ CORRECCIÓN: Agregar 'flex items-center' en ambos botones
+        btnActivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 cursor-pointer flex items-center";
+        btnInactivo.className = "map-btn px-8 py-3 rounded-full font-bold transition-all duration-300 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transform scale-100 cursor-pointer flex items-center";
 
         // Volver a mostrar el mapa cuando termine de cargar
         iframe.onload = () => {
@@ -334,7 +344,7 @@ if (aboutIndex.data.draft) {
       }, 300);
     }
 
-    // ✅ FUNCIÓN DE INICIALIZACIÓN (Se ejecuta cada vez que se muestra la página)
+    //  FUNCIÓN DE INICIALIZACIÓN (Se ejecuta cada vez que se muestra la página)
     function inicializarBotonesMapa() {
       const btnCaparazon = document.getElementById('btn-caparazon');
       const btnCinebol = document.getElementById('btn-cinebol');
@@ -363,6 +373,148 @@ if (aboutIndex.data.draft) {
     // 3. Ejecutar después de que Astro termine de intercambiar el contenido de la página
     document.addEventListener('astro:after-swap', inicializarBotonesMapa);
   </script>
+
+  <!-- /** PREGUINTAS FRECUENTES */ -->
+    <!-- FAQ Section -->
+  <section id="faq-section" class="section py-24 relative overflow-hidden bg-gray-50 dark:bg-darkmode-body">
+    <div class="absolute inset-0 bg-primary/5 dark:bg-primary/5 -z-10"></div>
+
+    <div class="container relative z-10">
+      <div class="row justify-center">
+        <div class="lg:col-10">
+          
+          <!-- Encabezado de la sección -->
+          <div class="text-center mb-12">
+            <h2 class="h2 mb-4 font-black text-gray-900 dark:text-white uppercase tracking-tight">
+              Preguntas <span class="text-primary italic">Frecuentes</span>
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Aprende paso a paso cómo hacer tu pedido desde nuestros Lives y cómo verificar su estado en tiempo real.
+            </p>
+          </div>
+
+          <!-- Contenedor de Acordeón -->
+          <div class="max-w-3xl mx-auto space-y-4">
+            
+            <!-- Pregunta 1: Cómo pedir en Live -->
+            <details class="group bg-white dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border rounded-2xl shadow-sm transition-all duration-300 open:shadow-md open:border-primary/30">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-lg font-semibold text-gray-900 dark:text-white group-open:text-primary transition-colors">
+                  ¿Cómo hago un pedido desde un Live?
+                </span>
+                <span class="ml-4 flex-shrink-0 text-primary transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                Es muy sencillo: 
+                <ol class="list-decimal list-inside mt-2 space-y-2">
+                  <li>Ve al <strong>Menú</strong> y selecciona la opción <strong>"Live"</strong>.</li>
+                  <li>Completa tus datos: Nombre Completo, Cédula de Identidad (CI), Celular (WhatsApp) y Departamento.</li>
+                  <li>Sube una <strong>captura de pantalla</strong> del producto que viste en el Live.</li>
+                  <li>Adjunta tu comprobante de pago y haz clic en <strong>"Enviar Pedido"</strong>.</li>
+                </ol>
+              </div>
+            </details>
+
+            <!-- Pregunta 2: Cómo obtener el QR de pago (CORREGIDA) -->
+            <details class="group bg-white dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border rounded-2xl shadow-sm transition-all duration-300 open:shadow-md open:border-primary/30">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-lg font-semibold text-gray-900 dark:text-white group-open:text-primary transition-colors">
+                  ¿Cómo obtengo el código QR para realizar el pago?
+                </span>
+                <span class="ml-4 flex-shrink-0 text-primary transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                Tienes dos opciones rápidas para obtener nuestro QR de pago:
+                <ul class="list-disc list-inside mt-2 space-y-2">
+                  <li><strong>Opción 1:</strong> Solicítalo directamente a nuestro número de WhatsApp de la importadora.</li>
+                  <li><strong>Opción 2:</strong> En la parte superior del formulario de pedido, haz clic en <strong>"Ver QR"</strong>. Una vez que lo visualices, <strong>realiza el pago</strong> desde tu aplicación bancaria, <strong>adjunta la captura del comprobante</strong> en el formulario y, finalmente, haz clic en <strong>"Enviar Pedido"</strong>.</li>
+                </ul>
+                <p class="mt-4 p-3 bg-primary/10 dark:bg-primary/20 text-primary text-sm font-semibold rounded-lg flex items-start gap-2">
+                  <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  ¡Importante! No olvides adjuntar el comprobante de pago antes de enviar. Sin este paso, el sistema no podrá procesar tu solicitud.
+                </p>
+              </div>
+            </details>
+
+            <!-- Pregunta 3: Confirmación del pedido -->
+            <details class="group bg-white dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border rounded-2xl shadow-sm transition-all duration-300 open:shadow-md open:border-primary/30">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-lg font-semibold text-gray-900 dark:text-white group-open:text-primary transition-colors">
+                  ¿Cómo sé que mi pedido se registró correctamente?
+                </span>
+                <span class="ml-4 flex-shrink-0 text-primary transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                ¡Es automático! Al hacer clic en el botón <strong>"Enviar Pedido"</strong>, el sistema te generará inmediatamente un <strong>código QR único de tu pedido</strong>. Te recomendamos tomar una captura de pantalla o guardar esa imagen, ya que la necesitarás para verificar tu compra.
+              </div>
+            </details>
+
+            <!-- Pregunta 4: Cómo verificar el pedido -->
+            <details class="group bg-white dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border rounded-2xl shadow-sm transition-all duration-300 open:shadow-md open:border-primary/30">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-lg font-semibold text-gray-900 dark:text-white group-open:text-primary transition-colors">
+                  ¿Cómo puedo verificar el estado de mi pedido?
+                </span>
+                <span class="ml-4 flex-shrink-0 text-primary transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                Ve al <strong>Menú</strong> y selecciona <strong>"Verificar tu pedido"</strong>. Allí tendrás dos opciones:
+                <ul class="list-disc list-inside mt-2 space-y-2">
+                  <li><strong>Verificar por QR:</strong> Usa la cámara de tu celular para escanear el QR de tu comprobante o sube la imagen guardada.</li>
+                  <li><strong>Verificar con mis datos:</strong> Ingresa manualmente tu Número de Pedido, Cédula de Identidad (CI) y Número de Celular, luego haz clic en "Verificar ahora".</li>
+                </ul>
+              </div>
+            </details>
+
+            <!-- Pregunta 5: Qué hacer si no tengo el QR -->
+            <details class="group bg-white dark:bg-darkmode-light border border-gray-200 dark:border-darkmode-border rounded-2xl shadow-sm transition-all duration-300 open:shadow-md open:border-primary/30">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-lg font-semibold text-gray-900 dark:text-white group-open:text-primary transition-colors">
+                  ¿Puedo verificar mi pedido si perdí o no tengo el código QR?
+                </span>
+                <span class="ml-4 flex-shrink-0 text-primary transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+                ¡Sí, no te preocupes! En la sección <strong>"Verificar tu pedido"</strong>, elige la opción <strong>"Verificar con mis datos"</strong>. Solo necesitas tener a la mano tu Número de Pedido, tu Cédula de Identidad y el número de celular con el que realizaste la compra.
+              </div>
+            </details>
+
+          </div>
+
+          <!-- Llamado a la acción (WhatsApp) -->
+          <div class="text-center mt-12">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">¿Tienes alguna otra duda sobre tu pedido en Live?</p>
+            <a href="https://wa.me/59163952544" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-full shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all duration-300 transform hover:scale-105">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Escribir al WhatsApp
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <style is:global>
     @keyframes gradient-x {
