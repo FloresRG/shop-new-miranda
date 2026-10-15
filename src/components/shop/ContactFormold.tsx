@@ -100,8 +100,8 @@ export default function ContactFormold() {
       errors.celular = "Por favor, ingrese su número de celular.";
     } else if (formData.celular.length !== 8) {
       errors.celular = "El número debe tener 8 dígitos.";
-    } else if (!/^[67]/.test(formData.celular)) {
-      errors.celular = "El número debe comenzar con 6 o 7.";
+    } else if (!/^[567]/.test(formData.celular)) {
+      errors.celular = "El número debe comenzar con 5,6 o 7.";
     }
 
     if (!formData.departamento.trim()) {
