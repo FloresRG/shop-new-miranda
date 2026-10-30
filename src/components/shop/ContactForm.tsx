@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import html2canvas from "html2canvas";
 import QRCode from "qrcode";
 import {
+  FaStore,
   FaShareAlt,
   FaFilePdf,
   FaUser,
@@ -614,14 +615,15 @@ export default function ContactForm() {
                       onClick={() =>
                         setFormData({ ...formData, provincia: prov })
                       }
-                      className={`relative px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 flex flex-col items-center justify-center text-center gap-1 ${
+                      className={`relative px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 flex items-center justify-center text-center gap-1 ${
                         isSelected
                           ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
                           : isSucursal
-                            ? "bg-accent/10 dark:bg-accent/20 border-accent text-[#0d8282] dark:text-[#4ee3e3] font-semibold shadow-sm hover:bg-accent/20"
+                            ? "bg-gray-50 dark:bg-darkmode-body dark:border-darkmode-border border-gray-200 text-[#0d8282] dark:text-[#4ee3e3] font-semibold shadow-sm hover:border-primary hover:bg-primary/5"
                             : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
                       }`}
                     >
+                      {isSucursal && <FaStore className="w-4 h-4 shrink-0" />}
                       <span>{prov}</span>
                     </button>
                   );
