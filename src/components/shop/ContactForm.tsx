@@ -19,9 +19,9 @@ import { API_BASE_URL } from "@/config/api";
 const departamentos = {
   "Santa Cruz": ["Santa Cruz", "Montero", "Camiri", "Satelite Norte"],
   "La Paz": [
-    "Caranavi",
     "Recojo en Caparazon Mall Center",
     "Recojo en CineBol",
+    "Caranavi",
     "Palos blancos",
     "Mapiri",
     "Guanay",
@@ -507,7 +507,7 @@ export default function ContactForm() {
                   const numericValue = value.replace(/\D/g, "");
                   if (
                     numericValue.length === 1 &&
-                    !["6", "7","5"].includes(numericValue)
+                    !["6", "7", "5"].includes(numericValue)
                   )
                     return;
                   const trimmed = numericValue.slice(0, 8);
@@ -602,22 +602,30 @@ export default function ContactForm() {
                 Provincia o Ciudad
               </label>
               <div className="grid grid-cols-2 gap-3">
-                {provincias.map((prov) => (
-                  <button
-                    key={prov}
-                    type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, provincia: prov })
-                    }
-                    className={`px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 ${
-                      formData.provincia === prov
-                        ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
-                        : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
-                    }`}
-                  >
-                    {prov}
-                  </button>
-                ))}
+                {provincias.map((prov) => {
+                  const isSelected = formData.provincia === prov;
+                  const isSucursal =
+                    formData.departamento === "La Paz" &&
+                    prov.startsWith("Recojo");
+                  return (
+                    <button
+                      key={prov}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, provincia: prov })
+                      }
+                      className={`relative px-4 py-3 border-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 flex flex-col items-center justify-center text-center gap-1 ${
+                        isSelected
+                          ? "bg-gradient-to-r from-primary to-[#F20505] text-white border-primary shadow-lg shadow-primary/25"
+                          : isSucursal
+                            ? "bg-accent/10 dark:bg-accent/20 border-accent text-[#0d8282] dark:text-[#4ee3e3] font-semibold shadow-sm hover:bg-accent/20"
+                            : "bg-gray-50 dark:bg-darkmode-body border-gray-200 dark:border-darkmode-border text-gray-700 dark:text-gray-300 hover:border-primary hover:bg-primary/5"
+                      }`}
+                    >
+                      <span>{prov}</span>
+                    </button>
+                  );
+                })}
               </div>
               {formErrors.provincia && (
                 <p className="text-red-500 text-sm flex items-center gap-1">
